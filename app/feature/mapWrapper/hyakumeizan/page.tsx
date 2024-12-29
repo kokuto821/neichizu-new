@@ -1,8 +1,8 @@
 // app/feature/mapWrapper/hyakumeizan/page.tsx
-import dynamic from 'next/dynamic'; // dynamicのインポート
 import Link from "next/link";
 import Image from "next/image";
 import { Header } from "@/app/components/molecules/header";
+import MapComponent from "../../map/hyakumeizan/MapComponent";
 
 // ビューポート設定を追加
 export const metadata = {
@@ -13,9 +13,6 @@ export const metadata = {
     userScalable: false,
   },
 };
-
-// MapComponentを動的にインポートし、SSRを無効にする
-const MapComponent = dynamic(() => import("../../map/hyakumeizan/MapComponent"), { ssr: false });
 
 const Hyakumeizan = () => {
   return (
@@ -56,5 +53,6 @@ const Hyakumeizan = () => {
 };
 
 export default Hyakumeizan; // デフォルトエクスポート
+
 
 
