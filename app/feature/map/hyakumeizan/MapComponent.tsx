@@ -2,24 +2,26 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-
-// Declare $ property on the window object
-declare global {
-  interface Window {
-    $: any;
-    Papa: any;
-  }
-}
 import Script from "next/script";
 import useMap from "./useMap"; // カスタムフックをインポート
+
+// Declare global types for jQuery and PapaParse
+declare global {
+  interface Window {
+    L: unknown; // Leafletの型
+    $: (selector: string) => unknown; // jQueryの型
+    Papa: {
+      parse: <T>(csvString: string, options?: unknown) => { data: T[] }; // PapaParseの型
+    };
+  }
+}
 
 const MapComponent = () => {
   const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Leaflet, jQuery, PapaParseのスクリプトが読み込まれた後にマップを初期化
     const initMap = () => {
-      if (typeof window !== "undefined" && window.L && window.$ && window.Papa && mapRef.current) {
+      if (typeof window.L === 'function' && typeof window.$ === 'function' && typeof window.Papa === 'object' && mapRef.current) {
         useMap(mapRef.current);
       }
     };
@@ -28,7 +30,7 @@ const MapComponent = () => {
     if (
       typeof window !== "undefined" &&
       window.L &&
-      window.$ &&
+      typeof window.$ === 'function' &&
       window.Papa
     ) {
       initMap();
@@ -87,3 +89,4 @@ const MapComponent = () => {
 };
 
 export default MapComponent;
+
