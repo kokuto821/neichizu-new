@@ -9,7 +9,7 @@ import useMap from "./useMap"; // カスタムフックをインポート
 declare global {
   interface Window {
     L: typeof import("leaflet"); // Leafletの型
-    $: (selector: string) => JQuery; // jQueryの型
+    $?: ((selector: string) => JQuery) | undefined; // jQueryの型
     Papa: {
       parse: <T>(csvString: string, options?: { header?: boolean; dynamicTyping?: boolean }) => { data: T[] }; // PapaParseの型
     };
@@ -20,10 +20,30 @@ const MapComponent = () => {
   const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (mapRef.current) {
-      useMap(mapRef.current); // マップ要素を渡す
+    const initMap = () => {
+      if (mapRef.current) {
+        useMap(mapRef.current); // マップ要素を渡す
+      }
+    };
+
+    // スクリプトの読み込みが完了したかチェック
+    if (
+      typeof window !== "undefined" &&
+      window.L &&
+      window.$ &&
+      window.Papa
+    ) {
+      initMap();
+    } else {
+      // スクリプトの読み込みが完了していない場合は、イベントリスナーを設定
+      window.addEventListener("load", initMap);
     }
-  }, [mapRef]);
+
+    // クリーンアップ関数
+    return () => {
+      window.removeEventListener("load", initMap);
+    };
+  }, []);
 
   return (
     <div>
@@ -69,3 +89,4 @@ const MapComponent = () => {
 };
 
 export default MapComponent;
+
