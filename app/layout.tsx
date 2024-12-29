@@ -44,10 +44,10 @@ export default function RootLayout({
       {/* faviconの読み込み */}
       <link rel="icon" href="img/mountain.ico" />
       {/* fontの読み込み */}
-      <link
-        href="https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c"
-        rel="stylesheet"
-      />
+      {/* <link
+  href="https://fonts.googleapis.com/css2?family=YourFont&display=optional"
+  rel="stylesheet"
+/> */}
       <body className="antialiased">
         {children}
         <Script
