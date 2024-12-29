@@ -45,7 +45,7 @@ export default function Home() {
         <div className="white_back">
           <div className="white_back_inner">
             <div className="white_back_inner_eyecatch">
-              <Link href="/hyakumeizan">
+              <Link href="/hyakumeizan.php">
                 <Image src="/img/hyakumeizan-eyecatch.webp" alt="百名山マップ" width={500} height={300} />
               </Link>
               <p className="white_inner_map-title">
