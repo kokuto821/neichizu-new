@@ -6,7 +6,7 @@ export default function Home() {
     <div className="wrapper">
       <header id="header">
         <h1 className="h1-title_text">
-          <Image src="/img/mountain.png" width={30} height={30} alt="Mountain icon" />
+          <Image src="<Image/mountain.png" width={30} height={30} alt="Mountain icon" />
           <Link href="/">ねいちず-NatureMaps</Link>
         </h1>
         <nav className="pc-nav">
@@ -46,7 +46,7 @@ export default function Home() {
           <div className="white_back_inner">
             <div className="white_back_inner_eyecatch">
               <Link href="/hyakumeizan">
-                <Image src="/img/hyakumeizan-eyecatch.webp" alt="百名山マップ" width={500} height={300} />
+                <Image src="./img/hyakumeizan-eyecatch.webp" alt="百名山マップ" width={500} height={300} />
               </Link>
               <p className="white_inner_map-title">
                 <Link href="/hyakumeizan" className="link_url">
@@ -69,7 +69,7 @@ export default function Home() {
             </div>
             <div className="white_back_inner_eyecatch">
               <Link href="/geopark">
-                <Image src="/img/geopark-eyecatch.webp" alt="ジオパークマップ" width={500} height={300} />
+                <Image src="./img/geopark-eyecatch.webp" alt="ジオパークマップ" width={500} height={300} />
               </Link>
               <p className="white_inner_map-title">
                 <Link href="/geopark" className="link_url">
@@ -97,7 +97,7 @@ export default function Home() {
             <div className="white_back_inner_eyecatch">
               <p className="map-eyecatch_block">
                 <Link href="/tokyo-green">
-                  <Image src="/img/tokyo-green_eyecatch.webp" alt="東京23区の緑被分布図" width={500} height={300} />
+                  <Image src="./img/tokyo-green_eyecatch.webp" alt="東京23区の緑被分布図" width={500} height={300} />
                 </Link>
               </p>
               <div className="white_inner_map-title">
