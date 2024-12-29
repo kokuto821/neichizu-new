@@ -6,7 +6,7 @@ export default function Home() {
     <div className="wrapper">
       <header id="header">
         <h1 className="h1-title_text">
-          <Image src="<Image/mountain.png" width={30} height={30} alt="Mountain icon" />
+          <Image src="/img/mountain.png" width={30} height={30} alt="Mountain icon" />
           <Link href="/">ねいちず-NatureMaps</Link>
         </h1>
         <nav className="pc-nav">
