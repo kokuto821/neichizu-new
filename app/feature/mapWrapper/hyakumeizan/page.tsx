@@ -20,7 +20,7 @@ const Hyakumeizan = () => {
 
       <div className="map_wrap">
         <iframe 
-          src="/hyakumeizan-map" // Next.jsではPHPファイルではなく、ルートを指定
+          src="/feature/map/hyakumeizan" // Next.jsではPHPファイルではなく、ルートを指定
           className="mapflame"
           style={{ border: 'none', width: '100%', height: '500px' }} // iframeのスタイルを追加
         ></iframe>
