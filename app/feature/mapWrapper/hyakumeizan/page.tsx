@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Header } from "@/app/components/molecules/header";
-import MapComponent from "../../map/hyakumeizan/MapComponent";
+import MapComponent from "../../map/hyakumeizan/MapComponent"; // 正しいパスでインポート
 
 // ビューポート設定を追加
 export const metadata = {
@@ -34,7 +34,7 @@ const Hyakumeizan = () => {
       </div>
 
       <div className="map_wrap">
-        <MapComponent />
+        <MapComponent /> {/* 地図コンポーネントを直接使用 */}
       </div>
 
       <footer className="foot_nav">
