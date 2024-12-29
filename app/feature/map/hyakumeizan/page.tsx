@@ -1,6 +1,7 @@
+// app/feature/map/hyakumeizan/page.tsx
+"use client";
+
 import { useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
 import Papa from 'papaparse';
 import $ from 'jquery'; // jQueryを使用するためにインポート
 import L from 'leaflet';
