@@ -103,7 +103,7 @@ p {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: url("DSC00697.JPG") top center/cover no-repeat;
+  /* background: url("DSC00697.JPG") top center/cover no-repeat; */
 }
 
 .sp-nav {
