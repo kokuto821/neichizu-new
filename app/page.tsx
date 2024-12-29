@@ -16,7 +16,7 @@ export default function Home() {
         <div className="white_back">
           <div className="white_back_inner">
             <div className="white_back_inner_eyecatch">
-              <Link href="/hyakumeizan">
+              <Link href="/feature/mapWrapper/hyakumeizan">
                 <Image
                   src="/img/hyakumeizan-eyecatch.webp"
                   alt="百名山マップ"
