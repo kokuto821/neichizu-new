@@ -1,8 +1,10 @@
+// app/feature/mapWrapper/hyakumeizan.tsx
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Header } from '@/app/components/molecules/header';
 
-export const Hyakumeizan = () => {
+const Hyakumeizan = () => {
   return (
     <div>
       {/* ヘッダーをインクルード */}
@@ -34,3 +36,5 @@ export const Hyakumeizan = () => {
     </div>
   );
 }
+
+export default Hyakumeizan; // デフォルトエクスポート
