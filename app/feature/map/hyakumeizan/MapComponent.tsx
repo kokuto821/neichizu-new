@@ -1,18 +1,48 @@
 // app/feature/map/hyakumeizan/MapComponent.tsx
 "use client";
 
+import { useEffect } from "react";
 import Script from "next/script";
 import useMap from "./useMap"; // カスタムフックをインポート
 
-const MapComponent = () => {
-  const mapId = "map"; // マップIDを定義
+declare global {
+  interface Window {
+    $: any;
+  }
+}
 
-  useMap(mapId); // カスタムフックを呼び出す
+const MapComponent = () => {
+  useEffect(() => {
+    // Leaflet, jQuery, PapaParseのスクリプトが読み込まれた後にマップを初期化
+    const initMap = () => {
+      if (typeof window !== "undefined" && window.L && window.$ && window.Papa) {
+        useMap("map");
+      }
+    };
+
+    // スクリプトの読み込みが完了したかチェック
+    if (
+      typeof window !== "undefined" &&
+      window.L &&
+      window.$ &&
+      window.Papa
+    ) {
+      initMap();
+    } else {
+      // スクリプトの読み込みが完了していない場合は、イベントリスナーを設定
+      window.addEventListener("load", initMap);
+    }
+
+    // クリーンアップ関数
+    return () => {
+      window.removeEventListener("load", initMap);
+    };
+  }, []);
 
   return (
     <div>
       <div
-        id={mapId}
+        id="map"
         style={{ position: "absolute", top: 0, bottom: 0, right: 0, left: 0 }}
       ></div>
 
@@ -53,4 +83,3 @@ const MapComponent = () => {
 };
 
 export default MapComponent;
-
