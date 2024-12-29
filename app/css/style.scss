@@ -10,7 +10,7 @@ html{
    height: 100%;
 }
 body { 
-   background-image: url(img/nature_back.webp);
+   background-image: url(/img/nature_back.webp);
    font-family: "M PLUS Rounded 1c";
    margin: 0;
    padding: 0;
@@ -88,7 +88,7 @@ p{
 }
 /* Class */
 .wrapper{
-   background-image: url(img/nature_back.png);
+   background-image: url(/img/nature_back.png);
    display: flex;
    flex-direction: column;
 }
