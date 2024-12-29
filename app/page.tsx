@@ -67,10 +67,57 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            {/* 他の white_back_inner_eyecatch ブロックも同様に変更 */}
+            <div className="white_back_inner_eyecatch">
+              <Link href="/geopark">
+                <Image src="/img/geopark-eyecatch.webp" alt="ジオパークマップ" width={500} height={300} />
+              </Link>
+              <p className="white_inner_map-title">
+                <Link href="/geopark" className="link_url">
+                  -ジオパークマップ-
+                </Link>
+              </p>
+              <div className="white_back_inner_info">
+                <p>日本ジオパークのマップです</p>
+                <p>
+                  <a
+                    className="link_url"
+                    href="https://geopark.jp/geopark/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    参考になったサイト
+                  </a>
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-        {/* 他の white_back ブロックも同様に変更 */}
+        <div className="white_back">
+          <div className="white_back_inner">
+            <div className="white_back_inner_eyecatch">
+              <p className="map-eyecatch_block">
+                <Link href="/tokyo-green">
+                  <Image src="/img/tokyo-green_eyecatch.webp" alt="東京23区の緑被分布図" width={500} height={300} />
+                </Link>
+              </p>
+              <div className="white_inner_map-title">
+                <Link href="/tokyo-green" className="link_url" style={{ fontSize: '1rem' }}>
+                  -東京23区の緑被分布図<br />(1984-2023)-
+                </Link>
+              </div>
+              <div className="white_back_inner_info">
+                <p>卒業研究で作成した、衛星画像から作成した東京都23区の年代別の緑被分布図です。</p>
+                <p>
+                  <a className="link_url" href="#" target="_blank" rel="noopener noreferrer">
+                    研究内容
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="white_back"></div>
+        <div className="space"></div>
       </div>
 
       <footer className="foot_nav">
