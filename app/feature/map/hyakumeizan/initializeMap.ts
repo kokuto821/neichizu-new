@@ -1,12 +1,14 @@
 // app/feature/map/hyakumeizan/initializeMap.ts
 import Papa from "papaparse";
-import $ from "jquery"; // jQueryを使用するためにインポート
+import $ from "jquery";
 import L from "leaflet";
 
 const initializeMap = (mapElement: HTMLDivElement) => {
+  if (typeof window === "undefined") return;
+
   const map = L.map(mapElement, {
-    center: [35, 139], // 初期位置（緯度、経度）
-    zoom: 5.5, // ズームレベル
+    center: [35, 139],
+    zoom: 5.5,
     scrollWheelZoom: true,
     zoomControl: false,
   });
@@ -47,27 +49,28 @@ const initializeMap = (mapElement: HTMLDivElement) => {
     }>(csvString, { header: true, dynamicTyping: false }).data;
 
     for (const row of data) {
-      const marker = L.marker([row.緯度, row.経度], { icon: MountainIcon })
-        .bindPopup(`
-          <div class="popup-image_wrapper">
-            <img class="popup-image" src="${row.画像}" />
-          </div>
-          <br>
-          <span class="m-name_text">${row.name}</span><br>
-          <span class="m-content_text">${row.エリア}</span><br>
-          <span class="m-content_text">${row.height}</span><br>
-          <a href="${row.googlemaplink}" target="_blank">
-            <img class="g_map_logo" src="/img/g_map_logo.jpg" alt="Googlemap" />
-          </a><br>
-          <a href="${row.YAMAP}" target="_blank">
-            <img class="yamap-logo" src="/img/yamap-logo.png" alt="YAMAP" />
-          </a>
-        `);
+      const marker = L.marker([Number(row.緯度), Number(row.経度)], { 
+        icon: MountainIcon 
+      }).bindPopup(`
+        <div class="popup-image_wrapper">
+          <img class="popup-image" src="${row.画像}" />
+        </div>
+        <br>
+        <span class="m-name_text">${row.name}</span><br>
+        <span class="m-content_text">${row.エリア}</span><br>
+        <span class="m-content_text">${row.height}</span><br>
+        <a href="${row.googlemaplink}" target="_blank">
+          <img class="g_map_logo" src="/img/g_map_logo.jpg" alt="Googlemap" />
+        </a><br>
+        <a href="${row.YAMAP}" target="_blank">
+          <img class="yamap-logo" src="/img/yamap-logo.png" alt="YAMAP" />
+        </a>
+      `);
       marker.addTo(map);
     }
   });
 
-  return map; // 地図インスタンスを返す
+  return map;
 };
 
 export default initializeMap;
