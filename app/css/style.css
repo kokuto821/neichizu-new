@@ -71,6 +71,8 @@ li {
 }
 
 .h2-title_text {
+  display: flex;
+  flex-direction: row;
   font-family: "M PLUS Rounded 1c";
   padding: 0;
   margin: 0;
@@ -381,6 +383,8 @@ p {
     padding: 0 4%;
   }
   .h2-title_text {
+    display: flex;
+    flex-direction: row;
     font-family: "M PLUS Rounded 1c";
     padding: 0;
     margin: 0;
