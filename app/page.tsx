@@ -1,41 +1,12 @@
-import Image from 'next/image';
-import Link from 'next/link';
+import Image from "next/image";
+import Link from "next/link";
+import { Header } from "./components/molecules/header";
+import { Footer } from "./components/molecules/footer";
 
 export default function Home() {
   return (
     <div className="wrapper">
-      <header id="header">
-        <h1 className="h1-title_text">
-          <Image src="/img/mountain.png" width={30} height={30} alt="Mountain icon" />
-          <Link href="/">ねいちず-NatureMaps</Link>
-        </h1>
-        <nav className="pc-nav">
-          <ul>
-            <li>
-              <Link href="/">TOP</Link>
-            </li>
-            <li>
-              <Link href="/other_list">OTHERS</Link>
-            </li>
-          </ul>
-        </nav>
-        <nav className="sp-nav">
-          <ul>
-            <li>
-              <Link href="/">TOP</Link>
-            </li>
-            <li>
-              <Link href="/other_list">OTHERS</Link>
-            </li>
-            <li className="close">
-              <span>閉じる</span>
-            </li>
-          </ul>
-        </nav>
-        <div id="hamburger">
-          <span></span>
-        </div>
-      </header>
+      <Header />
 
       <div className="map_title">
         <h2 className="h2-title_text">トップページ</h2>
@@ -45,8 +16,13 @@ export default function Home() {
         <div className="white_back">
           <div className="white_back_inner">
             <div className="white_back_inner_eyecatch">
-              <Link href="/hyakumeizan.php">
-                <Image src="/img/hyakumeizan-eyecatch.webp" alt="百名山マップ" width={500} height={300} />
+              <Link href="/hyakumeizan">
+                <Image
+                  src="/img/hyakumeizan-eyecatch.webp"
+                  alt="百名山マップ"
+                  width={500}
+                  height={300}
+                />
               </Link>
               <p className="white_inner_map-title">
                 <Link href="/hyakumeizan" className="link_url">
@@ -69,7 +45,12 @@ export default function Home() {
             </div>
             <div className="white_back_inner_eyecatch">
               <Link href="/geopark">
-                <Image src="/img/geopark-eyecatch.webp" alt="ジオパークマップ" width={500} height={300} />
+                <Image
+                  src="/img/geopark-eyecatch.webp"
+                  alt="ジオパークマップ"
+                  width={500}
+                  height={300}
+                />
               </Link>
               <p className="white_inner_map-title">
                 <Link href="/geopark" className="link_url">
@@ -97,18 +78,36 @@ export default function Home() {
             <div className="white_back_inner_eyecatch">
               <p className="map-eyecatch_block">
                 <Link href="/tokyo-green">
-                  <Image src="/img/tokyo-green_eyecatch.webp" alt="東京23区の緑被分布図" width={500} height={300} />
+                  <Image
+                    src="/img/tokyo-green_eyecatch.webp"
+                    alt="東京23区の緑被分布図"
+                    width={500}
+                    height={300}
+                  />
                 </Link>
               </p>
               <div className="white_inner_map-title">
-                <Link href="/tokyo-green" className="link_url" style={{ fontSize: '1rem' }}>
-                  -東京23区の緑被分布図<br />(1984-2023)-
+                <Link
+                  href="/tokyo-green"
+                  className="link_url"
+                  style={{ fontSize: "1rem" }}
+                >
+                  -東京23区の緑被分布図
+                  <br />
+                  (1984-2023)-
                 </Link>
               </div>
               <div className="white_back_inner_info">
-                <p>卒業研究で作成した、衛星画像から作成した東京都23区の年代別の緑被分布図です。</p>
                 <p>
-                  <a className="link_url" href="#" target="_blank" rel="noopener noreferrer">
+                  卒業研究で作成した、衛星画像から作成した東京都23区の年代別の緑被分布図です。
+                </p>
+                <p>
+                  <a
+                    className="link_url"
+                    href="#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     研究内容
                   </a>
                 </p>
@@ -120,9 +119,7 @@ export default function Home() {
         <div className="space"></div>
       </div>
 
-      <footer className="foot_nav">
-        <p className="foot_nav_p">@naturemap since2023</p>
-      </footer>
+      <Footer />
     </div>
   );
 }
