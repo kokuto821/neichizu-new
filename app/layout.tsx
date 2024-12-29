@@ -23,12 +23,37 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+<html lang="ja">
+  <head>
+    <meta charSet="utf-8" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>ねいちず-NatureMaps-</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    {/* faviconの読み込み */}
+    <link rel="icon" href="img/mountain.ico" />
+    {/* cssの読み込み */}
+    <link rel="stylesheet" href="css/style.css" />
+    {/* fontの読み込み */}
+    <link
+      href="https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c"
+      rel="stylesheet"
+    />
+    {/* jQueryの読み込み */}
+    <script
+      src="https://code.jquery.com/jquery-2.2.4.min.js"
+      integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+      crossOrigin="anonymous"
+    ></script>
+
+    {/* スマホナビの表示・非表示 */}
+  </head>
+  <body
+    className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+  >
+    {children}
+  </body>
+</html>
   );
 }
