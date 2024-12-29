@@ -1,7 +1,6 @@
 // app/feature/map/hyakumeizan/MapComponent.tsx
 "use client";
 
-import { useRef } from "react";
 import Script from "next/script";
 import useMap from "./useMap"; // カスタムフックをインポート
 
