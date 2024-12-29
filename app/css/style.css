@@ -37,6 +37,8 @@ header {
 }
 
 .h1-title_text {
+  display: flex;
+  flex-direction: row;
   font-family: "M PLUS Rounded 1c";
   margin: 0;
   padding: 0;
@@ -161,8 +163,6 @@ p {
   justify-content: center;
 }
 .content .white_back .white_back_inner_eyecatch {
-  display: flex;
-  flex-direction: row;
   margin: 2.5%;
   overflow: hidden;
   max-width: 30vw;
