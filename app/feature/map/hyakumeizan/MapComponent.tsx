@@ -6,14 +6,14 @@ import Script from "next/script";
 import useMap from "./useMap"; // カスタムフックをインポート
 
 const MapComponent = () => {
-  const mapRef = useRef(null); // マップIDを管理するためのref
+  const mapId = "map"; // マップIDを定義
 
-  useMap("map"); // カスタムフックを呼び出す
+  useMap(mapId); // カスタムフックを呼び出す
 
   return (
     <div>
       <div
-        id="map"
+        id={mapId}
         style={{ position: "absolute", top: 0, bottom: 0, right: 0, left: 0 }}
       ></div>
 
@@ -54,3 +54,4 @@ const MapComponent = () => {
 };
 
 export default MapComponent;
+
