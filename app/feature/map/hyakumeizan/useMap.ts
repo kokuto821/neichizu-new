@@ -1,15 +1,15 @@
 // app/feature/map/hyakumeizan/useMap.ts
 import { useEffect } from "react";
 import Papa from "papaparse";
-import $ from "jquery"; // jQueryを使用するためにインポート
+import $ from "jquery";
 import L from "leaflet";
 
-const useMap = (mapId: string) => {
+const useMap = (mapElement: HTMLElement) => {
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const map = L.map(mapId, {
-        center: [35, 139], // 初期位置（緯度、経度）
-        zoom: 5.5, // ズームレベル
+      const map = L.map(mapElement, {
+        center: [35, 139],
+        zoom: 5.5,
         scrollWheelZoom: true,
         zoomControl: false,
       });
@@ -74,7 +74,7 @@ const useMap = (mapId: string) => {
         map.remove(); // コンポーネントがアンマウントされたときにマップをクリーンアップ
       };
     }
-  }, [mapId]);
+  }, [mapElement]);
 };
 
 export default useMap;

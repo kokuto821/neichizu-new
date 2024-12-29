@@ -1,22 +1,26 @@
 // app/feature/map/hyakumeizan/MapComponent.tsx
 "use client";
 
-import { useEffect } from "react";
-import Script from "next/script";
-import useMap from "./useMap"; // カスタムフックをインポート
+import { useEffect, useRef } from "react";
 
+// Declare $ property on the window object
 declare global {
   interface Window {
     $: any;
+    Papa: any;
   }
 }
+import Script from "next/script";
+import useMap from "./useMap"; // カスタムフックをインポート
 
 const MapComponent = () => {
+  const mapRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     // Leaflet, jQuery, PapaParseのスクリプトが読み込まれた後にマップを初期化
     const initMap = () => {
-      if (typeof window !== "undefined" && window.L && window.$ && window.Papa) {
-        useMap("map");
+      if (typeof window !== "undefined" && window.L && window.$ && window.Papa && mapRef.current) {
+        useMap(mapRef.current);
       }
     };
 
@@ -42,7 +46,7 @@ const MapComponent = () => {
   return (
     <div>
       <div
-        id="map"
+        ref={mapRef}
         style={{ position: "absolute", top: 0, bottom: 0, right: 0, left: 0 }}
       ></div>
 
