@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<title>自販機マップ</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- faviconの読み込み -->
+<link rel="icon" href="img/faviconjihanki.ico">
+<!-- cssの読み込み -->
+<link rel="stylesheet" href="css/styles.css">
+<!-- fontの読み込み -->
+<link href="https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c" rel="stylesheet">
+<!-- jQueryの読み込み -->
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+<!-- スマホナビの表示・非表示 -->
+<script>
+$(function() {
+const hum = $('#hamburger, .close')
+const nav = $('.sp-nav')
+hum.on('click', function(){
+    nav.toggleClass('toggle');
+});
+});
+</script> 
+
+</head>
+
+
+<body>
+<header id="header">
+<h1><img src="img/jihanki.png" width="30px" height="30px" ;><a href="#">自動販売機マップ</a></h1>
+<nav class="pc-nav"><ul>
+<li><a href="index.html">TOP</a></li>
+<li><a href="Jihanki-info.html">INFO</a></li>
+<li><a href="myprof.html">PROFILE</a></li>
+</ul>
+</nav>
+<nav class="sp-nav">
+<ul>
+<li><a href="index.html">TOP</a></li>
+<li><a href="Jihanki-info.html">INFO</a></li>
+<li><a href="myprof.html">PROFILE</a></li>
+<li class="close"><span>閉じる</span></li>
+</ul>
+</nav> 
+<div id="hamburger">
+<span></span>
+</div>
+</header> 
+<!-- スマホナビの表示・非表示 -->
+<p></p>
+<br>
+<div class="imgflame">
+</div>   
+<!--<div class="usiro">
+<h2></h2>
+<p style="padding-left:5%;padding-right:5%;"></p></div>-->
+<main> 
+<!---->
+<h1 style = "text-align: center; padding-top: 25px;color:#ffffff;">Information</h1>
+<div class="usiro">
+<h2>自動販売機マップの制作状況</h2>
+<p style="padding-left:5%;padding-right:5%;">このページでは私が自動販売機マップをどういう動機で、何を考え、どう制作、実現したのかということについて記しました。
+</p></div>
+<div class="usiro">
+<h2>使用技術</h2>
+<img src="img/blan5.jpeg" width="50%" height="50%" class="effect"><br>
+<p style="padding-left:5%;padding-right:5%;">
+言語<br>
+html<br> css<br> javascript<br><br> 
+フレームワーク<br>
+jquery(ヘッダーで使用) <br>
+leaflet(GIS系のフレームワークの中で参考になる日本語の資料が多かったのと動作が軽いことを理由に採用)<br><br>
+デザイン<br>
+ibispaint(ロゴなどのデザイン)<br>
+gimp(無料で使えるphotoshop みたいなもの、画像の切り抜き等で使用)<br>
+</p></div>
+<div class="usiro">
+<h2>なぜ作ろうと思ったか</h2>
+<div class="ImgBox"><img src="img/bj1.jpeg" width="50%" height="50%"></div><br>
+<p style="padding-left:5%;padding-right:5%;">
+自動販売機は私達が暮らすあらゆる場所に溢れています。一見ランダムに配置されてるように見える自動販売機の分布にどのような特徴があるのか気になったので作りました。<br><br>
+また、インターネット上には全ての自動販売機会社の自動販売機が網羅された分布図が少なく実現できたら面白いものができるのではないかと思ったからです。</p></div>
+
+<h1 style = "text-align: center; padding-top: 25px;color:#ffffff;">工夫した・心がけた点</h1>
+
+<div class="usiro">
+<h2 style="padding-left:5%;padding-right:5%;">レスポンシブ化</h2>
+<div class="ImgBox"><img src="img/blan3.jpeg" width="50%" height="50%"><br>
+<p style="padding-left:5%;padding-right:5%;">現在、webサービスはスマホで利用する人が大半を占めていると思います。そのため、スマホの画面サイズを軸にレスポンシブ化することを心がけました。<br><br>スマホやタブレットなど小さい画面サイズの方では大まか上手くいったと思いますが、PCだと全画面にした場合、拡大比率によってはフォントなどのサイズと画像のサイズのバランスが崩れてしまうことがあり、まだまだ課題が残っている分野だと感じました。<br><br>
+画面によって挙動や見え方などが変わってくるため、どのページでも同じように見えるようにすることが想像以上に難しかったです。</p>
+
+<h2 style="padding-left:5%;padding-right:5%;">わかりやすく快適に</h2>
+<div class="ImgBox"><img src="img/blan4.jpeg" width="50%" height="50%">
+<p style="padding-left:5%;padding-right:5%;">シンプルで無駄のないデザインを軸にどんな人でも使い方が理解できるように、わかりやすい言葉を使ったり、画像を使うことで説明をできるだけ簡潔にして使い方が簡単に理解できるように心がけました。<br><br>
+cssの記述に関しては、制作する中で何度も調整することが多かったためhtmlのファイルに書かれていたり、cssのファイルに書かれていたりとごちゃごちゃになってしまいましたが、何も記述しないことに比べれば、ブラウザではとても見やすいデザインになったのではないかと思います。</p>
+<h2 style="padding-left:5%;padding-right:5%;">ポップな雰囲気にする</h2>
+<div class="ImgBox"><img src="img/bj2.jpeg" width="50%" height="50%"></div><br>
+<p style="padding-left:5%;padding-right:5%;">自動販売機は同じ場所で微動だにせず、機械音と照明を静かに奏でながら購入者を忍耐強く待ち続けているように感じさせる機械です。<br><br>そのため、なにか厳格で硬派なイメージを持ってしまうかもしれません。
+最近は見た目が華やかな自動販売機が登場していますが、まだまだそのようなイメージは払拭できていないように感じます。<br><br>そのような状況下で私はあえてイメージとは真逆のポップなデザインにしてみることにしました。<br><br>
+パステルカラーを多用したり、一部手書きのデザインを取り入れたりし、動きの部分では自動販売機の画像をタップをすると画像が飛び出して見えるような演出を加えるといったことをすることによって、技術的にはまだまだ乏しいものの、全体的少しワクワクするような雰囲気を与えることができたのではと思います。<br><br>
+個人で制作したものなので利用する人はほぼいないと思いますが、楽しく買い物できるきっかけになるようなコンテンツを作ることを心がけることができたのではないかと感じました。</p></div>
+
+
+
+
+
+
+
+
+
+</main>
+
+<footer id="footer02" class="outer-block">
+    <div class="logo"></div>
+    <div class="cont"></div><!-- /inner-block -->
+    <div class="copyright">
+        --COPYRIGHT © Jihankimap Inc. All rights Reserved.--<br><br>
+    </div>
+</footer>
+    
+    
+</body>
+</html>
