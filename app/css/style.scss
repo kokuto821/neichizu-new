@@ -147,7 +147,9 @@ p{
    .white_back_inner{
       display: flex;
       justify-content: center;
-      .white_back_inner_eyecatch{
+      &_eyecatch{
+         display: flex;
+         flex-direction: row;
          margin: 2.5%;
          overflow: hidden;
          max-width: 30vw;

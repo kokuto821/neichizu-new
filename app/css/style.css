@@ -160,21 +160,23 @@ p {
   display: flex;
   justify-content: center;
 }
-.content .white_back .white_back_inner .white_back_inner_eyecatch {
+.content .white_back .white_back_inner_eyecatch {
+  display: flex;
+  flex-direction: row;
   margin: 2.5%;
   overflow: hidden;
   max-width: 30vw;
 }
-.content .white_back .white_back_inner .white_back_inner_eyecatch .white_inner_map-title {
+.content .white_back .white_back_inner_eyecatch .white_inner_map-title {
   white-space: nowrap;
   font-size: 1.5rem;
   margin-bottom: 5px;
 }
-.content .white_back .white_back_inner .white_back_inner_eyecatch img {
+.content .white_back .white_back_inner_eyecatch img {
   height: auto;
   width: 30vw;
 }
-.content .white_back .white_back_inner .white_back_inner_eyecatch .white_back_inner_info {
+.content .white_back .white_back_inner_eyecatch .white_back_inner_info {
   padding: 0% 5% 0% 5%;
 }
 @media screen and (max-width: 680px) {
