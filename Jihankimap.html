@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>自販機マップ</title>
+<!-- leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.0/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.3.0/dist/leaflet.js"></script>
+<!-- faviconの読み込み -->
+<link rel="icon" href="img/faviconjihanki.ico">
+<!-- Plugin Icon.Pulse -->
+<link rel="stylesheet" href="css/L.Icon.Pulse.css" >
+<script src="js/L.Icon.Pulse.js" ></script>
+<!-- plugin -->
+    <script src="js/Leaflet.LocationShare.js"></script>
+<!-- plugin -->
+<!-- Load jQuery and PapaParse to read data from a CSV file -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+<!-- plugin -->
+<link rel="stylesheet" href="css/L.VisualClick.css" />
+<script src="js/L.VisualClick.js"></script>
+<!-- plugin -->
+
+
+<script>
+//自販機の種類を定義
+var nl = {
+  cola:"　コカ・コーラ ",coke:"　コークオン ",kiri:"　キリン　",asa:"　アサヒ　",sun:"　サントリー　",ito:"　伊藤園　",dydo:"　Dydo　",yaku:"　ヤクルト　",good:"　グッドドリンク　",pokka:" ポッカサッポロ  "
+};
+var sp = {
+  two:"　格安自販機（twodown）　",mira:"　格安自販機（ミラクルプライス）　",pokka:"　格安自販機（ポッカサッポロ）　",yasu:"　格安自販機(その他)　",
+  dashi:"　だしの自販機 ",seventeen:"　セブンティーンアイス ",tabaco:"　タバコ　",itothin:"　伊藤園（小）　",colathin:"　コカ・コーラ（小）",yasukiri:"　格安自販機（キリン）　",otsuka:"　otsuka　",wel:"伊藤園ウェルネス",
+  yasuasa:"　格安アサヒ　",
+}
+//自販機の座標と種類をリスト化　{pos: [], name:},
+var List = [
+      //{pos: [], name: },
+      
+      {pos: [35.743111,139.603365], name: nl.sun},        
+      {pos: [35.743704,139.602732], name:nl.ito},
+      {pos: [35.744169,139.602598], name:nl.sun},
+      {pos: [35.744435,139.602195], name:nl.asa},
+      {pos: [35.745114,139.601332], name:nl.kiri},      
+      {pos: [35.745406,139.599465], name:nl.dydo},
+      {pos: [35.745693,139.596885], name:nl.dydo},      
+      {pos: [35.745353,139.597550], name:nl.dydo},      
+      {pos: [35.747696,139.597314], name:nl.ito},            
+      {pos: [35.748759,139.598381], name:nl.kiri},
+      {pos: [35.748279,139.600339], name:nl.asa},
+      {pos: [35.747139,139.602893], name:nl.dydo},
+      {pos: [35.746712,139.604360], name:nl.ito},
+      {pos: [35.746573,139.604489], name:nl.sun},
+      {pos: [35.746338,139.604317], name:sp.two + nl.coke},
+      {pos: [35.746582,139.603459], name:nl.dydo},
+      {pos: [35.746312,139.603115], name:nl.kiri},      
+      {pos: [35.745388,139.603424], name:nl.coke},      
+      {pos: [35.743960,139.603864], name:nl.ito},     
+      {pos: [35.744331,139.603697], name:nl.dydo},      
+      {pos: [35.744444,139.604550], name:nl.dydo},      
+      {pos: [35.742508,139.603799], name:nl.sun},
+      {pos: [35.744273,139.604285], name:nl.ito},
+      {pos: [35.743299,139.601294], name:nl.dydo},     
+      {pos: [35.744287,139.599610], name:nl.coke},     
+      {pos: [35.746094,139.599690], name:nl.cola},      
+      {pos: [35.745206,139.601530], name:nl.ito},
+      {pos: [35.745262,139.601477], name:nl.coke},
+      {pos: [35.743377,139.604443], name:nl.sun},
+      {pos: [35.742776,139.604481], name:nl.sun},
+      
+      {pos: [35.742226,139.603767], name:nl.coke},
+      {pos: [35.742100,139.603676], name:nl.coke},
+      {pos: [35.741895,139.603408], name:nl.sun},      
+      {pos: [35.742607,139.602598], name:nl.kiri},
+      {pos: [35.742728,139.601530], name:nl.kiri},
+      {pos: [35.741618,139.602013], name:nl.cola},
+      {pos: [35.74300760968486,139.6049917891939], name: nl.kiri},
+      {pos: [35.741890271881175,139.60544032000777], name:nl.coke },
+      {pos: [35.739828157727715,139.6068572275807], name:nl.sun },
+      {pos: [35.73984591759344,139.60783484404868], name:nl.sun },
+      {pos: [35.740106720510624,139.60801731808073], name:nl.good },
+      {pos: [35.740880,139.607922], name:nl.asa },
+      {pos: [35.74266579454227,139.60828591619742], name:nl.kiri },
+      {pos: [35.7432498889117,139.6086846345286], name:nl.dydo },
+      {pos: [35.743421679395944,139.61157719617674], name:nl.ito },
+      {pos: [35.74484400297434,139.61128137349957], name:nl.sun },
+      {pos: [35.744737,139.611205], name:nl.asa },
+      {pos: [35.74450952469906,139.6092534811605], name:nl.dydo },
+      {pos: [35.745355300638586,139.608884845059], name:nl.dydo },
+      {pos: [35.744885469350045, 139.60805099383276], name:nl.asa },
+      {pos: [35.74429532516351,139.60843096500227], name:nl.asa },
+      {pos: [35.743708,139.607469], name:nl.ito },
+      {pos: [35.7437573, 139.6053157], name:nl.ito},
+      {pos: [35.7436387, 139.6053499], name:nl.ito },
+      {pos: [35.743304,139.605462], name:nl.ito },
+      {pos: [35.7427962, 139.6059544], name:nl.cola+nl.sun },
+      {pos: [35.7388641, 139.6056134], name:nl.pokka + nl.sun },
+      {pos: [35.7368663, 139.6031924], name:nl.kiri },
+      {pos: [35.7361139, 139.6002258], name:nl.dydo },
+      {pos: [35.7358934, 139.6001269], name:nl.ito },
+      {pos: [35.7358360, 139.6005728], name:nl.coke + nl.sun },
+      {pos: [35.7381618, 139.5988133], name:nl.ito },
+      {pos: [35.7402278, 139.5989582], name:nl.sun },
+      {pos: [35.7414603, 139.5992304], name:nl.sun },
+      {pos: [35.7424721, 139.5987674], name:nl.pokka },
+      {pos: [35.7426773, 139.5994115], name:nl.sun },
+      {pos: [35.7427352, 139.5995962], name:nl.ito },
+      {pos: [35.7423322, 139.6000398], name:nl.ito },
+      {pos: [35.7415547, 139.6024081], name:nl.asa },
+      {pos: [35.7415953, 139.6026033], name:nl.dydo },
+
+
+      {pos: [35.742967,139.603118], name: nl.cola + nl.kiri},
+      {pos: [35.745475,139.597319], name:nl.asa + nl.sun},
+      {pos: [35.746420,139.596053], name:nl.ito + nl.asa},
+      {pos: [35.747809,139.598660], name:nl.kiri + nl.sun},
+      {pos: [35.745654,139.603327], name:nl.coke + nl.kiri},
+      {pos: [35.745014,139.604518], name:nl.asa + nl.dydo},
+      {pos: [35.744727,139.603955], name:nl.coke + nl.kiri},
+      {pos: [35.744422,139.604701], name:nl.coke + nl.ito},
+      {pos: [35.743664,139.603907], name:nl.ito + nl.yaku},
+      {pos: [35.742232,139.603236], name:nl.cola +nl.cola},
+      {pos: [35.744250,139.599631], name:nl.kiri + nl.asa},
+      {pos: [35.745662,139.600447], name:nl.asa + nl.dydo},
+      {pos: [35.744182,139.602324], name:nl.sun + nl.asa},
+      {pos: [35.740508,139.606095], name: nl.asa+ nl.coke },
+      {pos: [35.74330439063087,139.60825306471057], name: nl.ito+ nl.coke },
+      {pos: [35.743736419860035,139.60886883562395], name: nl.ito+ nl.ito},
+      {pos: [35.7449193, 139.6055366], name:nl.dydo },
+      {pos: [35.7446374, 139.6054169], name:nl.sun + sp.yasukiri },
+      {pos: [35.7415689, 139.6139936], name:nl.ito },
+      {pos: [35.7421649, 139.6124718], name:nl.kiri },
+      {pos: [35.7420247, 139.6115340], name:nl.sun + sp.otsuka },
+      {pos: [35.7422645, 139.6110938], name:nl.coke + nl.ito },
+      {pos: [35.7466124, 139.6061864], name:nl.sun +nl.asa },
+      {pos: [35.7461759, 139.6056965], name:nl.sun + nl.asa },
+      {pos: [35.7471191, 139.6055671], name:nl.sun },
+      {pos: [35.7480940, 139.6054732], name:nl.ito },
+      {pos: [35.7484257, 139.6051909], name:nl.sun + nl.ito },
+      {pos: [35.7482396, 139.6054260], name:nl.dydo },
+      {pos: [35.7495925, 139.6074651], name:nl.ito },
+      {pos: [35.7502072, 139.6068053], name:nl.ito },
+      {pos: [35.7502205, 139.6053804], name:nl.asa },
+      {pos: [35.7502600, 139.6039031], name:nl.dydo },
+      {pos: [35.7497759, 139.6036135], name:nl.sun },
+      {pos: [35.7500975, 139.6008072], name:nl.dydo },
+      {pos: [35.7491582, 139.6012528], name:nl.cola },
+      {pos: [35.7505158, 139.5989421], name:nl.asa },
+      {pos: [35.749987205684704, 139.6075919621896], name:nl.dydo },
+      {pos: [35.749819927380756, 139.6076098691393], name:nl.sun },
+      
+    ]; 
+
+var yasulist =  [
+      {pos: [35.742595,139.603735], name: sp.yasu},
+      {pos: [35.745158,139.601090], name:sp.two},
+      {pos: [35.747239,139.597888], name:sp.yasu},     
+      {pos: [35.744206,139.599733], name:sp.pokka},
+      {pos: [35.744841,139.598821], name:sp.yasu},
+      {pos: [35.744744,139.601149], name:sp.yasu},
+      {pos: [35.743198,139.604422], name:sp.pokka},
+      {pos: [35.741609,139.605248], name:sp.two},
+      {pos: [35.742467,139.602930], name:sp.pokka},
+      {pos: [35.741818,139.601439], name:sp.yasu},
+      {pos: [35.743391409866916,139.60419082210683], name:sp.pokka },
+      {pos: [35.74076496674625, 139.60803890230093], name:sp.pokka },
+      {pos: [35.74325934152091,139.60823625147006], name:"　canshop　"},
+      {pos: [35.743127,139.608657], name:"　スキマデパート　"},
+      {pos: [35.743403615381844,139.60843124500397], name:sp.yasukiri },
+      {pos: [35.743442089330166,139.60846373824367], name:sp.yasukiri },
+      {pos: [35.744472,139.609472], name:sp.otsuka },
+      {pos: [35.745355300638586,139.608884845059], name:sp.yasukiri },
+      {pos: [35.744988,139.608053], name:"　ワンコイン　" },
+      {pos: [35.74429863541674,139.6082477804525], name:sp.yasukiri},
+      {pos: [35.74433337900391,139.60856365052948], name:"　ハッピープライス　" },
+      {pos: [35.7421578, 139.6125000], name:sp.yasu },
+      {pos: [35.7419991, 139.6121234], name:sp.two },
+      {pos: [35.7481452, 139.6077387], name:sp.yasu },
+      {pos: [35.7502619, 139.6041398], name:sp.two },
+      {pos: [35.7503179, 139.6011378], name:sp.yasu },
+      {pos: [35.74043163171929, 139.60434147915828], name:sp.yasukiri },
+      {pos: [35.7491946, 139.6012654], name:sp.yasuasa + sp.pokka },
+      {pos: [35.74858893913814, 139.60785266292763], name:sp.yasuasa + sp.yasukiri },
+      {pos: [35.74863138769407, 139.60784729850954], name:sp.pokka + "格安（サントリー）" },
+      {pos: [35.740142,139.608429], name:"　ベストチョイス　"+"　ベストチョイス　" },
+      {pos: [35.744274,139.603821], name:sp.yasu + sp.mira},     
+      {pos: [35.7434787, 139.6058092], name:sp.yasu },
+      {pos: [35.7434332, 139.6054374], name:sp.wel },
+      {pos: [35.7428093, 139.6059969], name:sp.wel+sp.yasu },
+      {pos: [35.7430324, 139.6076006], name:sp.yasu },
+      {pos: [35.7430572, 139.6070487], name:sp.two },
+      {pos: [35.7370977, 139.6053979], name:sp.two },
+      {pos: [35.7364081, 139.6032631], name:sp.pokka },
+      {pos: [35.7358210, 139.6005390], name: "  全農 "},
+      {pos: [35.7381735, 139.5988485], name:sp.yasu },
+];
+var doubleNlist = [
+      //{pos: [], name: + },
+      
+];
+var doubleYlist = [
+      //{pos: [], name: + },
+      
+];
+
+var splist = [
+      {pos: [35.743033,139.606626], name: sp.dashi},
+      {pos: [35.743148,139.604448], name:sp.colathin},
+      {pos: [35.745584,139.603359], name:sp.tabaco + sp.tabaco + sp.itothin},
+      {pos: [35.74053817897638,139.6060631611753], name:sp.seventeen },
+      {pos: [35.742457,139.603998], name:sp.tabaco + sp.tabaco},
+];
+
+$.get('./data.csv', function(csvString) {
+
+// Use PapaParse to convert string to array of objects
+var data = Papa.parse(csvString, {header: true, dynamicTyping: true}).data;
+
+// For each row in data, create a marker and add it to the map
+// For each row, columns `Latitude`, `Longitude`, and `Title` are required
+for (var i in data) {
+  var row = data[i];
+
+  var marker = L.marker([row.Latitude, row.Longitude], {
+    opacity: 1
+  }).bindPopup(row.Title+'<br>'+row.Latitude);
+  
+  marker.addTo(map);
+}
+
+});
+
+
+
+function init() {
+      //地図を表示するdiv要素のidを設定
+      var map = L.map('mapcontainer', 
+      //ズームコントロールを非表示で地図を作成
+      { zoomControl: false });
+      //地図の中心とズームレベルを指定
+      map.setView([35.743845,139.605910], 15);
+      //表示するタイルレイヤのURLとAttributionコントロールの記述を設定して、地図に追加する
+      L.tileLayer('http://tile.openstreetmap.jp/{z}/{x}/{y}.png', {
+        attribution: "<a href='http://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors"
+      }).addTo(map);
+      //スケールコントロールを最大幅200px、右下、m単位で地図に追加
+      L.control.scale({ maxWidth: 200, position: 'bottomright', imperial: false }).addTo(map);
+      //ズームコントロールを左下で地図に追加
+      // L.control.zoom({ position: 'bottomleft' }).addTo(map);
+      
+      
+      //オープンストリートマップのタイル
+      var osm = L.tileLayer('http://tile.openstreetmap.jp/{z}/{x}/{y}.png',
+        {  attribution: "<a href='http://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
+      //googlemapのタイル
+      var gmap = L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}',
+        {attribution: "<a href='https://developers.google.com/maps/documentation' target='_blank'>Google Map</a>"});
+      //地理院地図の標準地図タイル
+      var gsi =L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', 
+        {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
+      //地理院地図の淡色地図タイル
+      var gsipale = L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
+        {attribution: "<a href='http://portal.cyberjapan.jp/help/termsofuse.html' target='_blank'>地理院タイル</a>"});
+      //地理院地図航空写真のタイル  
+      var gsikouku =L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg');    
+      //baseMapsオブジェクトのプロパティにタイルを設定
+      var baseMaps = {
+        "オープンストリートマップ"  : osm,
+        "Google マップ": gmap,
+        "航空写真" : gsikouku,
+        "地理院地図" : gsi,
+        "淡色地図" : gsipale
+      };
+      
+    //mapiconの設定
+      //自販機のアイコン
+      var sampleIcon = L.icon({
+          iconUrl:"img/jihanki.png",
+          iconRetinaUrl:"img/jihanki.png",
+          iconSize:[50,50],
+          iconAnchor:[25,25],
+          popupAnchor:[0,-25],
+      });
+      var yasuIcon = L.icon({
+          iconUrl:"img/jihankired.png",
+          iconRetinaUrl:"img/jihankired.png",
+          iconSize:[50,50],
+          iconAnchor:[25,25],
+          popupAnchor:[0,-25],
+      });
+      var rareIcon = L.icon({
+          iconUrl:"img/jihankirare.png",
+          iconRetinaUrl:"img/jihankirare.png",
+          iconSize:[50,50],
+          iconAnchor:[25,25],
+          popupAnchor:[0,-25],
+      });
+      var doubleNIcon = L.icon({
+          iconUrl:"img/jihanki_double.png",
+          iconRetinaUrl:"img/jihanki_double.png",
+          iconSize:[50,50],
+          iconAnchor:[25,25],
+          popupAnchor:[0,-25],
+      });
+      var doubleYIcon = L.icon({
+          iconUrl:"img/jihankired_double.png",
+          iconRetinaUrl:"img/jihankired_double.png",
+          iconSize:[50,50],
+          iconAnchor:[25,25],
+          popupAnchor:[0,-25],
+      });
+    //現在地のアイコン  
+    var marker;
+map.on("locationfound", function(location) {
+    if (!marker){
+        var pulsingIcon = L.icon.pulse({
+            iconSize:[20,20]
+          ,color:'#57c6fd'
+          ,fillColor:'#57c6fd'
+          ,heartbeat: 2
+        });
+        L.marker(location.latlng, {icon:pulsingIcon}).addTo(map);
+    }
+});
+
+map.on('locationerror', function(e) {
+    alert('現在地が取得できませんでした。');
+});
+
+map.locate({
+    watch: false,
+    locate: true,
+    setView: true,
+    enableHighAccuracy: true
+});  
+  
+//////////////上map基本設定
+      //マーカー全体が入るボックスを作る
+      var lbound = L.latLngBounds(List[0].pos, List[0].pos);
+        //markerListの設定でマーカーを追加
+        for (var num in List) {
+          var mk = List[num];
+          var popup = L.popup().setContent(mk.name);
+          L.marker(mk.pos,{icon: sampleIcon,title: mk.name }).bindPopup(popup).addTo(map);
+          //マーカー全体が入るボックスを広げる
+          lbound.extend(mk.pos);
+        }
+      var kbound = L.latLngBounds(yasulist[0].pos, yasulist[0].pos);
+        //markerListの設定でマーカーを追加
+        for (var num in yasulist) {
+          var mk = yasulist[num];
+          var popup = L.popup().setContent(mk.name);
+          L.marker(mk.pos,{icon: yasuIcon,title: mk.name }).bindPopup(popup).addTo(map);
+          //マーカー全体が入るボックスを広げる
+          kbound.extend(mk.pos);
+        }  
+      var jbound = L.latLngBounds(splist[0].pos, splist[0].pos);
+        //markerListの設定でマーカーを追加
+        for (var num in splist) {
+          var mk = splist[num];
+          var popup = L.popup().setContent(mk.name);
+          L.marker(mk.pos,{icon: rareIcon,title: mk.name }).bindPopup(popup).addTo(map);
+          //マーカー全体が入るボックスを広げる
+          jbound.extend(mk.pos);
+        }   
+    //layersコントロールにbaseMapsオブジェクトを設定して地図に追加
+      //コントロール内にプロパティ名が表示される
+      L.control.layers(baseMaps).addTo(map);
+      osm.addTo(map); 
+  };
+  </script>
+</head>
+<body onload="init()">
+  <div id="mapcontainer" style="position:absolute;top:0;left:0;right:0;bottom:0;"></div>
+  <div id="mapid"></div>
+  
+</body>
+</html>
+
