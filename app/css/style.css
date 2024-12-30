@@ -263,8 +263,12 @@ p {
   margin-bottom: 0.5vh;
 }
 
+.popup-image_wrapper {
+  background-color: #fff;
+}
 .popup-image_wrapper .popup-image {
   width: 100%;
+  height: 20vh;
 }
 
 .leaflet-popup-content {

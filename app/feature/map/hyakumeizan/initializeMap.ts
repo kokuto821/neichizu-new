@@ -116,7 +116,7 @@ const createPopupElement = (row: MountainData): HTMLDivElement => {
     <span class="m-content_text">${row.height}</span><br>
     <a href="${row.googlemaplink}" target="_blank">
       <img class="g_map_logo" src="/img/g_map_logo.jpg" alt="Googlemap" />
-    </a><br>
+    </a>
     <a href="${row.YAMAP}" target="_blank">
       <img class="yamap-logo" src="/img/yamap-logo.png" alt="YAMAP" />
     </a>
