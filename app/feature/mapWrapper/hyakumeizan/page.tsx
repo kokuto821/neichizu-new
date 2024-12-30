@@ -2,17 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Header } from "@/app/components/molecules/header";
-import MapComponent from "../../map/hyakumeizan/MapComponent"; // 正しいパスでインポート
-
-// ビューポート設定を追加
-export const metadata = {
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
-};
+import MapRenderer from "../../map/hyakumeizan/MapRenderer";
 
 const Hyakumeizan = () => {
   return (
@@ -34,7 +24,7 @@ const Hyakumeizan = () => {
       </div>
 
       <div className="map_wrap">
-        <MapComponent /> {/* 地図コンポーネントを直接使用 */}
+        <MapRenderer /> {/* 地図コンポーネントを直接使用 */}
       </div>
 
       <footer className="foot_nav">
