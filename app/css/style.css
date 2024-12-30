@@ -265,10 +265,12 @@ p {
 
 .ol-popup {
   background-color: #fff;
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .popup-image_wrapper {
-  background-color: #fff;
+  padding: 0px;
 }
 .popup-image_wrapper .popup-image {
   width: 100%;
