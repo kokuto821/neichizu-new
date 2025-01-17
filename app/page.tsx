@@ -24,9 +24,8 @@ export default function Home() {
               reference={
                 "https://www.momonayama.net/hundred_mt_list_data/list.html"
               }
-            >
-              日本百名山のマップです
-            </ItemBoxEyecatch>
+              description={"日本百名山のマップです"}
+            />
             <div className="white_back_inner_eyecatch">
               <Link href="/feature/mapWrapper/hyakumeizan">
                 <Image
