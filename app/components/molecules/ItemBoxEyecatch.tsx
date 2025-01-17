@@ -4,7 +4,6 @@ type Props = {
   img: string;
   reference: string;
 };
-
 export const ItemBoxEyecatch: React.FC<Props> = ({
   title,
   url,

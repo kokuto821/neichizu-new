@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Header } from "./components/molecules/header";
 import { Footer } from "./components/molecules/footer";
-import { ItemBoxEyecatch } from "./components/molecules/itemBoxEyecatch";
+import { ItemBoxEyecatch } from "./components/molecules/ItemBoxEyecatch";
 
 export default function Home() {
   return (
