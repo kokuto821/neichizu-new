@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Header } from "./components/molecules/header";
 import { Footer } from "./components/molecules/footer";
+import { ItemBoxEyecatch } from "./components/molecules/itemBoxEyecatch";
 
 export default function Home() {
   return (
@@ -15,6 +16,16 @@ export default function Home() {
       <div className="content">
         <div className="white_back">
           <div className="white_back_inner">
+            <ItemBoxEyecatch
+              title={"百名山マップ"}
+              url={"百名山マップ"}
+              img={"/img/hyakumeizan-eyecatch.webp"}
+              reference={
+                "https://www.momonayama.net/hundred_mt_list_data/list.html"
+              }
+            >
+              日本百名山のマップです
+            </ItemBoxEyecatch>
             <div className="white_back_inner_eyecatch">
               <Link href="/feature/mapWrapper/hyakumeizan">
                 <Image
