@@ -7,14 +7,14 @@ type Props = {
   url: string;
   img: string;
   reference: string;
-  description: string;
+  children: React.ReactNode;
 };
 export const ItemBoxEyecatch: React.FC<Props> = ({
   title,
   url,
   img,
   reference,
-  description,
+  children,
 }) => {
   return (
     <div className="white_back_inner_eyecatch">
@@ -27,7 +27,7 @@ export const ItemBoxEyecatch: React.FC<Props> = ({
         </Link>
       </p>
       <div className="white_back_inner_info">
-        <p>{description}</p>
+        <p>{children}</p>
         <p>
           <Link
             className="link_url"
