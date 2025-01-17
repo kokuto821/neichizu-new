@@ -1,7 +1,12 @@
+import Link from "next/link";
+import Image from "next/image";
+import React from "react";
+
 type Props = {
   title: string;
   url: string;
   img: string;
+  children: React.ReactNode;
   reference: string;
 };
 export const ItemBoxEyecatch: React.FC<Props> = ({
