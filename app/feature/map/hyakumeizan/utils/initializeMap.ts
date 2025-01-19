@@ -67,7 +67,7 @@ export const initializeMap = async (
     finalConfig.mountainIconScale
   );
 
-  const csvFilePath = "app/csv/hyakumeizan.csv";
+  const csvFilePath = "app/geodata/csv/hyakumeizan.csv";
 
   try {
     const response = await fetch(csvFilePath);
