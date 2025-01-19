@@ -1,38 +1,61 @@
-// app/feature/map/hyakumeizan/MapRenderer.tsx
-"use client";
+import { useEffect, useRef, useCallback } from "react";
+import { Map } from "ol";
+import { MapConfig } from "./type/type";
 
-import { useEffect, useRef } from "react";
-import initializeMap from "./initializeMap";
-import { Map } from 'ol';
+type MapInitializer = (
+  element: HTMLDivElement,
+  config?: Partial<MapConfig>
+) => Promise<Map | null>;
 
-const MapRenderer = () => {
+type MapRendererProps = {
+  initializeMap: MapInitializer;
+  config?: Partial<MapConfig>;
+  className?: string;
+  onMapInitialized?: (map: Map) => void;
+  onMapError?: (error: Error) => void;
+};
+
+const MapRenderer: React.FC<MapRendererProps> = ({
+  initializeMap,
+  config,
+  className = "",
+  onMapInitialized,
+  onMapError,
+}) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<Map | null>(null);
-  
-  useEffect(() => {
-    const mapElement = mapRef.current;
-    
-    if (mapElement && !mapInstanceRef.current) {
-      initializeMap(mapElement).then(map => {
-        if (map) mapInstanceRef.current = map;
-      });
-    }
 
-    // クリーンアップ関数
-    return () => {
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.setTarget(undefined);
-        mapInstanceRef.current = null;
-      }
-    };
+  const cleanup = useCallback(() => {
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.setTarget(undefined);
+      mapInstanceRef.current.getOverlays().clear();
+      mapInstanceRef.current = null;
+    }
   }, []);
 
+  useEffect(() => {
+    const mapElement = mapRef.current;
+
+    if (mapElement && !mapInstanceRef.current) {
+      initializeMap(mapElement, config)
+        .then((map) => {
+          if (map) {
+            mapInstanceRef.current = map;
+            onMapInitialized?.(map);
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to initialize map:", error);
+          onMapError?.(error);
+        });
+    }
+
+    return cleanup;
+  }, [config, cleanup, initializeMap, onMapInitialized, onMapError]);
+
   return (
-    <div style={{ width: "100%", height: "100vh" }}>
-    <div
-      ref={mapRef}
-      style={{ position: "absolute", top: 0, bottom: 0, right: 0, left: 0 }}
-    />
+    <div className={`w-full h-screen ${className}`}>
+      <div ref={mapRef} className="absolute inset-0" />
     </div>
   );
 };
