@@ -1,4 +1,4 @@
-import { Overlay } from "ol";
+import { MapBrowserEvent, Overlay } from "ol";
 import { Map } from "ol";
 import { Pixel } from "ol/pixel";
 import { Coordinate } from "ol/coordinate";
@@ -25,11 +25,29 @@ export const createPopup = (row: MountainData): HTMLDivElement => {
   return popupElement;
 };
 export const handleMapClick =
-  (map: Map) => (evt: { pixel: Pixel; coordinate: Coordinate }) => {
-    const feature = map.forEachFeatureAtPixel(evt.pixel, (feature) => feature);
+  (map: Map) => (event: MapBrowserEvent<UIEvent>) => {
+    const feature = map.forEachFeatureAtPixel(
+      event.pixel,
+      (feature) => feature
+    );
+
+    // 全てのポップアップを非表示
     map.getOverlays().forEach((overlay) => overlay.setPosition(undefined));
+
     if (feature) {
       const popup = feature.get("popup") as Overlay;
-      popup.setPosition(evt.coordinate);
+      const coordinate = event.coordinate;
+
+      // ポップアップを表示
+      popup.setPosition(coordinate);
+
+      // ポップアップ要素にクリックイベントを追加
+      const popupElement = popup.getElement();
+      if (popupElement) {
+        popupElement.onclick = () => {
+          // 地図の中心をポップアップの座標に移動
+          map.getView().animate({ center: coordinate, duration: 500 });
+        };
+      }
     }
   };
