@@ -43,7 +43,3 @@ const Hyakumeizan = () => {
 };
 
 export default Hyakumeizan; // デフォルトエクスポート
-
-
-
-
