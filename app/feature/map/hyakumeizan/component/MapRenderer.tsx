@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useRef, useCallback } from "react";
 import { Map } from "ol";
 import { MapConfig } from "../type/type";
