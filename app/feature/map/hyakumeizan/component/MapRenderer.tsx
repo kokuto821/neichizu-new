@@ -1,54 +1,38 @@
+// app/feature/map/hyakumeizan/MapRenderer.tsx
 "use client";
-import { useEffect, useRef, useCallback } from "react";
+
+import { useEffect, useRef } from "react";
 import { Map } from "ol";
-import { MapConfig } from "../type/type";
+import initializeMap from "../utils/initializeMap";
 
-type MapInitializer = (
-  element: HTMLDivElement,
-  config?: Partial<MapConfig>
-) => Promise<Map | null>;
-
-type MapRendererProps = {
-  initializeMap: MapInitializer;
-  config?: Partial<MapConfig>;
-};
-
-export const MapRenderer: React.FC<MapRendererProps> = ({
-  initializeMap,
-  config,
-}) => {
+export const MapRenderer = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<Map | null>(null);
-
-  const cleanup = useCallback(() => {
-    if (mapInstanceRef.current) {
-      mapInstanceRef.current.setTarget(undefined);
-      mapInstanceRef.current.getOverlays().clear();
-      mapInstanceRef.current = null;
-    }
-  }, []);
 
   useEffect(() => {
     const mapElement = mapRef.current;
 
     if (mapElement && !mapInstanceRef.current) {
-      initializeMap(mapElement, config)
-        .then((map) => {
-          if (map) {
-            mapInstanceRef.current = map;
-          }
-        })
-        .catch((error) => {
-          console.error("Failed to initialize map:", error);
-        });
+      initializeMap(mapElement).then((map) => {
+        if (map) mapInstanceRef.current = map;
+      });
     }
 
-    return cleanup;
-  }, [config, cleanup, initializeMap]);
+    // クリーンアップ関数
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.setTarget(undefined);
+        mapInstanceRef.current = null;
+      }
+    };
+  }, []);
 
   return (
-    <div className={`w-full h-screen`}>
-      <div ref={mapRef} className="absolute inset-0" />
+    <div style={{ width: "100%", height: "100vh" }}>
+      <div
+        ref={mapRef}
+        style={{ position: "absolute", top: 0, bottom: 0, right: 0, left: 0 }}
+      />
     </div>
   );
 };

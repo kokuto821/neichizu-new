@@ -17,7 +17,7 @@ export default function Home() {
           <div className="white_back_inner">
             <ItemBoxEyecatch
               title="百名山マップ"
-              url="/hyakumeizan"
+              url="/hyakumeizan/page"
               img="/img/hyakumeizan-eyecatch.webp"
               reference="https://www.momonayama.net/hundred_mt_list_data/list.html"
             >
