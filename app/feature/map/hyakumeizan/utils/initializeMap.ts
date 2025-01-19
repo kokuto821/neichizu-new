@@ -50,7 +50,6 @@ const initializeMap = async (mapElement: HTMLDivElement) => {
       stopEvent: false,
       offset: [0, -50],
     });
-
     map.addOverlay(popup);
     feature.set("popup", popup);
 

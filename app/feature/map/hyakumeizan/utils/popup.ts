@@ -22,8 +22,10 @@ export const createPopup = (row: MountainData): HTMLDivElement => {
   `;
   return popupElement;
 };
+
 export const handleMapClick =
   (map: Map) => (event: MapBrowserEvent<UIEvent>) => {
+    // クリック位置の Feature を取得
     const feature = map.forEachFeatureAtPixel(
       event.pixel,
       (feature) => feature
@@ -33,19 +35,23 @@ export const handleMapClick =
     map.getOverlays().forEach((overlay) => overlay.setPosition(undefined));
 
     if (feature) {
-      const popup = feature.get("popup") as Overlay;
-      const coordinate = event.coordinate;
+      // Feature に紐付けられた Popup Overlay を取得
+      const popup = feature.get("popup") as Overlay | undefined;
 
-      // ポップアップを表示
-      popup.setPosition(coordinate);
+      if (popup) {
+        const coordinate = event.coordinate;
 
-      // ポップアップ要素にクリックイベントを追加
-      const popupElement = popup.getElement();
-      if (popupElement) {
-        popupElement.onclick = () => {
-          // 地図の中心をポップアップの座標に移動
-          map.getView().animate({ center: coordinate, duration: 500 });
-        };
+        // ポップアップを表示
+        popup.setPosition(coordinate);
+
+        // ポップアップ要素にクリックイベントを追加
+        const popupElement = popup.getElement();
+        if (popupElement) {
+          popupElement.onclick = () => {
+            // 地図の中心をポップアップの座標に移動
+            map.getView().animate({ center: coordinate, duration: 500 });
+          };
+        }
       }
     }
   };
