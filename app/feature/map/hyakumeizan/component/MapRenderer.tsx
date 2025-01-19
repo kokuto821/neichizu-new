@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from "react";
 import { Map } from "ol";
-import { MapConfig } from "./type/type";
+import { MapConfig } from "../type/type";
 
 type MapInitializer = (
   element: HTMLDivElement,
@@ -10,17 +10,11 @@ type MapInitializer = (
 type MapRendererProps = {
   initializeMap: MapInitializer;
   config?: Partial<MapConfig>;
-  className?: string;
-  onMapInitialized?: (map: Map) => void;
-  onMapError?: (error: Error) => void;
 };
 
-const MapRenderer: React.FC<MapRendererProps> = ({
+export const MapRenderer: React.FC<MapRendererProps> = ({
   initializeMap,
   config,
-  className = "",
-  onMapInitialized,
-  onMapError,
 }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<Map | null>(null);
@@ -41,23 +35,19 @@ const MapRenderer: React.FC<MapRendererProps> = ({
         .then((map) => {
           if (map) {
             mapInstanceRef.current = map;
-            onMapInitialized?.(map);
           }
         })
         .catch((error) => {
           console.error("Failed to initialize map:", error);
-          onMapError?.(error);
         });
     }
 
     return cleanup;
-  }, [config, cleanup, initializeMap, onMapInitialized, onMapError]);
+  }, [config, cleanup, initializeMap]);
 
   return (
-    <div className={`w-full h-screen ${className}`}>
+    <div className={`w-full h-screen`}>
       <div ref={mapRef} className="absolute inset-0" />
     </div>
   );
 };
-
-export default MapRenderer;

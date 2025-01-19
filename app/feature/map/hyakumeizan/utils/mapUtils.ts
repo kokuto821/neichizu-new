@@ -4,7 +4,7 @@ import { fromLonLat } from "ol/proj";
 import Feature from "ol/Feature";
 import Point from "ol/geom/Point";
 import Overlay from "ol/Overlay";
-import { MountainData } from "./type/type";
+import { MountainData } from "../type/type";
 
 export const createMountainStyle = (iconPath: string, scale: number) =>
   new Style({

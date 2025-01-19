@@ -8,10 +8,10 @@ import VectorSource from "ol/source/Vector";
 import Papa from "papaparse";
 
 import { createMountainStyle, createMountainFeature } from "./mapUtils";
-import { MapConfig, MountainData } from "./type/type";
+import { MapConfig, MountainData } from "../type/type";
 import { fromLonLat } from "ol/proj";
 
-const DEFAULT_CONFIG: MapConfig = {
+export const DEFAULT_CONFIG: MapConfig = {
   initialCenter: [139, 35],
   initialZoom: 5.5,
   mountainIconPath: "/img/mountain.png",
