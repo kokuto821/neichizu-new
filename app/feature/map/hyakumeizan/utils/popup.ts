@@ -1,5 +1,4 @@
-import { MapBrowserEvent, Overlay } from "ol";
-import { Map } from "ol";
+import { Map, MapBrowserEvent, Overlay } from "ol";
 import { MountainData } from "./fetchHyakumeizanData";
 
 export const createPopup = (row: MountainData): HTMLDivElement => {

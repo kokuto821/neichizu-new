@@ -14,7 +14,9 @@ export const MapRenderer = () => {
 
     if (mapElement && !mapInstanceRef.current) {
       initializeMap(mapElement).then((map) => {
-        if (map) mapInstanceRef.current = map;
+        if (map) {
+          mapInstanceRef.current = map;
+        }
       });
     }
 

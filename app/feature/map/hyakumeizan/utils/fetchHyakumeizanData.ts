@@ -13,7 +13,7 @@ export type MountainData = {
   YAMAP: string;
 };
 
-export const fetchHyakumeizanData = async (url: string) => {
+export const fetchCSVData = async (url: string) => {
   try {
     const response = await fetch(url);
     const csvString = await response.text();
