@@ -1,7 +1,15 @@
 import { Map, MapBrowserEvent, Overlay } from "ol";
 import { MountainData } from "./fetchHyakumeizanData";
+import Point from "ol/geom/Point";
+import Feature from "ol/Feature";
+import { FeatureLike } from "ol/Feature";
 
-export const createPopupElememt = (row: MountainData): HTMLDivElement => {
+// Type guard function
+const isOverlay = (value: unknown): value is Overlay => {
+  return value instanceof Overlay;
+};
+
+export const createPopupElement = (row: MountainData): HTMLDivElement => {
   const popupElement = document.createElement("div");
   popupElement.className = "ol-popup";
   popupElement.innerHTML = `
@@ -24,33 +32,41 @@ export const createPopupElememt = (row: MountainData): HTMLDivElement => {
 
 export const handleMapClick =
   (map: Map) => (event: MapBrowserEvent<UIEvent>) => {
-    // クリック位置の Feature を取得
     const feature = map.forEachFeatureAtPixel(
       event.pixel,
-      (feature) => feature
+      (feature: FeatureLike) => feature
     );
 
-    // 全てのポップアップを非表示
     map.getOverlays().forEach((overlay) => overlay.setPosition(undefined));
 
-    if (feature) {
-      // Feature に紐付けられた Popup Overlay を取得
-      const popup = feature.get("popup") as Overlay | undefined;
+    if (!feature || !(feature instanceof Feature)) return;
 
-      if (popup) {
-        const coordinate = event.coordinate;
+    const geometry = feature.getGeometry();
+    if (!(geometry instanceof Point)) return;
 
-        // ポップアップを表示
-        popup.setPosition(coordinate);
+    const coordinate = geometry.getCoordinates();
+    const existingPopup = feature.get("popup");
 
-        // ポップアップ要素にクリックイベントを追加
-        const popupElement = popup.getElement();
-        if (popupElement) {
-          popupElement.onclick = () => {
-            // 地図の中心をポップアップの座標に移動
-            map.getView().animate({ center: coordinate, duration: 500 });
-          };
-        }
-      }
+    // Use the type guard to check if existingPopup is an Overlay
+    if (isOverlay(existingPopup)) {
+      existingPopup.setPosition(coordinate);
+      map.getView().animate({ center: coordinate, duration: 500 });
+      return;
     }
+
+    // Create a new popup if it doesn't exist
+    const row = feature.get("data") as MountainData;
+    const popupElement = createPopupElement(row);
+
+    const newPopup = new Overlay({
+      element: popupElement,
+      positioning: "bottom-center",
+      stopEvent: false,
+      offset: [0, -50],
+    });
+
+    feature.set("popup", newPopup);
+    map.addOverlay(newPopup);
+    newPopup.setPosition(coordinate);
+    map.getView().animate({ center: coordinate, duration: 500 });
   };

@@ -5,7 +5,10 @@ import { fromLonLat } from "ol/proj";
 import { handleMapClick } from "./createPopupElement";
 import { addLayer } from "./addLayer";
 
-const initializeMap = async (mapElement: HTMLDivElement) => {
+const initializeMap = async (
+  mapElement: HTMLDivElement,
+  center: [number, number]
+) => {
   if (typeof window === "undefined") return;
 
   // 地図の作成
@@ -24,7 +27,7 @@ const initializeMap = async (mapElement: HTMLDivElement) => {
       }),
     ],
     view: new View({
-      center: fromLonLat([139, 35]),
+      center: fromLonLat(center),
       zoom: 5.5,
     }),
   });
