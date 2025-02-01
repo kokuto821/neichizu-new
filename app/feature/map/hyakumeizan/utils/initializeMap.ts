@@ -2,7 +2,8 @@ import { Map, View } from "ol";
 import TileLayer from "ol/layer/Tile";
 import XYZ from "ol/source/XYZ";
 import { fromLonLat } from "ol/proj";
-import { handleMapClick } from "./popup";
+import { handleMapClick } from "./createPopupElement";
+import { addLayer } from "./addLayer";
 
 const initializeMap = async (mapElement: HTMLDivElement) => {
   if (typeof window === "undefined") return;
@@ -30,6 +31,7 @@ const initializeMap = async (mapElement: HTMLDivElement) => {
 
   // クリックイベントの追加
   map.on("click", handleMapClick(map));
+  addLayer({ map });
 
   return map;
 };

@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
+import Head from "next/head";
 import "./css/globals.css";
 import "./css/style.css";
 import "./css/L.Icon.Pulse.css";
+import "ol/ol.css"; // OpenLayersのデフォルトスタイルをインポート
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +38,7 @@ export const metadata: Metadata = {
     icon: "/img/mountain.ico",
   },
 };
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -46,19 +49,16 @@ export default function RootLayout({
       lang="ja"
       className={`${geistSans.variable} ${geistMono.variable} ${mPlusRounded1c.variable}`}
     >
-      {/* faviconの読み込み */}
-      <link rel="icon" href="img/mountain.ico" />
-      {/* fontの読み込み */}
-      {/* <link
-  href="https://fonts.googleapis.com/css2?family=YourFont&display=optional"
-  rel="stylesheet"
-/> */}
-      {/* <!-- OpenLayers用のスタイルシート --> */}
-      <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/css/ol.css"
-        type="text/css"
-      />
+      <Head>
+        {/* faviconの読み込み */}
+        <link rel="icon" href="/img/mountain.ico" />
+        {/* OpenLayers用のスタイルシート */}
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/css/ol.css"
+          type="text/css"
+        />
+      </Head>
       <body className="antialiased">
         {children}
         <Script

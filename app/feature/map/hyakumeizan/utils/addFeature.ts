@@ -1,6 +1,6 @@
 import { Map, Feature, Overlay } from "ol";
 import VectorSource from "ol/source/Vector";
-import { createPopup } from "./popup";
+import { createPopupElememt } from "./createPopupElement";
 import { mountainIcon } from "./styles";
 import { fetchCSVData } from "./fetchHyakumeizanData";
 
@@ -12,7 +12,7 @@ export const addFeature = async (map: Map, vectorSource: VectorSource) => {
     feature.setStyle(mountainIcon);
 
     // Popup を作成
-    const popupElement = createPopup(row);
+    const popupElement = createPopupElememt(row);
     const popup = new Overlay({
       element: popupElement,
       positioning: "bottom-center",
@@ -24,5 +24,6 @@ export const addFeature = async (map: Map, vectorSource: VectorSource) => {
     feature.set("popup", popup);
 
     vectorSource.addFeature(feature);
+    console.log("Feature added");
   });
 };

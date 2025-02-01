@@ -14,8 +14,6 @@ export const addLayer = async ({ map }: Props) => {
   // レイヤーとデータの読み込み
   const vectorSource = new VectorSource();
   const vectorLayer = new VectorLayer({ source: vectorSource });
-
-  map.addLayer(vectorLayer);
-
   addFeature(map, vectorSource);
+  map.addLayer(vectorLayer);
 };

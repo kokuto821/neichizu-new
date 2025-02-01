@@ -5,5 +5,6 @@ export const mountainIcon = new Style({
     anchor: [0.5, 1],
     src: "/img/mountain.png",
     scale: 0.5,
+    // size: [64, 64],
   }),
 });
