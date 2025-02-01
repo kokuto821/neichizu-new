@@ -3,10 +3,20 @@ import { MountainData } from "./fetchHyakumeizanData";
 import Point from "ol/geom/Point";
 import Feature from "ol/Feature";
 import { FeatureLike } from "ol/Feature";
+import { Dispatch, SetStateAction } from "react";
 
 // Type guard function
 const isOverlay = (value: unknown): value is Overlay => {
   return value instanceof Overlay;
+};
+
+// 型ガード関数
+const isCoordinate = (value: any): value is [number, number] => {
+  return (
+    Array.isArray(value) &&
+    value.length === 2 &&
+    value.every((v) => typeof v === "number")
+  );
 };
 
 export const createPopupElement = (row: MountainData): HTMLDivElement => {
@@ -31,7 +41,8 @@ export const createPopupElement = (row: MountainData): HTMLDivElement => {
 };
 
 export const handleMapClick =
-  (map: Map) => (event: MapBrowserEvent<UIEvent>) => {
+  (map: Map, setCenter: Dispatch<SetStateAction<[number, number]>>) =>
+  (event: MapBrowserEvent<UIEvent>) => {
     const feature = map.forEachFeatureAtPixel(
       event.pixel,
       (feature: FeatureLike) => feature
@@ -50,8 +61,11 @@ export const handleMapClick =
     // Use the type guard to check if existingPopup is an Overlay
     if (isOverlay(existingPopup)) {
       existingPopup.setPosition(coordinate);
-      map.getView().animate({ center: coordinate, duration: 500 });
-      return;
+      if (isCoordinate(coordinate)) {
+        setCenter(coordinate as [number, number]);
+        map.getView().animate({ center: coordinate, duration: 500 });
+        return;
+      }
     }
 
     // Create a new popup if it doesn't exist

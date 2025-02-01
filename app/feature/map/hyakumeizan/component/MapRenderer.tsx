@@ -10,7 +10,6 @@ export const MapRenderer = () => {
   const mapInstanceRef = useRef<Map | null>(null);
   const [isClient, setIsClient] = useState(false);
   const [center, setCenter] = useState<[number, number]>([139, 35]); // 初期中心座標を設定
-
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -21,7 +20,7 @@ export const MapRenderer = () => {
     const mapElement = mapRef.current;
 
     if (mapElement && !mapInstanceRef.current) {
-      initializeMap(mapElement, center).then((map) => {
+      initializeMap(mapElement, center, setCenter).then((map) => {
         if (map) {
           mapInstanceRef.current = map;
         }
@@ -35,7 +34,7 @@ export const MapRenderer = () => {
         mapInstanceRef.current = null;
       }
     };
-  }, [isClient, center]);
+  }, [isClient]);
 
   if (!isClient) {
     return null; // クライアント側でのみ表示するコンテンツ
