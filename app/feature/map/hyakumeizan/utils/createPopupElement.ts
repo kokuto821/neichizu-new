@@ -65,7 +65,7 @@ export const handleMapClick =
 
     // Use the type guard to check if existingPopup is an Overlay
     if (isOverlay(existingPopup)) {
-      map.getView().animate({ center: coordinate, duration: 3000, zoom: 12 });
+      map.getView().animate({ center: coordinate, duration: 2000, zoom: 12 });
       existingPopup.setPosition(coordinate);
       return;
     }
