@@ -9,7 +9,7 @@ export const MapRenderer = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<Map | null>(null);
   const [isClient, setIsClient] = useState(false);
-  const [center, setCenter] = useState<[number, number]>([139, 35]); // 初期中心座標を設定
+  const [center] = useState<[number, number]>([139, 35]); // 初期中心座標を設定
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -20,7 +20,7 @@ export const MapRenderer = () => {
     const mapElement = mapRef.current;
 
     if (mapElement && !mapInstanceRef.current) {
-      initializeMap(mapElement, center, setCenter).then((map) => {
+      initializeMap(mapElement, center).then((map) => {
         if (map) {
           mapInstanceRef.current = map;
         }

@@ -4,12 +4,10 @@ import XYZ from "ol/source/XYZ";
 import { fromLonLat } from "ol/proj";
 import { handleMapClick } from "./createPopupElement";
 import { addLayer } from "./addLayer";
-import { Dispatch, SetStateAction } from "react";
 
 const initializeMap = async (
   mapElement: HTMLDivElement,
-  center: [number, number],
-  setCenter: Dispatch<SetStateAction<[number, number]>>
+  center: [number, number]
 ) => {
   if (typeof window === "undefined") return;
 
@@ -35,7 +33,7 @@ const initializeMap = async (
   });
 
   // クリックイベントの追加
-  map.on("click", handleMapClick(map, setCenter));
+  map.on("click", handleMapClick(map));
   addLayer({ map });
 
   return map;
