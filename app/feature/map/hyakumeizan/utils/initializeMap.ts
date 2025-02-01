@@ -1,4 +1,4 @@
-import { Map, View, Overlay, Feature } from "ol";
+import { Map, View } from "ol";
 import TileLayer from "ol/layer/Tile";
 import XYZ from "ol/source/XYZ";
 import { fromLonLat } from "ol/proj";
