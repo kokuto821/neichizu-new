@@ -34,7 +34,7 @@ export const MapRenderer = () => {
         mapInstanceRef.current = null;
       }
     };
-  }, [isClient]);
+  }, [isClient, center]);
 
   if (!isClient) {
     return null; // クライアント側でのみ表示するコンテンツ

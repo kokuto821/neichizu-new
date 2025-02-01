@@ -11,7 +11,7 @@ const isOverlay = (value: unknown): value is Overlay => {
 };
 
 // 型ガード関数
-const isCoordinate = (value: any): value is [number, number] => {
+const isCoordinate = (value: unknown): value is [number, number] => {
   return (
     Array.isArray(value) &&
     value.length === 2 &&
