@@ -27,6 +27,22 @@ export const createPopupElement = (row: MountainData): HTMLDivElement => {
       <img class="yamap-logo" src="/img/yamap-logo.png" alt="YAMAP" />
     </a>
   `;
+
+  // ポップアップ要素のクリックイベントを停止
+  popupElement.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+
+  // リンクのクリックイベントを停止しないように修正
+  const links = popupElement.querySelectorAll("a");
+  links.forEach((link) => {
+    link.addEventListener("click", (event) => {
+      event.stopPropagation();
+      // モバイル向けにリンクのクリックイベントを処理
+      window.location.href = (event.target as HTMLAnchorElement).href;
+    });
+  });
+
   return popupElement;
 };
 
@@ -49,8 +65,8 @@ export const handleMapClick =
 
     // Use the type guard to check if existingPopup is an Overlay
     if (isOverlay(existingPopup)) {
+      map.getView().animate({ center: coordinate, duration: 1000, zoom: 15 });
       existingPopup.setPosition(coordinate);
-      map.getView().animate({ center: coordinate, duration: 500 });
       return;
     }
 
@@ -68,5 +84,5 @@ export const handleMapClick =
     feature.set("popup", newPopup);
     map.addOverlay(newPopup);
     newPopup.setPosition(coordinate);
-    map.getView().animate({ center: coordinate, duration: 500 });
+    map.getView().animate({ center: coordinate, duration: 1000, zoom: 15 });
   };
