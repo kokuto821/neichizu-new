@@ -4,7 +4,7 @@ import React from "react";
 
 export const Header = () => {
   return (
-    <header id="header">
+    <div className="main_header">
       <h1 className="h1-title_text">
         <Image src="/img/logo.png" width={40} height={40} alt="Logo Icon" />
         <Link href="/" className="a-title_text">
@@ -37,6 +37,6 @@ export const Header = () => {
       <div id="hamburger">
         <span></span>
       </div>
-    </header>
+    </div>
   );
 };

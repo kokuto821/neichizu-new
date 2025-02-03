@@ -9,6 +9,15 @@ $MiddleGreen: rgb(125, 181, 177);
 $LightGreen: rgb(183, 225, 216);
 $EcruWhite: rgb(246, 247, 232);
 
+/* height */
+$header_height: 6vh;
+$map_title_height: 4vh;
+$map_height2: calc(
+  100vh - #{$header_height} - #{$map_title_height} - #{$footer_height}
+);
+$map_height: 89vh;
+$footer_height: 6vh;
+
 .wf-roundedmplus1c {
   font-family: "M PLUS Rounded 1c", "ヒラギノ角ゴ Pro W3";
 }
@@ -25,14 +34,11 @@ body {
   height: 100%;
   width: 100%;
   letter-spacing: 0.2em;
-
-  padding-top: 8vh;
 }
-header {
+.main_header {
   display: flex;
   padding: 10px 4% 5px;
-  position: fixed;
-  height: 8vh;
+  height: $header_height;
   top: 0;
   width: 100%;
   background-color: $SemiDarkGreen;
@@ -100,6 +106,11 @@ p {
   display: flex;
   flex-direction: column;
 }
+.page_wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 .main-visual {
   display: flex;
   justify-content: center;
@@ -115,7 +126,7 @@ p {
   width: 30vw;
 }
 .map_title {
-  height: 5vh;
+  height: $map_title_height;
   background-color: $LightGreen;
   display: flex;
   justify-content: center;
@@ -126,6 +137,7 @@ p {
 }
 .map_wrap {
   position: relative;
+  height: $map_height;
 }
 .mapflame {
   position: absolute;
@@ -390,7 +402,6 @@ p {
   }
 
   .map_title {
-    height: 5vh;
     background-color: $LightGreen;
     display: flex;
     justify-content: center;

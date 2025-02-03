@@ -3,6 +3,7 @@
   box-sizing: border-box;
 }
 
+/* height */
 .wf-roundedmplus1c {
   font-family: "M PLUS Rounded 1c", "ヒラギノ角ゴ Pro W3";
 }
@@ -21,14 +22,12 @@ body {
   height: 100%;
   width: 100%;
   letter-spacing: 0.2em;
-  padding-top: 8vh;
 }
 
-header {
+.main_header {
   display: flex;
   padding: 10px 4% 5px;
-  position: fixed;
-  height: 8vh;
+  height: 6vh;
   top: 0;
   width: 100%;
   background-color: rgb(75, 139, 138);
@@ -106,6 +105,12 @@ p {
   flex-direction: column;
 }
 
+.page_wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .main-visual {
   display: flex;
   justify-content: center;
@@ -123,7 +128,7 @@ p {
 }
 
 .map_title {
-  height: 5vh;
+  height: 4vh;
   background-color: rgb(183, 225, 216);
   display: flex;
   justify-content: center;
@@ -135,6 +140,7 @@ p {
 
 .map_wrap {
   position: relative;
+  height: 90vh;
 }
 
 .mapflame {
@@ -400,7 +406,6 @@ p {
     font-size: 20px;
   }
   .map_title {
-    height: 5vh;
     background-color: rgb(183, 225, 216);
     display: flex;
     justify-content: center;

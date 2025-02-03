@@ -1,27 +1,18 @@
 // app/feature/map/hyakumeizan/page.tsx
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import { Header } from "@/app/components/molecules/header";
 import { MapRenderer } from "@/app/feature/map/hyakumeizan/component/MapRenderer";
 
 const Hyakumeizan = () => {
   return (
-    <div>
+    <div className="page_wrapper">
       {/* ヘッダーをインクルード */}
       <Header />
 
       {/* スマホナビの表示・非表示 */}
       <div className="map_title">
-        <h2 className="h2-title_text">
-          <Image
-            src="/img/mountain.png"
-            width={30}
-            height={30}
-            alt="山のアイコン"
-          />
-          日本百名山
-        </h2>
+        <h2 className="h2-title_text">日本百名山</h2>
       </div>
 
       <div className="map_wrap">
