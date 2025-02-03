@@ -6,8 +6,10 @@ export const Header = () => {
   return (
     <header id="header">
       <h1 className="h1-title_text">
-        <Image src="/img/logo.png" width={30} height={30} alt="Logo Icon" />
-        <Link href="/">ねいちず-NatureMaps</Link>
+        <Image src="/img/logo.png" width={40} height={40} alt="Logo Icon" />
+        <Link href="/" className="a-title_text">
+          ねいちず-NatureMaps
+        </Link>
       </h1>
       <nav className="pc-nav">
         <ul>

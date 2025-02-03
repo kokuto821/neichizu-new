@@ -31,7 +31,7 @@ header {
   height: 8vh;
   top: 0;
   width: 100%;
-  background-color: rgb(179, 179, 179);
+  background-color: rgb(75, 139, 138);
   align-items: center;
   z-index: 999;
 }
@@ -40,10 +40,14 @@ header {
   display: flex;
   flex-direction: row;
   font-family: "M PLUS Rounded 1c";
+  font-weight: bold;
   margin: 0;
   padding: 0;
   font-size: 20px;
-  text-shadow: 0 0 0.05em rgba(7, 85, 255, 0.6784313725), 0 0 0.1em rgba(7, 85, 255, 0.6784313725), 0 0 0.15em rgba(7, 85, 255, 0.6784313725), 0 0 0.3em rgba(7, 85, 255, 0.6784313725);
+}
+
+.a-title_text {
+  margin-top: 2.5px;
 }
 
 a {
@@ -76,7 +80,7 @@ li {
   font-family: "M PLUS Rounded 1c";
   padding: 0;
   margin: 0;
-  text-shadow: 0 0 0.05em rgba(0, 134, 40, 0.6784313725), 0 0 0.1em rgba(0, 134, 40, 0.6784313725), 0 0 0.15em rgba(0, 134, 40, 0.6784313725), 0 0 0.3em rgba(0, 134, 40, 0.6784313725);
+  text-shadow: 0 0 0.05em rgb(75, 139, 138), 0 0 0.1em rgb(75, 139, 138), 0 0 0.15em rgb(75, 139, 138), 0 0 0.3em rgb(75, 139, 138);
   margin-left: 10%;
   margin-right: 10%;
   font-size: 25px;
@@ -120,7 +124,7 @@ p {
 
 .map_title {
   height: 5vh;
-  background-color: rgb(142, 196, 158);
+  background-color: rgb(183, 225, 216);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -221,12 +225,12 @@ p {
   font-family: "M PLUS Rounded 1c";
   color: rgb(69, 150, 226);
   font-weight: bold;
-  text-shadow: 0 0 0.05em #E0FFFF;
+  text-shadow: 0 0 0.05em #e0ffff;
 }
 
 /* id */
 #footer02 {
-  background: #E0FFFF;
+  background: #e0ffff;
 }
 
 .ie #footer02 .logo img,
@@ -354,7 +358,8 @@ p {
     font-size: 15px;
     color: #fff;
   }
-  .sp-nav li a, .sp-nav li span {
+  .sp-nav li a,
+  .sp-nav li span {
     display: block;
     padding: 20px 0;
   }
@@ -393,22 +398,11 @@ p {
     padding: 0 4%;
   }
   .h2-title_text {
-    display: flex;
-    flex-direction: row;
-    font-family: "M PLUS Rounded 1c";
-    padding: 0;
-    margin: 0;
-    text-shadow: 0 0 0.05em rgba(0, 134, 40, 0.6784313725), 0 0 0.1em rgba(0, 134, 40, 0.6784313725), 0 0 0.15em rgba(0, 134, 40, 0.6784313725), 0 0 0.3em rgba(0, 134, 40, 0.6784313725);
-    margin-left: 10%;
-    margin-right: 10%;
     font-size: 20px;
-    font-weight: normal;
-    color: #fff;
-    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.082);
   }
   .map_title {
     height: 5vh;
-    background-color: rgb(142, 196, 158);
+    background-color: rgb(183, 225, 216);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -450,7 +444,7 @@ p {
     font-family: "M PLUS Rounded 1c";
     color: rgb(69, 150, 226);
     font-weight: bold;
-    text-shadow: 0 0 0.05em #E0FFFF;
+    text-shadow: 0 0 0.05em #e0ffff;
   }
   .m-name_text {
     color: rgb(39, 39, 39);
