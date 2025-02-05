@@ -12,11 +12,9 @@ $EcruWhite: rgb(246, 247, 232);
 /* height */
 $header_height: 6vh;
 $map_title_height: 4vh;
-$map_height2: calc(
-  100vh - #{$header_height} - #{$map_title_height} - #{$footer_height}
-);
-$map_height: 89vh;
 $footer_height: 6vh;
+$map_height2: calc(100vh - #{$header_height} - #{$map_title_height} - #{$footer_height});
+$map_height: 89vh;
 
 .wf-roundedmplus1c {
   font-family: "M PLUS Rounded 1c", "ヒラギノ角ゴ Pro W3";
@@ -59,7 +57,6 @@ body {
 }
 a {
   text-decoration: none;
-  color: #fffffffd;
 }
 p {
   margin: 0px;
