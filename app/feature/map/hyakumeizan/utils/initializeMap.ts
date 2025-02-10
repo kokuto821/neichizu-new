@@ -2,16 +2,12 @@ import { Map, View } from "ol";
 import TileLayer from "ol/layer/Tile";
 import XYZ from "ol/source/XYZ";
 import { fromLonLat } from "ol/proj";
-import { handleMapClick } from "./createPopupElement";
 import { addLayer } from "./addLayer";
 
-const initializeMap = async (
+export const initializeMap = (
   mapElement: HTMLDivElement,
   center: [number, number]
-) => {
-  if (typeof window === "undefined") return;
-
-  // 地図の作成
+): Map => {
   const map = new Map({
     target: mapElement,
     layers: [
@@ -32,11 +28,8 @@ const initializeMap = async (
     }),
   });
 
-  // クリックイベントの追加
-  map.on("click", handleMapClick(map));
+  // 追加レイヤーの設定
   addLayer({ map });
 
   return map;
 };
-
-export default initializeMap;

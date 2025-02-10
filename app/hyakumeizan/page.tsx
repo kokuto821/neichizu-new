@@ -3,8 +3,11 @@
 import Link from "next/link";
 import { Header } from "@/app/components/molecules/header";
 import { MapRenderer } from "@/app/feature/map/hyakumeizan/component/MapRenderer";
+import { useState } from "react";
+import { FeatureProperties } from "../feature/map/hyakumeizan/types/types";
 
 const Hyakumeizan = () => {
+  const[selectedFeature, setSelectedFeature] = useState<FeatureProperties | null>(null);
   return (
     <div className="page_wrapper">
       {/* ヘッダーをインクルード */}
@@ -16,7 +19,7 @@ const Hyakumeizan = () => {
       </div>
 
       <div className="map_wrap">
-        <MapRenderer />
+        <MapRenderer setSelectedFeature={setSelectedFeature} />
       </div>
 
       <footer className="foot_nav">
@@ -29,6 +32,7 @@ const Hyakumeizan = () => {
           >
             Googlemapで見る
           </Link>
+          <span>{selectedFeature?.name}</span>
         </p>
       </footer>
     </div>

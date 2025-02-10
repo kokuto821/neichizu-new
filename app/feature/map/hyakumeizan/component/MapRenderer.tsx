@@ -1,50 +1,63 @@
-"use client";
+import { useRef, useEffect, useState, useCallback } from "react";
+import "ol/ol.css";
+import { FeatureProperties } from "../types/types";
+import { Pixel } from "ol/pixel";
+import Map from "ol/Map";
+import { initializeMap } from "../utils/InitializeMap";
 
-import { useEffect, useRef, useState } from "react";
-import { Map } from "ol";
-import "ol/ol.css"; // OpenLayersのデフォルトスタイルをインポート
-import initializeMap from "../utils/initializeMap";
+interface MapRendererProps {
+  setSelectedFeature: React.Dispatch<React.SetStateAction<FeatureProperties | null>>;
+}
 
-export const MapRenderer = () => {
+export const MapRenderer: React.FC<MapRendererProps> = ({ setSelectedFeature }) => {
   const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<Map | null>(null);
-  const [isClient, setIsClient] = useState(false);
-  const [center] = useState<[number, number]>([139, 35]); // 初期中心座標を設定
+  const [map, setMap] = useState<Map | null>(null);
+  const [center] = useState<[number, number]>([139, 35]); // 初期中心座標
+
+  // マップの初期化
   useEffect(() => {
-    setIsClient(true);
-  }, []);
+    if (!mapRef.current) return; // マップが既に存在する場合は初期化しない
 
-  useEffect(() => {
-    if (!isClient) return;
-
-    const mapElement = mapRef.current;
-
-    if (mapElement && !mapInstanceRef.current) {
-      initializeMap(mapElement, center).then((map) => {
-        if (map) {
-          mapInstanceRef.current = map;
-        }
-      });
-    }
+    const initializedMap = initializeMap(mapRef.current, center);
+    setMap(initializedMap);
 
     // クリーンアップ関数
     return () => {
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.setTarget(undefined);
-        mapInstanceRef.current = null;
+      if (initializedMap) {
+        initializedMap.setTarget(undefined); // マップのターゲットを解除
       }
     };
-  }, [isClient, center]);
+  }, [center]); // mapを依存配列から削除
 
-  if (!isClient) {
-    return null; // クライアント側でのみ表示するコンテンツ
-  }
+  // handleMapClickをuseCallbackでメモ化
+  const handleMapClick = useCallback((event: { pixel: Pixel }) => {
+    if (!map) return;
+    const feature = map.forEachFeatureAtPixel(event.pixel, (feature) => feature);
+    if (feature) {
+      const properties = feature.getProperties();
+      setSelectedFeature({
+        geometry: properties.geometry,
+        name: properties.name,
+        height: properties.height,
+        googlemaplink: properties.googlemaplink,
+        YAMAP: properties.YAMAP,
+        image: properties.image,
+        area: properties.area,
+      });
+    } else {
+      setSelectedFeature(null);
+    }
+  }, [map, setSelectedFeature]);
 
-  return (
-    <>
-      <div ref={mapRef} style={{ width: "100%", height: "100%" }}></div>
-    </>
-  );
+  // マップクリックイベントの設定
+  useEffect(() => {
+    if (!map) return;
+
+    map.on("click", handleMapClick);
+    return () => map.un("click", handleMapClick);
+  }, [map, handleMapClick]);
+
+  return <div ref={mapRef} style={{ width: "100%", height: "100%" }} />;
 };
 
 export default MapRenderer;

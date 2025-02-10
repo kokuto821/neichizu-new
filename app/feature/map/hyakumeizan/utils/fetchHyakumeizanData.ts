@@ -24,7 +24,12 @@ export const fetchCSVData = async (url: string) => {
     });
 
     return data.map((row) => ({
-      row,
+      name: row.name,
+      height: row.height,
+      googlemaplink: row.googlemaplink,
+      YAMAP: row.YAMAP,
+      image: row.画像,
+      area: row.エリア,
       geometry: new Point(
         fromLonLat([parseFloat(row.経度), parseFloat(row.緯度)])
       ),
