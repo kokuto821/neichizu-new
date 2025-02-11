@@ -5,6 +5,7 @@ import { Header } from "@/app/components/molecules/header";
 import { MapRenderer } from "@/app/feature/map/hyakumeizan/component/MapRenderer";
 import { useState } from "react";
 import { FeatureProperties } from "../feature/map/hyakumeizan/types/types";
+import { PopupCard } from "../components/molecules/popupCard";
 
 const Hyakumeizan = () => {
   const[selectedFeature, setSelectedFeature] = useState<FeatureProperties | null>(null);
@@ -20,6 +21,7 @@ const Hyakumeizan = () => {
 
       <div className="map_wrap">
         <MapRenderer setSelectedFeature={setSelectedFeature} />
+        <PopupCard />
       </div>
 
       <footer className="foot_nav">

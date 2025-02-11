@@ -7,3 +7,14 @@ export type FeatureProperties= {
     image: string,
     area: string,
 }
+
+export type fetchMountainData = {
+  緯度: string;
+  経度: string;
+  画像: string;
+  name: string;
+  エリア: string;
+  height: string;
+  googlemaplink: string;
+  YAMAP: string;
+};

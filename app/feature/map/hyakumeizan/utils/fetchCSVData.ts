@@ -1,28 +1,19 @@
 import Papa from "papaparse";
 import Point from "ol/geom/Point";
 import { fromLonLat } from "ol/proj";
-
-export type MountainData = {
-  緯度: string;
-  経度: string;
-  画像: string;
-  name: string;
-  エリア: string;
-  height: string;
-  googlemaplink: string;
-  YAMAP: string;
-};
+import { fetchMountainData } from "../types/types";
 
 export const fetchCSVData = async (url: string) => {
   try {
     const response = await fetch(url);
     const csvString = await response.text();
 
-    const { data } = Papa.parse<MountainData>(csvString, {
+    const { data } = Papa.parse<fetchMountainData>(csvString, {
       header: true,
       dynamicTyping: false,
     });
 
+    // 全てのフィーチャーを地図上に表示する
     return data.map((row) => ({
       name: row.name,
       height: row.height,

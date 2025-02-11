@@ -1,7 +1,7 @@
 import { Map, Feature } from "ol";
 import VectorSource from "ol/source/Vector";
 import { mountainIcon } from "./styles";
-import { fetchCSVData } from "./fetchHyakumeizanData";
+import { fetchCSVData } from "./fetchCSVData";
 
 export const addFeature = async (map: Map, vectorSource: VectorSource) => {
   const data = await fetchCSVData("/csv/hyakumeizan.csv");
@@ -17,7 +17,7 @@ export const addFeature = async (map: Map, vectorSource: VectorSource) => {
       image: image,
       area: area,
     });
-    
+
     feature.setStyle(mountainIcon);
 
     vectorSource.addFeature(feature);

@@ -5,10 +5,12 @@ import { Map, MapBrowserEvent } from 'ol';
 export const useMapClick = (map: Map | null, setSelectedFeature: Dispatch<SetStateAction<FeatureProperties | null>>) => {
     const handleMapClick = useCallback((event: MapBrowserEvent<UIEvent>) => {
         if (!map) return;
-        const feature = map.forEachFeatureAtPixel(event.pixel, (feature) => feature);
+
+        // 地図上で選択されたフィーチャー情報を定義
+        const clickedFeature = map.forEachFeatureAtPixel(event.pixel, (feature) => feature);
   
-        if (feature) {
-          const properties = feature.getProperties();
+        if (clickedFeature) {
+          const properties = clickedFeature.getProperties();
           setSelectedFeature({
               geometry: properties.geometry,
               name: properties.name,
