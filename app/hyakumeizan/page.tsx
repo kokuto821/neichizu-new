@@ -10,6 +10,7 @@ import { PopupCard } from "../components/molecules/popupCard";
 const Hyakumeizan = () => {
   const [selectedFeature, setSelectedFeature] =
     useState<FeatureProperties | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
   return (
     <div className="page_wrapper">
       {/* ヘッダーをインクルード */}
@@ -21,8 +22,11 @@ const Hyakumeizan = () => {
       </div>
 
       <div className="map_wrap">
-        <MapRenderer setSelectedFeature={setSelectedFeature} />
-        <PopupCard selectedFeature={selectedFeature} />
+        <MapRenderer
+          setSelectedFeature={setSelectedFeature}
+          setIsVisible={setIsVisible}
+        />
+        {isVisible ? <PopupCard selectedFeature={selectedFeature} /> : null}
       </div>
 
       <footer className="foot_nav">

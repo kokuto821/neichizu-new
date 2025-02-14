@@ -9,10 +9,12 @@ interface MapRendererProps {
   setSelectedFeature: React.Dispatch<
     React.SetStateAction<FeatureProperties | null>
   >;
+  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const MapRenderer: React.FC<MapRendererProps> = ({
   setSelectedFeature,
+  setIsVisible,
 }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<Map | null>(null);
@@ -33,7 +35,7 @@ export const MapRenderer: React.FC<MapRendererProps> = ({
     };
   }, [center]);
 
-  useMapClick(map, setSelectedFeature);
+  useMapClick(map, setSelectedFeature, setIsVisible);
 
   return (
     <div

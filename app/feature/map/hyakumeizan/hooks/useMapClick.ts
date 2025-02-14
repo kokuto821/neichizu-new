@@ -11,7 +11,8 @@ const isFeature = (feature: FeatureLike): feature is Feature => {
 
 export const useMapClick = (
   map: Map | null,
-  setSelectedFeature: Dispatch<SetStateAction<FeatureProperties | null>>
+  setSelectedFeature: Dispatch<SetStateAction<FeatureProperties | null>>,
+  setIsVisible: Dispatch<SetStateAction<boolean>>
 ) => {
   const handleMapClick = useCallback(
     (event: MapBrowserEvent<UIEvent>) => {
@@ -25,6 +26,7 @@ export const useMapClick = (
 
       if (!clickedFeature) {
         setSelectedFeature(null);
+        setIsVisible(false);
         return;
       }
 
@@ -45,11 +47,12 @@ export const useMapClick = (
         if (!(geometry instanceof Point)) return;
         const coordinate = geometry.getCoordinates();
         map.getView().animate({ center: coordinate, duration: 500 });
+        setIsVisible(true);
       } else {
-        setSelectedFeature(null);
+        setIsVisible(false);
       }
     },
-    [map, setSelectedFeature]
+    [map, setSelectedFeature, setIsVisible]
   );
 
   useEffect(() => {
