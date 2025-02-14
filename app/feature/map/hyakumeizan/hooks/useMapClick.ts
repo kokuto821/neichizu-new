@@ -47,7 +47,10 @@ export const useMapClick = (
         if (!(geometry instanceof Point)) return;
         const coordinate = geometry.getCoordinates();
         map.getView().animate({ center: coordinate, duration: 500 });
-        setIsVisible(true);
+        // 0.5秒後に setIsVisible(true) を実行
+        setTimeout(() => {
+          setIsVisible(true);
+        }, 500);
       } else {
         setIsVisible(false);
       }

@@ -1,6 +1,6 @@
 import React from "react";
 import { Header } from "./components/molecules/header";
-import { Footer } from "./components/molecules/footer";
+import { MainFooter } from "./components/molecules/mainFooter";
 import { ItemBoxEyecatch } from "./components/molecules/ItemBoxEyecatch";
 
 export default function Home() {
@@ -51,7 +51,7 @@ export default function Home() {
         <div className="space"></div>
       </div>
 
-      <Footer />
+      <MainFooter />
     </div>
   );
 }
