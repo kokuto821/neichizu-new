@@ -380,6 +380,12 @@ p {
 .css-1mzo6j-MuiCardContent-root:last-child {
   padding-bottom: 0px;
 }
+.css-by55oi {
+  padding: 0px;
+}
+.css-by55oi:last-child {
+  padding-bottom: 0px;
+}
 
 /*responsive*/
 @include sp {
@@ -490,12 +496,6 @@ p {
     color: rgb(39, 39, 39);
     font-size: 20px;
     font-weight: bold;
-  }
-
-  //leaflet_custom-css
-  .leaflet-popup-content {
-    width: 50vw !important;
-    margin: 3.5vh 2vw;
   }
 
   // end
