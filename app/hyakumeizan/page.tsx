@@ -8,7 +8,8 @@ import { FeatureProperties } from "../feature/map/hyakumeizan/types/types";
 import { PopupCard } from "../components/molecules/popupCard";
 
 const Hyakumeizan = () => {
-  const[selectedFeature, setSelectedFeature] = useState<FeatureProperties | null>(null);
+  const [selectedFeature, setSelectedFeature] =
+    useState<FeatureProperties | null>(null);
   return (
     <div className="page_wrapper">
       {/* ヘッダーをインクルード */}
@@ -34,7 +35,6 @@ const Hyakumeizan = () => {
           >
             Googlemapで見る
           </Link>
-          <span>{selectedFeature?.name}</span>
         </p>
       </footer>
     </div>
