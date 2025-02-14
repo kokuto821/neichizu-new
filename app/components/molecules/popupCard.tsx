@@ -4,15 +4,20 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
+import { FeatureProperties } from '@/app/feature/map/hyakumeizan/types/types';
 
-export const PopupCard = () => {
+type Props = {
+  selectedFeature:FeatureProperties | null
+}
+
+export const PopupCard = ({selectedFeature}:Props) => {
   return (
     <Card sx={{ display: 'flex',position:"absolute" ,top:"0",left:"0", }}>
           <CardMedia
         component="img"
         sx={{ width: 151 }}
-        image="" // 画像のURLを入れる
-        alt="" // 山の名前を入れる
+        image={selectedFeature?.image} // 画像のURLを入れる
+        alt={selectedFeature?.name} // 山の名前を入れる
       />
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <CardContent sx={{ flex: '1 0 auto' }}>

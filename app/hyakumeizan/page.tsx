@@ -21,7 +21,7 @@ const Hyakumeizan = () => {
 
       <div className="map_wrap">
         <MapRenderer setSelectedFeature={setSelectedFeature} />
-        <PopupCard />
+        <PopupCard selectedFeature={selectedFeature} />
       </div>
 
       <footer className="foot_nav">
