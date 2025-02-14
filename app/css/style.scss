@@ -105,6 +105,7 @@ li {
   color: #fff;
   -webkit-text-stroke: 1px rgba(0, 0, 0, 0.082);
   @include sp {
+    margin: 0px 0px 0px 0px;
     font-size: 18px;
   }
 }
