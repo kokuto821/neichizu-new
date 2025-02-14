@@ -100,12 +100,12 @@ li {
     0 0 0.15em $SemiDarkGreen, 0 0 0.3em $SemiDarkGreen;
   margin-left: 10%;
   margin-right: 10%;
-  font-size: 25px;
+  font-size: 20px;
   font-weight: normal;
   color: #fff;
   -webkit-text-stroke: 1px rgba(0, 0, 0, 0.082);
   @include sp {
-    font-size: 20px;
+    font-size: 18px;
   }
 }
 

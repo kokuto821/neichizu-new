@@ -85,14 +85,14 @@ li {
   text-shadow: 0 0 0.05em rgb(75, 139, 138), 0 0 0.1em rgb(75, 139, 138), 0 0 0.15em rgb(75, 139, 138), 0 0 0.3em rgb(75, 139, 138);
   margin-left: 10%;
   margin-right: 10%;
-  font-size: 25px;
+  font-size: 20px;
   font-weight: normal;
   color: #fff;
   -webkit-text-stroke: 1px rgba(0, 0, 0, 0.082);
 }
 @media screen and (max-width: 680px) {
   .h2-title_text {
-    font-size: 20px;
+    font-size: 18px;
   }
 }
 
