@@ -370,22 +370,6 @@ p {
     height: 20vh;
   }
 }
-// MUI-customCSS
-.css-1mzo6j-MuiCardContent-root {
-  padding: 0px;
-  padding-left: 10px;
-  display: flex;
-  flex-direction: column;
-}
-.css-1mzo6j-MuiCardContent-root:last-child {
-  padding-bottom: 0px;
-}
-.css-by55oi {
-  padding: 0px;
-}
-.css-by55oi:last-child {
-  padding-bottom: 0px;
-}
 
 /*responsive*/
 @include sp {

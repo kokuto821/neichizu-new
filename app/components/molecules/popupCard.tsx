@@ -32,7 +32,7 @@ export const PopupCard = ({ selectedFeature }: Props) => {
           alt={selectedFeature?.name} // 山の名前を入れる
         />
         <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <CardContent sx={{ flex: "1 0 auto" }}>
+          <CardContent style={{ padding: "0px 0px 0px 10px" }}>
             <Typography component="div" variant="h5">
               {selectedFeature?.name}
             </Typography>
