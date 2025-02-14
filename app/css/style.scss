@@ -3,6 +3,15 @@
   box-sizing: border-box;
 }
 
+// mixin
+@mixin sp {
+  @media screen and (max-width: 680px) {
+    @content;
+  }
+}
+
+// color
+
 $DarkGreen: rgb(31, 58, 61);
 $SemiDarkGreen: rgb(75, 139, 138);
 $MiddleGreen: rgb(125, 181, 177);
@@ -13,7 +22,9 @@ $EcruWhite: rgb(246, 247, 232);
 $header_height: 6vh;
 $map_title_height: 4vh;
 $footer_height: 6vh;
-$map_height2: calc(100vh - #{$header_height} - #{$map_title_height} - #{$footer_height});
+$map_height2: calc(
+  100vh - #{$header_height} - #{$map_title_height} - #{$footer_height}
+);
 $map_height: 89vh;
 
 .wf-roundedmplus1c {
@@ -44,10 +55,10 @@ body {
   z-index: 999;
   &__title_text {
     margin-top: 2.5px;
-    color:$EcruWhite
+    color: $EcruWhite;
   }
   &__menu-text {
-    color:$EcruWhite
+    color: $EcruWhite;
   }
 }
 .h1-title_text {
@@ -83,7 +94,8 @@ li {
   flex-direction: row;
   font-family: "M PLUS Rounded 1c";
   padding: 0;
-  margin: 0;
+  box-sizing: border-box;
+  margin: 5px 0px 0px 0px;
   text-shadow: 0 0 0.05em $SemiDarkGreen, 0 0 0.1em $SemiDarkGreen,
     0 0 0.15em $SemiDarkGreen, 0 0 0.3em $SemiDarkGreen;
   margin-left: 10%;
@@ -92,6 +104,9 @@ li {
   font-weight: normal;
   color: #fff;
   -webkit-text-stroke: 1px rgba(0, 0, 0, 0.082);
+  @include sp {
+    font-size: 20px;
+  }
 }
 
 img {
@@ -122,6 +137,68 @@ p {
 }
 .sp-nav {
   display: none;
+  @include sp {
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: block;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    transform: translateY(-100%);
+    transition: all 0.2s ease-in-out;
+    ul {
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+    li {
+      margin: 0;
+      padding: 0;
+    }
+    li span {
+      font-size: 15px;
+      color: #fff;
+    }
+    li a,
+    li span {
+      display: block;
+      padding: 20px 0;
+    }
+    /*-閉じるアイコンー*/
+    .close {
+      position: relative;
+      padding-left: 20px;
+    }
+    .close::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      display: block;
+      width: 16px;
+      height: 1px;
+      background: #fff;
+      transform: rotate(45deg);
+    }
+    .close::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      display: block;
+      width: 16px;
+      height: 1px;
+      background: #fff;
+      transform: rotate(-45deg);
+    }
+  }
 }
 .map-eyecatch_block {
   height: auto;
@@ -157,6 +234,11 @@ p {
 // content
 .content {
   margin: 5%;
+  @include sp {
+    .white_back {
+      padding: 5% 10%;
+    }
+  }
   .white_back {
     background-color: #ffffe0;
     border: #2b2e2c;
@@ -187,17 +269,12 @@ p {
           padding: 0% 5% 0% 5%;
         }
       }
-      @media screen and (max-width: 680px) {
+      @include sp {
         .white_back_inner_eyecatch {
           margin: 5%;
           max-width: none;
         }
       }
-    }
-  }
-  @media screen and (max-width: 680px) {
-    .white_back {
-      padding: 5% 10%;
     }
   }
 
@@ -210,6 +287,17 @@ p {
   .space {
     height: 50px;
   }
+}
+
+.popup-card {
+  padding: 0px 20%;
+  @include sp {
+    padding: 0px 5%;
+  }
+}
+
+.link-img-logo {
+  padding-bottom: 4px;
 }
 //end content
 .foot_nav {
@@ -282,29 +370,21 @@ p {
     height: 20vh;
   }
 }
-//leaflet_custom-css
-.leaflet-popup-content {
-  width: 15vw !important;
+// MUI-customCSS
+.css-1mzo6j-MuiCardContent-root {
+  padding: 0px;
+  padding-left: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.css-1mzo6j-MuiCardContent-root:last-child {
+  padding-bottom: 0px;
 }
 
 /*responsive*/
-@media screen and (max-width: 680px) {
+@include sp {
   .pc-nav {
     display: none;
-  }
-  .sp-nav {
-    z-index: 1;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    display: block;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    opacity: 0;
-    transform: translateY(-100%);
-    transition: all 0.2s ease-in-out;
   }
   #hamburger {
     position: relative;
@@ -344,63 +424,13 @@ p {
     background-color: #fff;
   }
   /*スマホメニュー*/
-  .sp-nav ul {
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-  }
-  .sp-nav li {
-    margin: 0;
-    padding: 0;
-  }
-  .sp-nav li span {
-    font-size: 15px;
-    color: #fff;
-  }
-  .sp-nav li a,
-  .sp-nav li span {
-    display: block;
-    padding: 20px 0;
-  }
-  /*-閉じるアイコンー*/
-  .sp-nav .close {
-    position: relative;
-    padding-left: 20px;
-  }
-  .sp-nav .close::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    display: block;
-    width: 16px;
-    height: 1px;
-    background: #fff;
-    transform: rotate(45deg);
-  }
-  .sp-nav .close::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    display: block;
-    width: 16px;
-    height: 1px;
-    background: #fff;
-    transform: rotate(-45deg);
-  }
+
   .toggle {
     transform: translateY(0);
     opacity: 1;
   }
   .main-visual {
     padding: 0 4%;
-  }
-  .h2-title_text {
-    font-size: 20px;
   }
 
   .map_title {
