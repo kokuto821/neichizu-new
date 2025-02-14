@@ -1,6 +1,13 @@
 import { Dispatch, SetStateAction, useCallback, useEffect } from "react";
 import { FeatureProperties } from "../types/types";
 import { Map, MapBrowserEvent } from "ol";
+import Point from "ol/geom/Point";
+import Feature, { FeatureLike } from "ol/Feature";
+
+// 型ガード関数
+const isFeature = (feature: FeatureLike): feature is Feature => {
+  return feature instanceof Feature;
+};
 
 export const useMapClick = (
   map: Map | null,
@@ -16,7 +23,12 @@ export const useMapClick = (
         (feature) => feature
       );
 
-      if (clickedFeature) {
+      if (!clickedFeature) {
+        setSelectedFeature(null);
+        return;
+      }
+
+      if (isFeature(clickedFeature)) {
         const properties = clickedFeature.getProperties();
         setSelectedFeature({
           geometry: properties.geometry,
@@ -27,6 +39,12 @@ export const useMapClick = (
           image: properties.image,
           area: properties.area,
         });
+
+        // フィーチャーの中心座標に地図を移動
+        const geometry = properties.geometry;
+        if (!(geometry instanceof Point)) return;
+        const coordinate = geometry.getCoordinates();
+        map.getView().animate({ center: coordinate, duration: 500 });
       } else {
         setSelectedFeature(null);
       }
