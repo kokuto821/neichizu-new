@@ -5,13 +5,15 @@ export const gsi = new TileLayer({
   source: new XYZ({
     url: "https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png",
   }),
-  zIndex: 0,
+  properties: { name: "gsi" },
+  visible: true,
 });
 export const osm = new TileLayer({
   source: new OSM({
     url: "http://tile.openstreetmap.jp/{z}/{x}/{y}.png",
   }),
-  zIndex: 1,
+  properties: { name: "osm" },
+  visible: false,
 });
 
 export const layers = [gsi, osm];
