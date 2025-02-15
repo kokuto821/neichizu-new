@@ -8,7 +8,7 @@ import { MapToolbar } from "../components/molecules/mapToolbar";
 import { useInitializeMap } from "../feature/map/hyakumeizan/hooks/useInitializeMap";
 import { FeatureProperties } from "../feature/map/hyakumeizan/types/types";
 
-const Hyakumeizan = memo(() => {
+const Hyakumeizan = () => {
   const [popupVisible, setIsPopupVisible] = useState<boolean>(false);
   const { map, mapRef, setMap, switchBaseLayer } = useInitializeMap();
   const [selectedFeature, setSelectedFeature] =
@@ -39,10 +39,7 @@ const Hyakumeizan = memo(() => {
       </div>
     </div>
   );
-});
-
-// displayName を設定
-Hyakumeizan.displayName = "Hyakumeizan";
+};
 
 // Next.js のページコンポーネントは default export でなければならない
 export default Hyakumeizan;
