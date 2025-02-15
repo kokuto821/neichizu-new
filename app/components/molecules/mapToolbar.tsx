@@ -25,7 +25,7 @@ export const MapToolbar = ({ changeOSMLayer, changeGSILayer }: Props) => {
   return (
     <div
       className="map_toolbar"
-      style={{ position: 'absolute', top: '0', left: '0', padding: '5px' }}
+      style={{ position: 'absolute', top: '0', left: '0', padding: '15px' }}
     >
       <MapToolbarInner>
         <IconButtonBox
