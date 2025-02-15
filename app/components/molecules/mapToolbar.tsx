@@ -30,7 +30,7 @@ export const MapToolbar = ({ changeOSMLayer, changeGSILayer }: Props) => {
       <MapToolbarInner>
         <IconButtonBox
           onClick={() => {
-            changeLayerVisible();
+            setTimeout(() => changeLayerVisible(), 350);
           }}
         >
           <IconButton aria-label="layers" sx={{ color: 'rgb(75, 139, 138)' }}>
@@ -39,9 +39,13 @@ export const MapToolbar = ({ changeOSMLayer, changeGSILayer }: Props) => {
         </IconButtonBox>
         {isLayerVisible ? (
           <>
-            <IconButton onClick={() => changeGSILayer()}>gsi</IconButton>
+            <IconButton onClick={() => setTimeout(() => changeGSILayer(), 350)}>
+              gsi
+            </IconButton>
             <br />
-            <IconButton onClick={() => changeOSMLayer()}>osm</IconButton>
+            <IconButton onClick={() => setTimeout(() => changeOSMLayer(), 350)}>
+              osm
+            </IconButton>
           </>
         ) : null}
       </MapToolbarInner>
