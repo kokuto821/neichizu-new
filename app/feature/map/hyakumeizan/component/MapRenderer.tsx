@@ -1,17 +1,17 @@
-import { Dispatch, RefObject, SetStateAction } from "react";
-import "ol/ol.css";
-import { FeatureProperties } from "../types/types";
-import { useMapClick } from "../hooks/useMapClick";
-import { Map } from "ol";
+import { Dispatch, RefObject, SetStateAction } from 'react';
+import 'ol/ol.css';
+import { FeatureProperties } from '../types/types';
+import { useMapClick } from '../hooks/useMapClick';
+import { Map } from 'ol';
 
 type MapRendererProps = {
   setSelectedFeature: React.Dispatch<
     React.SetStateAction<FeatureProperties | null>
   >;
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  map: Map;
+  map: Map | null;
   mapRef: RefObject<HTMLDivElement | null>;
-  setMap: Dispatch<SetStateAction<Map>>;
+  setMap: Dispatch<SetStateAction<Map | null>>;
 };
 
 export const MapRenderer: React.FC<MapRendererProps> = ({
@@ -25,7 +25,7 @@ export const MapRenderer: React.FC<MapRendererProps> = ({
   return (
     <div
       ref={mapRef}
-      style={{ width: "100%", height: "100%", position: "relative" }}
+      style={{ width: '100%', height: '100%', position: 'relative' }}
     />
   );
 };
