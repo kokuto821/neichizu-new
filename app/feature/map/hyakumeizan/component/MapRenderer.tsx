@@ -1,40 +1,25 @@
-import { useRef, useEffect, useState } from "react";
+import { Dispatch, RefObject, SetStateAction } from "react";
 import "ol/ol.css";
 import { FeatureProperties } from "../types/types";
-import Map from "ol/Map";
-import { initializeMap } from "../utils/initializeMap";
 import { useMapClick } from "../hooks/useMapClick";
+import { Map } from "ol";
 
-interface MapRendererProps {
+type MapRendererProps = {
   setSelectedFeature: React.Dispatch<
     React.SetStateAction<FeatureProperties | null>
   >;
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
-}
+  map: Map;
+  mapRef: RefObject<HTMLDivElement | null>;
+  setMap: Dispatch<SetStateAction<Map>>;
+};
 
 export const MapRenderer: React.FC<MapRendererProps> = ({
   setSelectedFeature,
   setIsVisible,
+  map,
+  mapRef,
 }) => {
-  const mapRef = useRef<HTMLDivElement>(null);
-  const [map, setMap] = useState<Map | null>(null);
-  const [center] = useState<[number, number]>([139, 35]); // 初期中心座標
-
-  // マップの初期化
-  useEffect(() => {
-    if (!mapRef.current) return; // マップが既に存在する場合は初期化しない
-
-    const initializedMap: Map = initializeMap(mapRef.current, center);
-    setMap(initializedMap);
-
-    // クリーンアップ関数
-    return () => {
-      if (initializedMap) {
-        initializedMap.setTarget(undefined); // マップのターゲットを解除
-      }
-    };
-  }, [center]);
-
   useMapClick(map, setSelectedFeature, setIsVisible);
 
   return (

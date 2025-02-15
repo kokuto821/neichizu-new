@@ -1,21 +1,26 @@
 // app/feature/map/hyakumeizan/page.tsx
 "use client";
-import Link from "next/link";
 import { Header } from "@/app/components/molecules/header";
 import { MapRenderer } from "@/app/feature/map/hyakumeizan/component/MapRenderer";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { FeatureProperties } from "../feature/map/hyakumeizan/types/types";
 import { PopupCard } from "../components/molecules/popupCard";
+import { MapToolbar } from "../components/molecules/mapToolbar";
+import { useInitializeMap } from "../feature/map/hyakumeizan/hooks/useInitializeMap";
+import { useLayerChange } from "../feature/map/hyakumeizan/hooks/useLayerChange";
 
-const Hyakumeizan = () => {
+const Hyakumeizan = memo(() => {
   const [selectedFeature, setSelectedFeature] =
     useState<FeatureProperties | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [popupVisible, setIsPopupVisible] = useState<boolean>(false);
+  const { map, mapRef, setMap } = useInitializeMap();
+  const { changeOSMLayer, changeGSILayer } = useLayerChange({
+    map,
+  });
   return (
     <div className="page_wrapper">
       {/* ヘッダーをインクルード */}
       <Header />
-
       {/* スマホナビの表示・非表示 */}
       <div className="map_title">
         <h2 className="h2-title_text">日本百名山</h2>
@@ -24,12 +29,20 @@ const Hyakumeizan = () => {
       <div className="map_wrap">
         <MapRenderer
           setSelectedFeature={setSelectedFeature}
-          setIsVisible={setIsVisible}
+          setIsVisible={setIsPopupVisible}
+          map={map}
+          setMap={setMap}
+          mapRef={mapRef}
         />
-        {isVisible ? <PopupCard selectedFeature={selectedFeature} /> : null}
+        {popupVisible ? <PopupCard selectedFeature={selectedFeature} /> : null}
+        <MapToolbar
+          changeOSMLayer={changeOSMLayer}
+          changeGSILayer={changeGSILayer}
+        />
       </div>
     </div>
   );
-};
+});
 
-export default Hyakumeizan; // デフォルトエクスポート
+// Next.js のページコンポーネントは default export でなければならない
+export default Hyakumeizan;

@@ -4,7 +4,6 @@ import Script from "next/script";
 import Head from "next/head";
 import "./css/globals.css";
 import "./css/style.css";
-import "./css/L.Icon.Pulse.css";
 import "ol/ol.css"; // OpenLayersのデフォルトスタイルをインポート
 
 const geistSans = Geist({

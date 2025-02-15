@@ -8,12 +8,10 @@ type Props = {
   map: Map;
 };
 
-export const addLayer = async ({ map }: Props) => {
-  // 山データを追加
-
+export const addVectorLayer = async ({ map }: Props) => {
   // レイヤーとデータの読み込み
   const vectorSource = new VectorSource();
-  const vectorLayer = new VectorLayer({ source: vectorSource });
+  const vectorIconLayer = new VectorLayer({ source: vectorSource });
   addFeature(map, vectorSource);
-  map.addLayer(vectorLayer);
+  map.addLayer(vectorIconLayer);
 };
