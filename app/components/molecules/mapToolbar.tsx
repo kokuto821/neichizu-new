@@ -1,4 +1,4 @@
-import { IconButton, styled } from '@mui/material';
+import { Box, IconButton, styled } from '@mui/material';
 import LayersRoundedIcon from '@mui/icons-material/LayersRounded';
 import { color } from '@/app/css/color';
 import { useChangeVisible } from '@/app/feature/map/hyakumeizan/hooks/useChangeVisible';
@@ -38,15 +38,14 @@ export const MapToolbar = ({ changeOSMLayer, changeGSILayer }: Props) => {
           </IconButton>
         </IconButtonBox>
         {isLayerVisible ? (
-          <>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <IconButton onClick={() => setTimeout(() => changeGSILayer(), 300)}>
               gsi
             </IconButton>
-            <br />
             <IconButton onClick={() => setTimeout(() => changeOSMLayer(), 300)}>
               osm
             </IconButton>
-          </>
+          </Box>
         ) : null}
       </MapToolbarInner>
     </div>
