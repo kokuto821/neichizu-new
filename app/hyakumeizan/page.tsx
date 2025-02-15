@@ -10,8 +10,7 @@ import { FeatureProperties } from "../feature/map/hyakumeizan/types/types";
 
 const Hyakumeizan = memo(() => {
   const [popupVisible, setIsPopupVisible] = useState<boolean>(false);
-  const { map, mapRef, setMap, setActiveLayer, activeLayer, switchBaseLayer } =
-    useInitializeMap();
+  const { map, mapRef, setMap, switchBaseLayer } = useInitializeMap();
   const [selectedFeature, setSelectedFeature] =
     useState<FeatureProperties | null>(null);
 
@@ -41,6 +40,9 @@ const Hyakumeizan = memo(() => {
     </div>
   );
 });
+
+// displayName を設定
+Hyakumeizan.displayName = "Hyakumeizan";
 
 // Next.js のページコンポーネントは default export でなければならない
 export default Hyakumeizan;

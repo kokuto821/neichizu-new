@@ -2,8 +2,6 @@ import { IconButton, styled } from "@mui/material";
 import LayersRoundedIcon from "@mui/icons-material/LayersRounded";
 import { color } from "@/app/css/color";
 import { useChangeVisible } from "@/app/feature/map/hyakumeizan/hooks/useChangeVisible";
-import TileLayer from "ol/layer/Tile";
-import { Dispatch, SetStateAction } from "react";
 
 type Props = {
   changeOSMLayer: () => void;

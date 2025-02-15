@@ -1,8 +1,8 @@
-import { useEffect, useState, useRef, RefObject } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Map, View } from "ol";
 import { fromLonLat } from "ol/proj";
 import { defaults as defaultControls } from "ol/control";
-import { gsi, layers, osm } from "../utils/layers";
+import { gsi, osm } from "../utils/layers";
 import TileLayer from "ol/layer/Tile";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";

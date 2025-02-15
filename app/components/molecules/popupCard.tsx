@@ -18,9 +18,9 @@ export const PopupCard = ({ selectedFeature }: Props) => {
       className="popup-card"
       style={{
         position: "absolute",
+        transform: "translateY(-22.5%)",
         bottom: "0",
         left: "0",
-        transform: "translateY(-15%)",
         width: "100%",
       }}
     >
