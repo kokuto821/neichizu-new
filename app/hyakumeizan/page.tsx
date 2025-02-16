@@ -42,5 +42,4 @@ const Hyakumeizan = () => {
   );
 };
 
-// Next.js のページコンポーネントは default export でなければならない
 export default Hyakumeizan;

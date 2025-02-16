@@ -7,12 +7,19 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { FeatureProperties } from '@/app/feature/map/hyakumeizan/types/types';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 type Props = {
   selectedFeature: FeatureProperties | null;
 };
 
 export const PopupCard = ({ selectedFeature }: Props) => {
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsImageLoaded(false);
+  }, [selectedFeature]);
+
   return (
     <div
       className="popup-card"
@@ -21,6 +28,7 @@ export const PopupCard = ({ selectedFeature }: Props) => {
         bottom: '0',
         left: '0',
         width: '100%',
+        visibility: selectedFeature ? 'visible' : 'hidden',
       }}
     >
       <Card sx={{ display: 'flex', alignItems: 'center' }}>
@@ -30,9 +38,12 @@ export const PopupCard = ({ selectedFeature }: Props) => {
             sx={{
               width: 151,
               height: 130,
+              display: isImageLoaded ? 'block' : 'none',
             }}
-            image={selectedFeature.image} // 画像のURLを入れる
-            alt={selectedFeature.name} // 山の名前を入れる
+            image={selectedFeature.image}
+            alt={selectedFeature.name}
+            onLoad={() => setIsImageLoaded(true)}
+            onError={() => setIsImageLoaded(true)}
           />
         )}
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
