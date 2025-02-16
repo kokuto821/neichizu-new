@@ -13,7 +13,6 @@ const Hyakumeizan = () => {
   const { map, mapRef, setMap, switchBaseLayer } = useInitializeMap();
   const [selectedFeature, setSelectedFeature] =
     useState<FeatureProperties | null>(null);
-  const [isPopupLoaded, setIsPopupLoaded] = useState<boolean>(false);
 
   return (
     <div className="page_wrapper">
@@ -30,12 +29,7 @@ const Hyakumeizan = () => {
           setMap={setMap}
           mapRef={mapRef}
         />
-        {popupVisible && (
-          <PopupCard
-            selectedFeature={selectedFeature}
-            onLoad={() => setIsPopupLoaded(true)}
-          />
-        )}
+        {popupVisible && <PopupCard selectedFeature={selectedFeature} />}
         <MapToolbar
           changeGSILayer={() => switchBaseLayer('gsi')}
           changePHOTOLayer={() => switchBaseLayer('photo')}

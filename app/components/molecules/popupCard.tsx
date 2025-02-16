@@ -7,24 +7,12 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { FeatureProperties } from '@/app/feature/map/hyakumeizan/types/types';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 
 type Props = {
   selectedFeature: FeatureProperties | null;
-  onLoad?: () => void;
 };
 
-export const PopupCard = ({ selectedFeature, onLoad }: Props) => {
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
-
-  useEffect(() => {
-    // 画像が正常に読み込まれたら、onLoad を呼び出す
-    if (isImageLoaded && onLoad) {
-      onLoad();
-      console.log('imageloaded');
-    }
-  }, [isImageLoaded, onLoad]);
-
+export const PopupCard = ({ selectedFeature }: Props) => {
   return (
     <div
       className="popup-card"
@@ -36,31 +24,15 @@ export const PopupCard = ({ selectedFeature, onLoad }: Props) => {
       }}
     >
       <Card sx={{ display: 'flex', alignItems: 'center' }}>
-        {!isImageLoaded && (
-          <Box
-            sx={{
-              width: 151,
-              height: 130,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Typography>Loading...</Typography>
-          </Box>
-        )}
         {selectedFeature?.image && (
           <CardMedia
             component="img"
             sx={{
               width: 151,
               height: 130,
-              display: isImageLoaded ? 'block' : 'none',
             }}
             image={selectedFeature.image} // 画像のURLを入れる
             alt={selectedFeature.name} // 山の名前を入れる
-            onLoad={() => setIsImageLoaded(true)} // 画像読み込み完了を検知
-            onError={() => setIsImageLoaded(true)} // 画像読み込みエラーも完了扱いにする
           />
         )}
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
