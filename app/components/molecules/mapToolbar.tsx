@@ -57,7 +57,7 @@ export const MapToolbar = ({
               display: 'flex',
               flexDirection: 'column',
               gap: '5px',
-              padding: '10px 0px 0px 0px',
+              padding: '7.5px 0px 0px 0px',
             }}
           >
             <Button
