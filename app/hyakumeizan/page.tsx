@@ -2,7 +2,7 @@
 'use client';
 import { Header } from '@/app/components/molecules/header';
 import { MapRenderer } from '@/app/feature/map/hyakumeizan/component/MapRenderer';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PopupCard } from '../components/molecules/popupCard';
 import { MapToolbar } from '../components/molecules/mapToolbar';
 import { useInitializeMap } from '../feature/map/hyakumeizan/hooks/useInitializeMap';
@@ -16,24 +16,25 @@ const Hyakumeizan = () => {
   // 画像読み込み状態を管理するステートを追加
   const [imageLoaded, setImageLoaded] = useState(false);
 
+  const imgRef = useRef<HTMLImageElement | null>(null); // useRefで画像参照を保持
+
   // 選択されたフィーチャーが変更された時の処理
   useEffect(() => {
-    let img: HTMLImageElement | null = null;
     setImageLoaded(false); // 画像読み込み状態をリセット
 
     if (selectedFeature?.image) {
-      img = new Image();
-      img.src = selectedFeature.image;
-      img.onload = () => setImageLoaded(true);
-      img.onerror = () => setImageLoaded(true); // エラー時も読み込み完了扱い
+      imgRef.current = new Image(); // useRefに画像を代入
+      imgRef.current.src = selectedFeature.image;
+      imgRef.current.onload = () => setImageLoaded(true);
+      imgRef.current.onerror = () => setImageLoaded(true); // エラー時も読み込み完了扱い
     } else {
       setImageLoaded(true); // 画像がない場合は即時完了
     }
 
     return () => {
-      if (img) {
-        img.onload = null;
-        img.onerror = null;
+      if (imgRef.current) {
+        imgRef.current.onload = null;
+        imgRef.current.onerror = null;
       }
     };
   }, [selectedFeature]);
