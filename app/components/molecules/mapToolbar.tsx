@@ -1,4 +1,4 @@
-import { Box, IconButton, styled } from '@mui/material';
+import { Box, Button, IconButton, styled } from '@mui/material';
 import LayersRoundedIcon from '@mui/icons-material/LayersRounded';
 import { color } from '@/app/css/color';
 import { useChangeVisible } from '@/app/feature/map/hyakumeizan/hooks/useChangeVisible';
@@ -33,18 +33,44 @@ export const MapToolbar = ({ changeOSMLayer, changeGSILayer }: Props) => {
             setTimeout(() => changeLayerVisible(), 300);
           }}
         >
-          <IconButton aria-label="layers" sx={{ color: 'rgb(75, 139, 138)' }}>
+          <IconButton
+            aria-label="layers"
+            sx={{
+              color: color.SemiDarkGreen,
+            }}
+          >
             <LayersRoundedIcon />
           </IconButton>
         </IconButtonBox>
         {isLayerVisible ? (
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <IconButton onClick={() => setTimeout(() => changeGSILayer(), 300)}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '5px',
+              padding: '5px',
+            }}
+          >
+            <Button
+              variant="contained"
+              onClick={() => setTimeout(() => changeGSILayer(), 300)}
+              sx={{
+                backgroundColor: color.SemiDarkGreen,
+                color: color.EcruWhite,
+              }}
+            >
               gsi
-            </IconButton>
-            <IconButton onClick={() => setTimeout(() => changeOSMLayer(), 300)}>
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => setTimeout(() => changeOSMLayer(), 300)}
+              sx={{
+                backgroundColor: color.MiddleGreen,
+                color: color.EcruWhite,
+              }}
+            >
               osm
-            </IconButton>
+            </Button>
           </Box>
         ) : null}
       </MapToolbarInner>
