@@ -18,7 +18,7 @@ export const PopupCard = ({ selectedFeature }: Props) => {
 
   useEffect(() => {
     if (selectedFeature) {
-      // 1秒後に表示状態をtrueにする
+      // 0.5秒後に表示状態をtrueにする
       const timer = setTimeout(() => {
         setIsVisible(true);
       }, 500);
