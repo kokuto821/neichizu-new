@@ -2,7 +2,7 @@
 'use client';
 import { Header } from '@/app/components/molecules/header';
 import { MapRenderer } from '@/app/feature/map/hyakumeizan/component/MapRenderer';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PopupCard } from '../components/molecules/popupCard';
 import { MapToolbar } from '../components/molecules/mapToolbar';
 import { useInitializeMap } from '../feature/map/hyakumeizan/hooks/useInitializeMap';
@@ -13,6 +13,30 @@ const Hyakumeizan = () => {
   const { map, mapRef, setMap, switchBaseLayer } = useInitializeMap();
   const [selectedFeature, setSelectedFeature] =
     useState<FeatureProperties | null>(null);
+  // 画像読み込み状態を管理するステートを追加
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  // 選択されたフィーチャーが変更された時の処理
+  useEffect(() => {
+    let img: HTMLImageElement | null = null;
+    setImageLoaded(false); // 画像読み込み状態をリセット
+
+    if (selectedFeature?.image) {
+      img = new Image();
+      img.src = selectedFeature.image;
+      img.onload = () => setImageLoaded(true);
+      img.onerror = () => setImageLoaded(true); // エラー時も読み込み完了扱い
+    } else {
+      setImageLoaded(true); // 画像がない場合は即時完了
+    }
+
+    return () => {
+      if (img) {
+        img.onload = null;
+        img.onerror = null;
+      }
+    };
+  }, [selectedFeature]);
 
   return (
     <div className="page_wrapper">
@@ -29,7 +53,9 @@ const Hyakumeizan = () => {
           setMap={setMap}
           mapRef={mapRef}
         />
-        {popupVisible && <PopupCard selectedFeature={selectedFeature} />}
+        {popupVisible && imageLoaded && (
+          <PopupCard selectedFeature={selectedFeature} />
+        )}
         <MapToolbar
           changeGSILayer={() => switchBaseLayer('gsi')}
           changePHOTOLayer={() => switchBaseLayer('photo')}

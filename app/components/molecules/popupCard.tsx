@@ -14,12 +14,24 @@ type Props = {
 };
 
 export const PopupCard = ({ selectedFeature }: Props) => {
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [isVisible, setIsVisible] = useState(false); // 表示状態を管理するステート
 
   useEffect(() => {
-    setIsImageLoaded(false);
-  }, [selectedFeature]);
+    if (selectedFeature) {
+      // 1秒後に表示状態をtrueにする
+      const timer = setTimeout(() => {
+        setIsVisible(true);
+      }, 500);
 
+      // クリーンアップ関数でタイマーをクリア
+      return () => {
+        clearTimeout(timer);
+        setIsVisible(false); // 表示状態をリセット
+      };
+    } else {
+      setIsVisible(false); // selectedFeatureがnullの場合は非表示
+    }
+  }, [selectedFeature]);
   return (
     <div
       className="popup-card"
@@ -28,7 +40,8 @@ export const PopupCard = ({ selectedFeature }: Props) => {
         bottom: '0',
         left: '0',
         width: '100%',
-        visibility: selectedFeature ? 'visible' : 'hidden',
+        visibility: isVisible ? 'visible' : 'hidden', // isVisibleステートで制御
+        transition: 'visibility 0.3s ease', // 必要に応じてトランジションを追加
       }}
     >
       <Card sx={{ display: 'flex', alignItems: 'center' }}>
@@ -38,12 +51,9 @@ export const PopupCard = ({ selectedFeature }: Props) => {
             sx={{
               width: 151,
               height: 130,
-              display: isImageLoaded ? 'block' : 'none',
             }}
             image={selectedFeature.image}
             alt={selectedFeature.name}
-            onLoad={() => setIsImageLoaded(true)}
-            onError={() => setIsImageLoaded(true)}
           />
         )}
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>

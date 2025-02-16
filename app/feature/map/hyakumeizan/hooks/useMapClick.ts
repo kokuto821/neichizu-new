@@ -1,8 +1,8 @@
-import { Dispatch, SetStateAction, useCallback, useEffect } from "react";
-import { FeatureProperties } from "../types/types";
-import { Map, MapBrowserEvent } from "ol";
-import Point from "ol/geom/Point";
-import Feature, { FeatureLike } from "ol/Feature";
+import { Dispatch, SetStateAction, useCallback, useEffect } from 'react';
+import { FeatureProperties } from '../types/types';
+import { Map, MapBrowserEvent } from 'ol';
+import Point from 'ol/geom/Point';
+import Feature, { FeatureLike } from 'ol/Feature';
 
 // 型ガード関数
 const isFeature = (feature: FeatureLike): feature is Feature => {
@@ -47,10 +47,7 @@ export const useMapClick = (
         if (!(geometry instanceof Point)) return;
         const coordinate = geometry.getCoordinates();
         map.getView().animate({ center: coordinate, duration: 500 });
-        // 0.5秒後に setIsVisible(true) を実行
-        setTimeout(() => {
-          setIsVisible(true);
-        }, 500);
+        setIsVisible(true);
       } else {
         setIsVisible(false);
       }
@@ -60,9 +57,9 @@ export const useMapClick = (
 
   useEffect(() => {
     if (!map) return;
-    map.on("click", handleMapClick);
+    map.on('click', handleMapClick);
     return () => {
-      map.un("click", handleMapClick);
+      map.un('click', handleMapClick);
       map.setTarget(undefined);
     };
   }, [map, handleMapClick]);
