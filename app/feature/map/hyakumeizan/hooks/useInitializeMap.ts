@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Map, View } from 'ol';
 import { fromLonLat } from 'ol/proj';
 import { defaults as defaultControls } from 'ol/control';
-import { gsi, osm } from '../utils/layers';
+import { gsi, layers, osm, osmTopo, photo, relief } from '../utils/layers';
 import TileLayer from 'ol/layer/Tile';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
@@ -26,7 +26,7 @@ export const useInitializeMap = () => {
     // Map インスタンスの生成
     const initializedMap = new Map({
       target: mapRef.current,
-      layers: [gsi, osm],
+      layers: layers,
       view: new View({
         center: fromLonLat(center),
         zoom: 5.5,
@@ -38,7 +38,10 @@ export const useInitializeMap = () => {
 
     setBaseLayers([
       { name: 'gsi', layer: gsi },
+      { name: 'photo', layer: photo },
+      { name: 'relief', layer: relief },
       { name: 'osm', layer: osm },
+      { name: 'osmTopo', layer: osmTopo },
     ]);
 
     // クリーンアップ: マップのターゲットを解除

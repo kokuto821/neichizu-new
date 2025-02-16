@@ -1,24 +1,23 @@
 // app/feature/map/hyakumeizan/page.tsx
-"use client";
-import { Header } from "@/app/components/molecules/header";
-import { MapRenderer } from "@/app/feature/map/hyakumeizan/component/MapRenderer";
-import { useState } from "react";
-import { PopupCard } from "../components/molecules/popupCard";
-import { MapToolbar } from "../components/molecules/mapToolbar";
-import { useInitializeMap } from "../feature/map/hyakumeizan/hooks/useInitializeMap";
-import { FeatureProperties } from "../feature/map/hyakumeizan/types/types";
+'use client';
+import { Header } from '@/app/components/molecules/header';
+import { MapRenderer } from '@/app/feature/map/hyakumeizan/component/MapRenderer';
+import { useState } from 'react';
+import { PopupCard } from '../components/molecules/popupCard';
+import { MapToolbar } from '../components/molecules/mapToolbar';
+import { useInitializeMap } from '../feature/map/hyakumeizan/hooks/useInitializeMap';
+import { FeatureProperties } from '../feature/map/hyakumeizan/types/types';
 
 const Hyakumeizan = () => {
   const [popupVisible, setIsPopupVisible] = useState<boolean>(false);
   const { map, mapRef, setMap, switchBaseLayer } = useInitializeMap();
   const [selectedFeature, setSelectedFeature] =
     useState<FeatureProperties | null>(null);
+  const [isPopupLoaded, setIsPopupLoaded] = useState<boolean>(false);
 
   return (
     <div className="page_wrapper">
-      {/* ヘッダーをインクルード */}
       <Header />
-      {/* スマホナビの表示・非表示 */}
       <div className="map_title">
         <h2 className="h2-title_text">日本百名山</h2>
       </div>
@@ -31,10 +30,19 @@ const Hyakumeizan = () => {
           setMap={setMap}
           mapRef={mapRef}
         />
-        {popupVisible ? <PopupCard selectedFeature={selectedFeature} /> : null}
+        {popupVisible && (
+          <PopupCard
+            selectedFeature={selectedFeature}
+            onLoad={() => setIsPopupLoaded(true)}
+          />
+        )}
+        {isPopupLoaded && <PopupCard selectedFeature={selectedFeature} />}
         <MapToolbar
-          changeOSMLayer={() => switchBaseLayer("osm")}
-          changeGSILayer={() => switchBaseLayer("gsi")}
+          changeGSILayer={() => switchBaseLayer('gsi')}
+          changePHOTOLayer={() => switchBaseLayer('photo')}
+          changeRELIEFLayer={() => switchBaseLayer('relief')}
+          changeOSMLayer={() => switchBaseLayer('osm')}
+          changeTOPOLayer={() => switchBaseLayer('osmTopo')}
         />
       </div>
     </div>

@@ -6,9 +6,18 @@ import { useChangeVisible } from '@/app/feature/map/hyakumeizan/hooks/useChangeV
 type Props = {
   changeOSMLayer: () => void;
   changeGSILayer: () => void;
+  changePHOTOLayer: () => void;
+  changeRELIEFLayer: () => void;
+  changeTOPOLayer: () => void;
 };
 
-export const MapToolbar = ({ changeOSMLayer, changeGSILayer }: Props) => {
+export const MapToolbar = ({
+  changeOSMLayer,
+  changeGSILayer,
+  changePHOTOLayer,
+  changeRELIEFLayer,
+  changeTOPOLayer,
+}: Props) => {
   const { isVisible: isLayerVisible, changeVisible: changeLayerVisible } =
     useChangeVisible();
   const IconButtonBox = styled('div')({
@@ -59,17 +68,47 @@ export const MapToolbar = ({ changeOSMLayer, changeGSILayer }: Props) => {
                 color: color.EcruWhite,
               }}
             >
-              gsi
+              地理院地図
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => setTimeout(() => changePHOTOLayer(), 300)}
+              sx={{
+                backgroundColor: color.SemiDarkGreen,
+                color: color.EcruWhite,
+              }}
+            >
+              空中写真
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => setTimeout(() => changeRELIEFLayer(), 300)}
+              sx={{
+                backgroundColor: color.SemiDarkGreen,
+                color: color.EcruWhite,
+              }}
+            >
+              色別標高
             </Button>
             <Button
               variant="contained"
               onClick={() => setTimeout(() => changeOSMLayer(), 300)}
               sx={{
-                backgroundColor: color.MiddleGreen,
+                backgroundColor: color.SemiDarkGreen,
                 color: color.EcruWhite,
               }}
             >
               osm
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => setTimeout(() => changeTOPOLayer(), 300)}
+              sx={{
+                backgroundColor: color.SemiDarkGreen,
+                color: color.EcruWhite,
+              }}
+            >
+              osmTopo
             </Button>
           </Box>
         ) : null}
