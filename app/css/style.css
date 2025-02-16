@@ -290,7 +290,7 @@ p {
 }
 @media screen and (max-width: 680px) {
   .popup-card {
-    padding: 0px 5% 7vh 5%;
+    padding: 0px 5% 4vh 5%;
   }
 }
 
