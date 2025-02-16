@@ -36,7 +36,6 @@ const Hyakumeizan = () => {
             onLoad={() => setIsPopupLoaded(true)}
           />
         )}
-        {isPopupLoaded && <PopupCard selectedFeature={selectedFeature} />}
         <MapToolbar
           changeGSILayer={() => switchBaseLayer('gsi')}
           changePHOTOLayer={() => switchBaseLayer('photo')}
