@@ -26,7 +26,7 @@ body {
 
 .main_header {
   display: flex;
-  padding: 10px 4% 5px;
+  padding: 0 10px;
   height: 6vh;
   top: 0;
   width: 100%;
@@ -35,7 +35,7 @@ body {
   z-index: 999;
 }
 .main_header__title_text {
-  margin-top: 2.5px;
+  margin-top: 0px;
   color: rgb(246, 247, 232);
 }
 .main_header__menu-text {

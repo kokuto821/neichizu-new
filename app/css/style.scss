@@ -46,7 +46,7 @@ body {
 }
 .main_header {
   display: flex;
-  padding: 10px 4% 5px;
+  padding: 0 10px;
   height: $header_height;
   top: 0;
   width: 100%;
@@ -54,7 +54,7 @@ body {
   align-items: center;
   z-index: 999;
   &__title_text {
-    margin-top: 2.5px;
+    margin-top: 0px;
     color: $EcruWhite;
   }
   &__menu-text {
