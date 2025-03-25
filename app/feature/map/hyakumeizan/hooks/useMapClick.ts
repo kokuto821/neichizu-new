@@ -1,10 +1,4 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FeatureProperties } from '../types/types';
 import { Map, MapBrowserEvent } from 'ol';
 import Point from 'ol/geom/Point';

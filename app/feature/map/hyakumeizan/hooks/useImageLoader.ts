@@ -33,7 +33,7 @@ export const useImageLoader = (
         imgRef.current.onerror = null;
       }
     };
-  }, [selectedFeature?.image]);
+  }, [selectedFeature?.image, setIsFeatureClick]);
 
   return { isImageLoaded };
 };
