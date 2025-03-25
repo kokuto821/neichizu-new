@@ -2,7 +2,6 @@
 'use client';
 import { Header } from '@/app/components/molecules/header';
 import { MapRenderer } from '@/app/feature/map/hyakumeizan/component/MapRenderer';
-import { useEffect, useRef, useState } from 'react';
 import { PopupCard } from '../components/molecules/popupCard';
 import { MapToolbar } from '../components/molecules/mapToolbar';
 import { useInitializeMap } from '../feature/map/hyakumeizan/hooks/useInitializeMap';
