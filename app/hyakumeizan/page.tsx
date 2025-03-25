@@ -6,38 +6,18 @@ import { useEffect, useRef, useState } from 'react';
 import { PopupCard } from '../components/molecules/popupCard';
 import { MapToolbar } from '../components/molecules/mapToolbar';
 import { useInitializeMap } from '../feature/map/hyakumeizan/hooks/useInitializeMap';
-import { FeatureProperties } from '../feature/map/hyakumeizan/types/types';
+import { useMapClick } from '../feature/map/hyakumeizan/hooks/useMapClick';
+import { useImageLoader } from '../feature/map/hyakumeizan/hooks/useImageLoader';
+import { CircularProgress } from '@mui/material';
+import { color } from '../css/color';
 
 const Hyakumeizan = () => {
-  const [popupVisible, setIsPopupVisible] = useState<boolean>(false);
-  const { map, mapRef, setMap, switchBaseLayer } = useInitializeMap();
-  const [selectedFeature, setSelectedFeature] =
-    useState<FeatureProperties | null>(null);
-  // 画像読み込み状態を管理するステートを追加
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const { map, mapRef, switchBaseLayer } = useInitializeMap();
 
-  const imgRef = useRef<HTMLImageElement | null>(null); // useRefで画像参照を保持
+  const { selectedFeature, isFeatureClick, setIsFeatureClick } =
+    useMapClick(map);
 
-  // 選択されたフィーチャーが変更された時の処理
-  useEffect(() => {
-    setImageLoaded(false); // 画像読み込み状態をリセット
-
-    if (selectedFeature?.image) {
-      imgRef.current = new Image(); // useRefに画像を代入
-      imgRef.current.src = selectedFeature.image;
-      imgRef.current.onload = () => setImageLoaded(true);
-      imgRef.current.onerror = () => setImageLoaded(true); // エラー時も読み込み完了扱い
-    } else {
-      setImageLoaded(true); // 画像がない場合は即時完了
-    }
-
-    return () => {
-      if (imgRef.current) {
-        imgRef.current.onload = null;
-        imgRef.current.onerror = null;
-      }
-    };
-  }, [selectedFeature]);
+  const { isImageLoaded } = useImageLoader(selectedFeature, setIsFeatureClick);
 
   return (
     <div className="page_wrapper">
@@ -47,16 +27,29 @@ const Hyakumeizan = () => {
       </div>
 
       <div className="map_wrap">
-        <MapRenderer
-          setSelectedFeature={setSelectedFeature}
-          setIsVisible={setIsPopupVisible}
-          map={map}
-          setMap={setMap}
-          mapRef={mapRef}
-        />
-        {popupVisible && imageLoaded && (
+        <MapRenderer mapRef={mapRef} />
+        {isFeatureClick && selectedFeature && (
+          <div
+            style={{
+              position: 'absolute',
+              color: color.SemiDarkGreen,
+              bottom: '4vh',
+              left: '0vw',
+              width: '100vw',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '0px 20% 4vh 20%',
+              visibility: 'visible', // isVisibleステートで制御
+            }}
+          >
+            <CircularProgress color="inherit" />
+          </div>
+        )}
+        {isImageLoaded && selectedFeature && (
           <PopupCard selectedFeature={selectedFeature} />
         )}
+
         <MapToolbar
           changeGSILayer={() => switchBaseLayer('gsi')}
           changePHOTOLayer={() => switchBaseLayer('photo')}

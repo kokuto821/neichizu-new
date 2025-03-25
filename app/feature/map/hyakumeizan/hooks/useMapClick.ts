@@ -1,4 +1,10 @@
-import { Dispatch, SetStateAction, useCallback, useEffect } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { FeatureProperties } from '../types/types';
 import { Map, MapBrowserEvent } from 'ol';
 import Point from 'ol/geom/Point';
@@ -9,11 +15,10 @@ const isFeature = (feature: FeatureLike): feature is Feature => {
   return feature instanceof Feature;
 };
 
-export const useMapClick = (
-  map: Map | null,
-  setSelectedFeature: Dispatch<SetStateAction<FeatureProperties | null>>,
-  setIsVisible: Dispatch<SetStateAction<boolean>>
-) => {
+export const useMapClick = (map: Map | null) => {
+  const [selectedFeature, setSelectedFeature] =
+    useState<FeatureProperties | null>(null);
+  const [isFeatureClick, setIsFeatureClick] = useState<boolean>(false);
   const handleMapClick = useCallback(
     (event: MapBrowserEvent<UIEvent>) => {
       if (!map) return;
@@ -25,8 +30,8 @@ export const useMapClick = (
       );
 
       if (!clickedFeature) {
+        setIsFeatureClick(true);
         setSelectedFeature(null);
-        setIsVisible(false);
         return;
       }
 
@@ -47,12 +52,10 @@ export const useMapClick = (
         if (!(geometry instanceof Point)) return;
         const coordinate = geometry.getCoordinates();
         map.getView().animate({ center: coordinate, duration: 500 });
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
+        setIsFeatureClick(true);
       }
     },
-    [map, setSelectedFeature, setIsVisible]
+    [map, setSelectedFeature, setIsFeatureClick]
   );
 
   useEffect(() => {
@@ -64,5 +67,5 @@ export const useMapClick = (
     };
   }, [map, handleMapClick]);
 
-  return null;
+  return { selectedFeature, isFeatureClick, setIsFeatureClick };
 };
