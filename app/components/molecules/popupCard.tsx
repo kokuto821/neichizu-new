@@ -34,7 +34,7 @@ export const PopupCard = ({ selectedFeature }: Props) => {
   }, [selectedFeature]);
   return (
     <div
-      className="popup-card"
+      className="pt-0 px-[5%] pb-[4vh] md:px-[20%]"
       style={{
         position: 'absolute',
         bottom: '0',

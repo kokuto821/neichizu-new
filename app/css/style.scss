@@ -126,11 +126,6 @@ p {
   display: flex;
   flex-direction: column;
 }
-.page_wrapper {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
 .main-visual {
   display: flex;
   justify-content: center;
@@ -291,14 +286,6 @@ p {
     height: 50px;
   }
 }
-
-.popup-card {
-  padding: 0px 20% 4vh 20%;
-  @include sp {
-    padding: 0px 5% 4vh 5%;
-  }
-}
-
 .link-img-logo {
   padding-bottom: 4px;
 }

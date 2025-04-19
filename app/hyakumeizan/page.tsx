@@ -9,6 +9,7 @@ import { useMapClick } from '../feature/map/hyakumeizan/hooks/useMapClick';
 import { useImageLoader } from '../feature/map/hyakumeizan/hooks/useImageLoader';
 import { CircularProgress } from '@mui/material';
 import { color } from '../css/color';
+import { ReactNode } from 'react';
 
 const Hyakumeizan = () => {
   const { map, mapRef, switchBaseLayer } = useInitializeMap();
@@ -19,7 +20,7 @@ const Hyakumeizan = () => {
   const { isImageLoaded } = useImageLoader(selectedFeature, setIsFeatureClick);
 
   return (
-    <div className="page_wrapper">
+    <div className="flex flex-col h-full">
       <Header />
       <div className="map_title">
         <h2 className="h2-title_text">日本百名山</h2>
