@@ -23,7 +23,7 @@ export const PopupCard = ({ selectedFeature }: Props) => {
   }) => {
     return (
       <div
-        className="pt-0 px-[5%] pb-[4vh] md:px-[20%] absolute  bottom-0  left-0 w-full"
+        className="pt-0 px-[5%] pb-[10vh] md:px-[20%] absolute  bottom-0  left-0 w-full"
         style={{
           visibility: isVisible ? 'visible' : 'hidden', // isVisibleステートで制御
           transition: 'visibility 0.3s ease', // 必要に応じてトランジションを追加
@@ -33,6 +33,7 @@ export const PopupCard = ({ selectedFeature }: Props) => {
       </div>
     );
   };
+
   return (
     <PopupWrapper isVisible={isVisible}>
       <Card sx={{ display: 'flex', alignItems: 'center' }}>
