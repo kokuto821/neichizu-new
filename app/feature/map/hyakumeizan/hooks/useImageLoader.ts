@@ -3,6 +3,7 @@ import { FeatureProperties } from '../types/types';
 
 export const useImageLoader = (
   selectedFeature: FeatureProperties | null,
+  setSelectedFeature: Dispatch<SetStateAction<FeatureProperties | null>>,
   setIsFeatureClick: Dispatch<SetStateAction<boolean>>
 ) => {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
@@ -17,6 +18,9 @@ export const useImageLoader = (
       img.src = selectedFeature.image;
       img.onload = () => {
         setIsImageLoaded(true);
+        setTimeout(() => {
+          setIsFeatureClick(false);
+        }, 700); // 1秒後にクリック状態をリセット
       };
       img.onerror = () => {
         setIsImageLoaded(true); // エラー時も読み込み完了扱い

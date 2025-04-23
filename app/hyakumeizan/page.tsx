@@ -9,15 +9,22 @@ import { useMapClick } from '../feature/map/hyakumeizan/hooks/useMapClick';
 import { useImageLoader } from '../feature/map/hyakumeizan/hooks/useImageLoader';
 import { CircularProgress } from '@mui/material';
 import { color } from '../css/color';
-import { ReactNode } from 'react';
 
 const Hyakumeizan = () => {
   const { map, mapRef, switchBaseLayer } = useInitializeMap();
 
-  const { selectedFeature, isFeatureClick, setIsFeatureClick } =
-    useMapClick(map);
+  const {
+    selectedFeature,
+    setSelectedFeature,
+    isFeatureClick,
+    setIsFeatureClick,
+  } = useMapClick(map);
 
-  const { isImageLoaded } = useImageLoader(selectedFeature, setIsFeatureClick);
+  const { isImageLoaded } = useImageLoader(
+    selectedFeature,
+    setSelectedFeature,
+    setIsFeatureClick
+  );
 
   return (
     <div className="flex flex-col h-full">
@@ -28,7 +35,7 @@ const Hyakumeizan = () => {
 
       <div className="map_wrap">
         <MapRenderer mapRef={mapRef} />
-        {isFeatureClick && selectedFeature && (
+        {isFeatureClick && selectedFeature !== null && (
           <div
             style={{
               position: 'absolute',
@@ -46,9 +53,7 @@ const Hyakumeizan = () => {
             <CircularProgress color="inherit" />
           </div>
         )}
-        {isImageLoaded && selectedFeature && (
-          <PopupCard selectedFeature={selectedFeature} />
-        )}
+        {isImageLoaded && <PopupCard selectedFeature={selectedFeature} />}
 
         <MapToolbar
           changeGSILayer={() => switchBaseLayer('gsi')}
