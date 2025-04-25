@@ -15,14 +15,12 @@ const Hyakumeizan = () => {
 
   const {
     selectedFeature,
-    setSelectedFeature,
     isFeatureClick,
     setIsFeatureClick,
   } = useMapClick(map);
 
   const { isImageLoaded } = useImageLoader(
     selectedFeature,
-    setSelectedFeature,
     setIsFeatureClick
   );
 

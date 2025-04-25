@@ -3,7 +3,6 @@ import { FeatureProperties } from '../types/types';
 
 export const useImageLoader = (
   selectedFeature: FeatureProperties | null,
-  setSelectedFeature: Dispatch<SetStateAction<FeatureProperties | null>>,
   setIsFeatureClick: Dispatch<SetStateAction<boolean>>
 ) => {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
