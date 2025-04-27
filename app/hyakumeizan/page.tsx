@@ -22,11 +22,10 @@ const Hyakumeizan = () => {
     <div className="flex flex-col h-full">
       <div className="relative h-[100vh]">
         <MapRenderer mapRef={mapRef} />
-
         <div className="pt-0 px-[5%] md:px-[20%] absolute bottom-0 left-0 w-full">
-          <div className="flex flex-col gap-2 pb-[1vh]">
+          <div className="pb-[1vh] flex flex-col gap-2">
             {isFeatureClick && selectedFeature !== null && (
-              <div className="translate-y-20 z-1">
+              <div className="absolute top-0 left-0 right-0 m-auto">
                 <RoadingSpinner />
               </div>
             )}

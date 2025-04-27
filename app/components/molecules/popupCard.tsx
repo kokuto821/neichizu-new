@@ -25,7 +25,7 @@ export const PopupCard = ({ selectedFeature }: Props) => {
       <div
         style={{
           visibility: isVisible ? 'visible' : 'hidden', // isVisibleステートで制御
-          transition: 'visibility 0.5s ease', // 必要に応じてトランジションを追加
+          transition: 'visibility 1s ease', // 必要に応じてトランジションを追加
         }}
       >
         {children}
