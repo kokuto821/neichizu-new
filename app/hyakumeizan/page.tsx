@@ -1,58 +1,38 @@
 // app/feature/map/hyakumeizan/page.tsx
 'use client';
-import { Header } from '@/app/components/molecules/header';
 import { MapRenderer } from '@/app/feature/map/hyakumeizan/component/MapRenderer';
 import { PopupCard } from '../components/molecules/popupCard';
 import { MapToolbar } from '../components/molecules/mapToolbar';
 import { useInitializeMap } from '../feature/map/hyakumeizan/hooks/useInitializeMap';
 import { useMapClick } from '../feature/map/hyakumeizan/hooks/useMapClick';
 import { useImageLoader } from '../feature/map/hyakumeizan/hooks/useImageLoader';
-import { CircularProgress } from '@mui/material';
-import { color } from '../css/color';
+import { BottomNavigation } from '../components/molecules/BottomNavigation';
+import { RoadingSpinner } from '../components/molecules/RoadingSpinner';
 
 const Hyakumeizan = () => {
-  const { map, mapRef, switchBaseLayer } = useInitializeMap();
+  const { map, mapRef, switchBaseLayer, isVectorVisible, setIsVectorVisible } =
+    useInitializeMap();
 
-  const {
-    selectedFeature,
-    isFeatureClick,
-    setIsFeatureClick,
-  } = useMapClick(map);
+  const { selectedFeature, isFeatureClick, setIsFeatureClick } =
+    useMapClick(map);
 
-  const { isImageLoaded } = useImageLoader(
-    selectedFeature,
-    setIsFeatureClick
-  );
+  const { isImageLoaded } = useImageLoader(selectedFeature, setIsFeatureClick);
 
   return (
     <div className="flex flex-col h-full">
-      <Header />
-      <div className="map_title">
-        <h2 className="h2-title_text">日本百名山</h2>
-      </div>
+      {/* <Header /> */}
+      {/* <div className="map_title">
+        <h2 className="h2-title_text">{isVectorVisible ? '日本百名山' : ''}</h2>
+      </div> */}
 
-      <div className="map_wrap">
+      <div className="relative h-[100vh]">
         <MapRenderer mapRef={mapRef} />
-        {isFeatureClick && selectedFeature !== null && (
-          <div
-            style={{
-              position: 'absolute',
-              color: color.SemiDarkGreen,
-              bottom: '4vh',
-              left: '0vw',
-              width: '100vw',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: '0px 20% 4vh 20%',
-              visibility: 'visible', // isVisibleステートで制御
-            }}
-          >
-            <CircularProgress color="inherit" />
-          </div>
-        )}
+        {isFeatureClick && selectedFeature !== null && <RoadingSpinner />}
         {isImageLoaded && <PopupCard selectedFeature={selectedFeature} />}
-
+        <BottomNavigation
+          isVectorVisible={isVectorVisible}
+          setIsVectorVisible={setIsVectorVisible}
+        />
         <MapToolbar
           changeGSILayer={() => switchBaseLayer('gsi')}
           changePHOTOLayer={() => switchBaseLayer('photo')}

@@ -19,6 +19,8 @@ export const useInitializeMap = () => {
   const [baseLayers, setBaseLayers] = useState<BaseLayerConfig[]>([]);
   const [activeLayer, setActiveLayer] = useState('gsi');
   const [center] = useState<[number, number]>([139, 35]); // 初期中心座標
+  const [isVectorVisible,setIsVectorVisible] = useState(true);
+
 
   useEffect(() => {
     if (typeof window === 'undefined' || !mapRef.current) return;
@@ -50,19 +52,34 @@ export const useInitializeMap = () => {
     };
   }, [center]);
 
+  const vectorLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
+
   useEffect(() => {
     if (!map) return;
 
-    // vectorレイヤーの追加
-    const vectorSource = new VectorSource();
-    const vectorLayer = new VectorLayer({
-      source: vectorSource,
-      properties: { type: 'vector' },
-    });
+    const existingVectorLayer = map.getLayers().getArray().find(
+      layer => layer.get('type') === 'vector'
+    ) as VectorLayer<VectorSource>;
 
-    addFeature(map, vectorSource);
-    map.addLayer(vectorLayer);
-  }, [map]);
+    if (isVectorVisible) {
+      if (!existingVectorLayer) {
+        const vectorSource = new VectorSource();
+        vectorLayerRef.current = new VectorLayer({
+          source: vectorSource,
+          properties: { type: 'vector' },
+        });
+        addFeature(map, vectorSource);
+        map.addLayer(vectorLayerRef.current);
+        console.log('Vector layer added');
+      }
+    } else {
+      if (existingVectorLayer) {
+        map.removeLayer(existingVectorLayer);
+        vectorLayerRef.current = null;
+        console.log('Vector layer removed');
+      }
+    }
+  }, [isVectorVisible, map]);
 
   // レイヤー切り替え処理
   const switchBaseLayer = (layerName: string) => {
@@ -86,5 +103,7 @@ export const useInitializeMap = () => {
     activeLayer,
     switchBaseLayer,
     baseLayers,
+    isVectorVisible,
+    setIsVectorVisible
   };
 };

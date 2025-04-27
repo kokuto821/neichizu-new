@@ -13,7 +13,7 @@ export const RoadingSpinner = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: '0px 20% 4vh 20%',
+        padding: '0px 20% 11vh 20%',
         visibility: 'visible', // isVisibleステートで制御
       }}
     >

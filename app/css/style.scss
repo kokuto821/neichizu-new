@@ -22,21 +22,19 @@ $EcruWhite: rgb(246, 247, 232);
 $header_height: 6vh;
 $map_title_height: 4vh;
 $footer_height: 6vh;
-$map_height2: calc(
-  100vh - #{$header_height} - #{$map_title_height} - #{$footer_height}
-);
+$map_height2: calc(100vh - #{$header_height} - #{$map_title_height} - #{$footer_height});
 $map_height: 90vh;
 
 .wf-roundedmplus1c {
-  font-family: 'M PLUS Rounded 1c', 'ヒラギノ角ゴ Pro W3';
+  font-family: "M PLUS Rounded 1c", "ヒラギノ角ゴ Pro W3";
 }
 /* 要素名 */
 html {
   height: 100%;
 }
 body {
-  background-image: url('/img/nature_back.webp');
-  font-family: 'M PLUS Rounded 1c';
+  background-image: url("/img/nature_back.webp");
+  font-family: "M PLUS Rounded 1c";
   margin: 0;
   padding: 0;
   background-color: #fcfcfc;
@@ -64,7 +62,7 @@ body {
 .h1-title_text {
   display: flex;
   flex-direction: row;
-  font-family: 'M PLUS Rounded 1c';
+  font-family: "M PLUS Rounded 1c";
   font-weight: bold;
   margin: 0;
   padding: 0;
@@ -92,7 +90,7 @@ li {
 .h2-title_text {
   display: flex;
   flex-direction: row;
-  font-family: 'M PLUS Rounded 1c';
+  font-family: "M PLUS Rounded 1c";
   padding: 0;
   box-sizing: border-box;
   text-shadow:
@@ -117,12 +115,12 @@ img {
   border-radius: 0px;
 }
 p {
-  font-family: 'M PLUS Rounded 1c';
+  font-family: "M PLUS Rounded 1c";
   text-align: left;
 }
 /* Class */
 .wrapper {
-  background-image: url('/img/nature_back.png');
+  background-image: url("/img/nature_back.png");
   display: flex;
   flex-direction: column;
 }
@@ -175,7 +173,7 @@ p {
       padding-left: 20px;
     }
     .close::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 50%;
       left: 0;
@@ -186,7 +184,7 @@ p {
       transform: rotate(45deg);
     }
     .close::after {
-      content: '';
+      content: "";
       position: absolute;
       top: 50%;
       left: 0;
@@ -212,10 +210,7 @@ p {
     transform: translateY(-10%);
   }
 }
-.map_wrap {
-  position: relative;
-  height: $map_height;
-}
+
 .mapflame {
   position: absolute;
   display: block;
@@ -296,10 +291,10 @@ p {
   align-items: center;
   height: 100px;
   .foot_nav_p {
-    font-family: 'M PLUS Rounded 1c';
+    font-family: "M PLUS Rounded 1c";
   }
   .foot_nav_link {
-    font-family: 'M PLUS Rounded 1c';
+    font-family: "M PLUS Rounded 1c";
     color: rgb(69, 150, 226);
     font-weight: bold;
   }
@@ -401,7 +396,7 @@ p {
     transform: translateY(-50%);
   }
   #hamburger::before {
-    content: '';
+    content: "";
     display: block;
     position: absolute;
     top: 0;
@@ -411,7 +406,7 @@ p {
     background-color: #fff;
   }
   #hamburger::after {
-    content: '';
+    content: "";
     display: block;
     position: absolute;
     bottom: 0;
@@ -460,7 +455,7 @@ p {
 
   .foot_nav {
     .foot_nav_p {
-      font-family: 'M PLUS Rounded 1c';
+      font-family: "M PLUS Rounded 1c";
       text-align: center;
     }
     .foot_nav_p {
@@ -469,7 +464,7 @@ p {
       margin: 1em;
     }
     .foot_nav_link {
-      font-family: 'M PLUS Rounded 1c';
+      font-family: "M PLUS Rounded 1c";
       color: rgb(69, 150, 226);
       font-weight: bold;
       text-shadow: 0 0 0.05em #e0ffff;

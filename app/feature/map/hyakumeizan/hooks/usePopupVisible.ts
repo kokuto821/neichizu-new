@@ -1,4 +1,4 @@
-import { useState, useEffect, use, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { FeatureProperties } from '../types/types';
 
 export const usePopupVisible = (selectedFeature: FeatureProperties | null) => {
@@ -24,7 +24,7 @@ export const usePopupVisible = (selectedFeature: FeatureProperties | null) => {
   useEffect(() => {
     const cleanup = handleVisible();
     return cleanup;
-  }, [selectedFeature]);
+  }, [handleVisible]); // selectedFeatureが変更されたときに実行
 
   return { isVisible }; // isVisibleを返す
 };
