@@ -1,7 +1,7 @@
-import React from "react";
-import { Header } from "./components/molecules/header";
-import { MainFooter } from "./components/molecules/mainFooter";
-import { ItemBoxEyecatch } from "./components/molecules/ItemBoxEyecatch";
+import React from 'react';
+import { Header } from './components/molecules/header';
+import { MainFooter } from './components/molecules/mainFooter';
+import { ItemBoxEyecatch } from './components/molecules/ItemBoxEyecatch';
 
 export default function Home() {
   return (
@@ -50,7 +50,6 @@ export default function Home() {
         <div className="white_back"></div>
         <div className="space"></div>
       </div>
-
       <MainFooter />
     </div>
   );

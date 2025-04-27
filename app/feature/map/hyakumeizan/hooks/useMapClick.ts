@@ -61,5 +61,10 @@ export const useMapClick = (map: Map | null) => {
     };
   }, [map, handleMapClick]);
 
-  return { selectedFeature, isFeatureClick, setIsFeatureClick };
+  return {
+    selectedFeature,
+    setSelectedFeature,
+    isFeatureClick,
+    setIsFeatureClick,
+  };
 };

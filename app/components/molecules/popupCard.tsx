@@ -7,43 +7,35 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { FeatureProperties } from '@/app/feature/map/hyakumeizan/types/types';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { usePopupVisible } from '@/app/feature/map/hyakumeizan/hooks/usePopupVisible';
+import { FC, ReactNode } from 'react';
 
 type Props = {
   selectedFeature: FeatureProperties | null;
 };
 
 export const PopupCard = ({ selectedFeature }: Props) => {
-  const [isVisible, setIsVisible] = useState(false); // 表示状態を管理するステート
+  const { isVisible } = usePopupVisible(selectedFeature);
 
-  useEffect(() => {
-    if (selectedFeature) {
-      // 0.5秒後に表示状態をtrueにする
-      const timer = setTimeout(() => {
-        setIsVisible(true);
-      }, 500);
+  const PopupWrapper: FC<{ isVisible: boolean; children: ReactNode }> = ({
+    isVisible,
+    children,
+  }) => {
+    return (
+      <div
+        className="pt-0 px-[5%] pb-[11.5vh] md:pb-[12.5vh] md:px-[20%] absolute  bottom-0 left-0 w-full"
+        style={{
+          visibility: isVisible ? 'visible' : 'hidden', // isVisibleステートで制御
+          transition: 'visibility 0.3s ease', // 必要に応じてトランジションを追加
+        }}
+      >
+        {children}
+      </div>
+    );
+  };
 
-      // クリーンアップ関数でタイマーをクリア
-      return () => {
-        clearTimeout(timer);
-        setIsVisible(false); // 表示状態をリセット
-      };
-    } else {
-      setIsVisible(false); // selectedFeatureがnullの場合は非表示
-    }
-  }, [selectedFeature]);
   return (
-    <div
-      className="popup-card"
-      style={{
-        position: 'absolute',
-        bottom: '0',
-        left: '0',
-        width: '100%',
-        visibility: isVisible ? 'visible' : 'hidden', // isVisibleステートで制御
-        transition: 'visibility 0.3s ease', // 必要に応じてトランジションを追加
-      }}
-    >
+    <PopupWrapper isVisible={isVisible}>
       <Card sx={{ display: 'flex', alignItems: 'center' }}>
         {selectedFeature?.image && (
           <CardMedia
@@ -89,6 +81,6 @@ export const PopupCard = ({ selectedFeature }: Props) => {
           </CardContent>
         </Box>
       </Card>
-    </div>
+    </PopupWrapper>
   );
 };

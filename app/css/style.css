@@ -113,12 +113,6 @@ p {
   flex-direction: column;
 }
 
-.page_wrapper {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
 .main-visual {
   display: flex;
   justify-content: center;
@@ -210,11 +204,6 @@ p {
   transform: translateY(-10%);
 }
 
-.map_wrap {
-  position: relative;
-  height: 90vh;
-}
-
 .mapflame {
   position: absolute;
   display: block;
@@ -282,15 +271,6 @@ p {
 }
 .content .space {
   height: 50px;
-}
-
-.popup-card {
-  padding: 0px 20% 4vh 20%;
-}
-@media screen and (max-width: 680px) {
-  .popup-card {
-    padding: 0px 5% 4vh 5%;
-  }
 }
 
 .link-img-logo {
