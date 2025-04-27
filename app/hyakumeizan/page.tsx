@@ -36,9 +36,7 @@ const Hyakumeizan = () => {
             >
               <RoadingSpinner />
             </div>
-            {isVectorVisible && isImageLoaded && (
-              <PopupCard selectedFeature={selectedFeature} />
-            )}
+            {isImageLoaded && <PopupCard selectedFeature={selectedFeature} />}
             <BottomNavigation
               isVectorVisible={isVectorVisible}
               setIsVectorVisible={setIsVectorVisible}
