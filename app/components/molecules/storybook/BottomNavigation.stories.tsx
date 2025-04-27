@@ -4,13 +4,15 @@ import { BottomNavigation } from '../BottomNavigation';
 export default {
   title: 'BottomNavigation',
   component: BottomNavigation,
+} as Meta;
 
-} as Meta
-
-const Template: StoryFn = (args) => <BottomNavigation {...args} />;
+const Template: StoryFn<{
+  isVectorVisible: boolean;
+  setIsVectorVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}> = (args) => <BottomNavigation {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
-  // ここにHeaderコンポーネントに渡すプロップスを定義できます
-  // 例えば、ロゴのパスやリンクのテキストを変更したい場合など
+  isVectorVisible: false,
+  setIsVectorVisible: () => {},
 };
