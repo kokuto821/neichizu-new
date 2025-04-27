@@ -15,11 +15,7 @@ export const BottomNavigation = ({
   const UnvisualContainer: FC<{
     children: ReactNode;
   }> = ({ children }) => {
-    return (
-      <div className="pt-0 px-[5%] pb-[1vh] md:px-[20%] absolute bottom-0 left-0 w-full">
-        {children}
-      </div>
-    );
+    return <div className="">{children}</div>;
   };
 
   const NavigationWrapper: FC<{ children: ReactNode }> = ({ children }) => {
@@ -60,7 +56,7 @@ export const BottomNavigation = ({
       >
         <Button
           className="flex-col"
-          sx={{ color: color.SemiDarkGreen }}
+          sx={{ color: color.SemiDarkGreen, padding: 0 }}
           onClick={onClick}
         >
           {children}

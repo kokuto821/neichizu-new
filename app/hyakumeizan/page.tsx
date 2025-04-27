@@ -20,19 +20,24 @@ const Hyakumeizan = () => {
 
   return (
     <div className="flex flex-col h-full">
-      {/* <Header /> */}
-      {/* <div className="map_title">
-        <h2 className="h2-title_text">{isVectorVisible ? '日本百名山' : ''}</h2>
-      </div> */}
-
       <div className="relative h-[100vh]">
         <MapRenderer mapRef={mapRef} />
-        {isFeatureClick && selectedFeature !== null && <RoadingSpinner />}
-        {isImageLoaded && <PopupCard selectedFeature={selectedFeature} />}
-        <BottomNavigation
-          isVectorVisible={isVectorVisible}
-          setIsVectorVisible={setIsVectorVisible}
-        />
+
+        <div className="pt-0 px-[5%] md:px-[20%] absolute bottom-0 left-0 w-full">
+          <div className="flex flex-col gap-2 pb-[1vh]">
+            {isFeatureClick && selectedFeature !== null && (
+              <div className="translate-y-20 z-1">
+                <RoadingSpinner />
+              </div>
+            )}
+            {isImageLoaded && <PopupCard selectedFeature={selectedFeature} />}
+            <BottomNavigation
+              isVectorVisible={isVectorVisible}
+              setIsVectorVisible={setIsVectorVisible}
+            />
+          </div>
+        </div>
+
         <MapToolbar
           changeGSILayer={() => switchBaseLayer('gsi')}
           changePHOTOLayer={() => switchBaseLayer('photo')}
