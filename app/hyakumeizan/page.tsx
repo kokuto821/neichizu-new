@@ -24,11 +24,18 @@ const Hyakumeizan = () => {
         <MapRenderer mapRef={mapRef} />
         <div className="pt-0 px-[5%] md:px-[20%] absolute bottom-0 left-0 w-full">
           <div className="pb-[1vh] flex flex-col justify-center gap-2">
-            {isFeatureClick && selectedFeature !== null && (
-              <div className="absolute top-10 left-0 right-0 bottom-0 m-auto z-1">
-                <RoadingSpinner />
-              </div>
-            )}
+            <div
+              className="absolute top-10 left-0 right-0 bottom-0 m-auto z-1"
+              style={{
+                visibility:
+                  isFeatureClick && selectedFeature !== null
+                    ? 'visible'
+                    : 'hidden', // isVisibleステートで制御
+                transition: 'visibility 0.3s ease', // 必要に応じてトランジションを追加
+              }}
+            >
+              <RoadingSpinner />
+            </div>
             {isImageLoaded && <PopupCard selectedFeature={selectedFeature} />}
             <BottomNavigation
               isVectorVisible={isVectorVisible}
