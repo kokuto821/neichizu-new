@@ -8,9 +8,11 @@ import { Dispatch, SetStateAction } from 'react';
 export const BottomNavigation = ({
   isVectorVisible,
   setIsVectorVisible,
+  setIsFeatureClick,
 }: {
   isVectorVisible: boolean;
   setIsVectorVisible: Dispatch<SetStateAction<boolean>>;
+  setIsFeatureClick: Dispatch<SetStateAction<boolean>>;
 }) => {
   const UnvisualContainer: FC<{
     children: ReactNode;
@@ -99,6 +101,7 @@ export const BottomNavigation = ({
           <NavigationItem
             onClick={() => {
               setTimeout(() => setIsVectorVisible(!isVectorVisible), 300);
+              setTimeout(() => setIsFeatureClick(false), 300);
             }}
             isVisible={isVectorVisible}
           >

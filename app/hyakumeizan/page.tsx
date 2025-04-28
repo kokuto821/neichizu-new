@@ -25,7 +25,6 @@ const Hyakumeizan = () => {
         <div className="pt-0 px-[5%] md:px-[20%] absolute bottom-0 left-0 w-full">
           <div className="pb-[1vh] flex flex-col justify-center gap-2">
             <div
-              className="absolute top-10 left-0 right-0 bottom-0 m-auto z-1"
               style={{
                 visibility:
                   isFeatureClick && selectedFeature !== null
@@ -40,6 +39,7 @@ const Hyakumeizan = () => {
             <BottomNavigation
               isVectorVisible={isVectorVisible}
               setIsVectorVisible={setIsVectorVisible}
+              setIsFeatureClick={setIsFeatureClick}
             />
           </div>
         </div>
