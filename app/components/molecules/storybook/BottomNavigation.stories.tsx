@@ -9,6 +9,7 @@ export default {
 const Template: StoryFn<{
   isVectorVisible: boolean;
   setIsVectorVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsFeatureClick: React.Dispatch<React.SetStateAction<boolean>>;
 }> = (args) => <BottomNavigation {...args} />;
 
 export const Default = Template.bind({});
