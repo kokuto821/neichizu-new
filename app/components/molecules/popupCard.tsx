@@ -18,13 +18,10 @@ export const PopupCard = ({ selectedFeature }: Props) => {
   const { isVisible } = usePopupVisible(selectedFeature);
 
   const PopupWrapper: FC<{ isVisible: boolean; children: ReactNode }> = ({
-    isVisible,
     children,
   }) => {
     return (
-      <div
-        className="pt-0 px-[5%] pb-[12vh] md:pb-[12.5vh] md:px-[20%] absolute  bottom-0 left-0 w-full"
-      >
+      <div className="pt-0 px-[5%] pb-[12vh] md:pb-[12.5vh] md:px-[20%] absolute  bottom-0 left-0 w-full">
         {children}
       </div>
     );
