@@ -27,20 +27,18 @@ const Hyakumeizan = () => {
       <div className="relative h-[100vh]">
         <MapRenderer mapRef={mapRef} />
         {isFeatureClick && selectedFeature !== null && <RoadingSpinner />}
-        <div className="flex flex-col gap-2">
-          {isImageLoaded && <PopupCard selectedFeature={selectedFeature} />}
-          <BottomNavigation
-            isVectorVisible={isVectorVisible}
-            setIsVectorVisible={setIsVectorVisible}
-          />
-          <MapToolbar
-            changeGSILayer={() => switchBaseLayer('gsi')}
-            changePHOTOLayer={() => switchBaseLayer('photo')}
-            changeRELIEFLayer={() => switchBaseLayer('relief')}
-            changeOSMLayer={() => switchBaseLayer('osm')}
-            changeTOPOLayer={() => switchBaseLayer('osmTopo')}
-          />
-        </div>
+        {isImageLoaded && <PopupCard selectedFeature={selectedFeature} />}
+        <BottomNavigation
+          isVectorVisible={isVectorVisible}
+          setIsVectorVisible={setIsVectorVisible}
+        />
+        <MapToolbar
+          changeGSILayer={() => switchBaseLayer('gsi')}
+          changePHOTOLayer={() => switchBaseLayer('photo')}
+          changeRELIEFLayer={() => switchBaseLayer('relief')}
+          changeOSMLayer={() => switchBaseLayer('osm')}
+          changeTOPOLayer={() => switchBaseLayer('osmTopo')}
+        />
       </div>
     </div>
   );

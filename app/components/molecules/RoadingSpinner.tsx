@@ -7,13 +7,13 @@ export const RoadingSpinner = () => {
       style={{
         position: 'absolute',
         color: color.SemiDarkGreen,
-        bottom: '6.5vh',
+        bottom: '155px',
         left: '0vw',
         width: '100vw',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: '0px 20% 11vh 20%',
+        padding: '0px 20% 0 20%',
         visibility: 'visible', // isVisibleステートで制御
       }}
     >
