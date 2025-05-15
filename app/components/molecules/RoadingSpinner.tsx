@@ -4,8 +4,8 @@ import { CircularProgress } from '@mui/material';
 export const RoadingSpinner = () => {
   return (
     <div
+      className="flex justify-center items-center"
       style={{
-        position: 'absolute',
         color: color.SemiDarkGreen,
         bottom: '6.5vh',
         left: '0vw',

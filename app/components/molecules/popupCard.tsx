@@ -24,10 +24,6 @@ export const PopupCard = ({ selectedFeature }: Props) => {
     return (
       <div
         className="pt-0 px-[5%] pb-[12vh] md:pb-[12.5vh] md:px-[20%] absolute  bottom-0 left-0 w-full"
-        style={{
-          visibility: isVisible ? 'visible' : 'hidden', // isVisibleステートで制御
-          transition: 'visibility 0.3s ease', // 必要に応じてトランジションを追加
-        }}
       >
         {children}
       </div>
@@ -36,7 +32,7 @@ export const PopupCard = ({ selectedFeature }: Props) => {
 
   return (
     <PopupWrapper isVisible={isVisible}>
-      <Card sx={{ display: 'flex', alignItems: 'center' }}>
+      <Card sx={{ display: 'flex', alignItems: 'center', zIndex: 2 }}>
         {selectedFeature?.image && (
           <CardMedia
             component="img"
