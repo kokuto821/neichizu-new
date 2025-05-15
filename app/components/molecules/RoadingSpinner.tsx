@@ -7,7 +7,7 @@ export const RoadingSpinner = () => {
       style={{
         position: 'absolute',
         color: color.SemiDarkGreen,
-        bottom: '4vh',
+        bottom: '7vh',
         left: '0vw',
         width: '100vw',
         display: 'flex',

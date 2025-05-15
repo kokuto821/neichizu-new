@@ -16,7 +16,7 @@ export const BottomNavigation = ({
     children: ReactNode;
   }> = ({ children }) => {
     return (
-      <div className="pt-0 px-[5%] pb-[1vh] md:px-[20%] absolute bottom-0 left-0 w-full">
+      <div className="pt-0 px-[5%] pb-[1.25vh] md:px-[20%] absolute bottom-0 left-0 w-full">
         {children}
       </div>
     );
