@@ -9,6 +9,7 @@ import { FeatureProperties } from '@/app/feature/map/hyakumeizan/types/types';
 import Link from 'next/link';
 import { usePopupVisible } from '@/app/feature/map/hyakumeizan/hooks/usePopupVisible';
 import { FC, ReactNode } from 'react';
+import { color } from '@/app/css/color';
 
 type Props = {
   selectedFeature: FeatureProperties | null;
@@ -35,7 +36,13 @@ export const PopupCard = ({ selectedFeature }: Props) => {
 
   return (
     <PopupWrapper isVisible={isVisible}>
-      <Card sx={{ display: 'flex', alignItems: 'center' }}>
+      <Card
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          backgroundColor: color.EcruWhite,
+        }}
+      >
         {selectedFeature?.image && (
           <CardMedia
             component="img"
@@ -62,7 +69,7 @@ export const PopupCard = ({ selectedFeature }: Props) => {
             <Link href={selectedFeature?.googlemaplink || '#'} target="_blank">
               <Image
                 className="link-img-logo"
-                src={'/img/g_map_logo.jpg'}
+                src={'/img/g_map_logo.png'}
                 alt={'googleMap'}
                 width={110}
                 height={110}
