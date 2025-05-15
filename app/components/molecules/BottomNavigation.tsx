@@ -17,7 +17,13 @@ export const BottomNavigation = ({
   const UnvisualContainer: FC<{
     children: ReactNode;
   }> = ({ children }) => {
-    return <div className="">{children}</div>;
+    
+    return (
+      <div className="pt-0 px-[5%] pb-[1.25vh] md:px-[20%] absolute bottom-0 left-0 w-full">
+        {children}
+      </div>
+    );
+
   };
 
   const NavigationWrapper: FC<{ children: ReactNode }> = ({ children }) => {

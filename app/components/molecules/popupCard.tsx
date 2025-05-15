@@ -23,10 +23,7 @@ export const PopupCard = ({ selectedFeature }: Props) => {
   }) => {
     return (
       <div
-        style={{
-          visibility: isVisible ? 'visible' : 'hidden', // isVisibleステートで制御
-          transition: 'visibility 1s ease', // 必要に応じてトランジションを追加
-        }}
+        className="pt-0 px-[5%] pb-[12vh] md:pb-[12.5vh] md:px-[20%] absolute  bottom-0 left-0 w-full"
       >
         {children}
       </div>
