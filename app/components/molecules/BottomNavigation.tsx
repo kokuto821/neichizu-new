@@ -8,22 +8,18 @@ import { Dispatch, SetStateAction } from 'react';
 export const BottomNavigation = ({
   isVectorVisible,
   setIsVectorVisible,
-  setIsFeatureClick,
 }: {
   isVectorVisible: boolean;
   setIsVectorVisible: Dispatch<SetStateAction<boolean>>;
-  setIsFeatureClick: Dispatch<SetStateAction<boolean>>;
 }) => {
   const UnvisualContainer: FC<{
     children: ReactNode;
   }> = ({ children }) => {
-    
     return (
       <div className="pt-0 px-[5%] pb-[1.25vh] md:px-[20%] absolute bottom-0 left-0 w-full">
         {children}
       </div>
     );
-
   };
 
   const NavigationWrapper: FC<{ children: ReactNode }> = ({ children }) => {
@@ -64,7 +60,7 @@ export const BottomNavigation = ({
       >
         <Button
           className="flex-col"
-          sx={{ color: color.SemiDarkGreen, padding: 0 }}
+          sx={{ color: color.SemiDarkGreen }}
           onClick={onClick}
         >
           {children}
@@ -107,7 +103,6 @@ export const BottomNavigation = ({
           <NavigationItem
             onClick={() => {
               setTimeout(() => setIsVectorVisible(!isVectorVisible), 300);
-              setTimeout(() => setIsFeatureClick(false), 300);
             }}
             isVisible={isVectorVisible}
           >
