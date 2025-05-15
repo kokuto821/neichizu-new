@@ -20,29 +20,18 @@ const Hyakumeizan = () => {
 
   return (
     <div className="flex flex-col h-full">
+      {/* <Header /> */}
+      {/* <div className="map_title">
+        <h2 className="h2-title_text">{isVectorVisible ? '日本百名山' : ''}</h2>
+      </div> */}
       <div className="relative h-[100vh]">
         <MapRenderer mapRef={mapRef} />
-        <div className="pt-0 px-[5%] md:px-[20%] absolute bottom-0 left-0 w-full">
-          <div className="pb-[1vh] flex flex-col justify-center gap-2">
-            <div
-              style={{
-                visibility:
-                  isFeatureClick && selectedFeature !== null
-                    ? 'visible'
-                    : 'hidden', // isVisibleステートで制御
-                transition: 'visibility 0.3s ease', // 必要に応じてトランジションを追加
-              }}
-            >
-              <RoadingSpinner />
-            </div>
-            {isImageLoaded && <PopupCard selectedFeature={selectedFeature} />}
-            <BottomNavigation
-              isVectorVisible={isVectorVisible}
-              setIsVectorVisible={setIsVectorVisible}
-              setIsFeatureClick={setIsFeatureClick}
-            />
-          </div>
-        </div>
+        {isFeatureClick && selectedFeature !== null && <RoadingSpinner />}
+        {isImageLoaded && <PopupCard selectedFeature={selectedFeature} />}
+        <BottomNavigation
+          isVectorVisible={isVectorVisible}
+          setIsVectorVisible={setIsVectorVisible}
+        />
 
         <MapToolbar
           changeGSILayer={() => switchBaseLayer('gsi')}
