@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { Button } from '@mui/material';
 
 import { Dispatch, SetStateAction } from 'react';
+import { SwipeableDrawerWithCloseButton } from './SwipeableDrawerWithCloseButton';
 
 export const BottomNavigation = ({
   isVectorVisible,
@@ -109,6 +110,7 @@ export const BottomNavigation = ({
     <UnvisualContainer>
       <NavigationWrapper>
         <NavigationList>
+          <SwipeableDrawerWithCloseButton />
           <NavigationTitle>Neichizu</NavigationTitle>
           <NavigationItem
             onClick={() => {
