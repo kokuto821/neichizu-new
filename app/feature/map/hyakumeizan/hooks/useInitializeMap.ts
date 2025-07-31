@@ -4,9 +4,7 @@ import { fromLonLat } from 'ol/proj';
 import { defaults as defaultControls } from 'ol/control';
 import { gsi, layers, osm, osmTopo, photo, relief } from '../utils/layers';
 import TileLayer from 'ol/layer/Tile';
-import VectorSource from 'ol/source/Vector';
-import VectorLayer from 'ol/layer/Vector';
-import { addFeature } from '../utils/addFeature';
+import { useVectorLayerVisibility } from './useVectorLayerVisibility';
 
 type BaseLayerConfig = {
   name: string;
@@ -50,33 +48,7 @@ export const useInitializeMap = () => {
     };
   }, []);
 
-  // ベクターレイヤーの表示・非表示制御
-  useEffect(() => {
-    if (!map) return;
-
-    const existingVectorLayer = map
-      .getLayers()
-      .getArray()
-      .find((layer) => layer.get('type') === 'vector') as
-      | VectorLayer<VectorSource>
-      | undefined;
-
-    if (isVectorVisible) {
-      if (!existingVectorLayer) {
-        const vectorSource = new VectorSource();
-        const vectorLayer = new VectorLayer({
-          source: vectorSource,
-          properties: { type: 'vector' },
-        });
-        addFeature(map, vectorSource);
-        map.addLayer(vectorLayer);
-      }
-    } else {
-      if (existingVectorLayer) {
-        map.removeLayer(existingVectorLayer);
-      }
-    }
-  }, [isVectorVisible, map]);
+  useVectorLayerVisibility(map, isVectorVisible);
 
   // ベースレイヤー切り替え
   const switchBaseLayer = useCallback(
