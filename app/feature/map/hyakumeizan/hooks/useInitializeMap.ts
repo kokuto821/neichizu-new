@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { Map, View } from 'ol';
 import { fromLonLat } from 'ol/proj';
 import { defaults as defaultControls } from 'ol/control';
@@ -18,14 +18,13 @@ export const useInitializeMap = () => {
   const [map, setMap] = useState<Map | null>(null);
   const [baseLayers, setBaseLayers] = useState<BaseLayerConfig[]>([]);
   const [activeLayer, setActiveLayer] = useState('gsi');
-  const [center] = useState<[number, number]>([139, 35]); // 初期中心座標
-  const [isVectorVisible,setIsVectorVisible] = useState(true);
-
-
+  const [isVectorVisible, setIsVectorVisible] = useState(true);
+  // マップ初期化
   useEffect(() => {
     if (typeof window === 'undefined' || !mapRef.current) return;
 
-    // Map インスタンスの生成
+    const center = [139, 35]; // 初期中心座標
+
     const initializedMap = new Map({
       target: mapRef.current,
       layers: layers,
@@ -46,54 +45,52 @@ export const useInitializeMap = () => {
       { name: 'osmTopo', layer: osmTopo },
     ]);
 
-    // クリーンアップ: マップのターゲットを解除
     return () => {
       initializedMap.setTarget(undefined);
     };
-  }, [center]);
+  }, []);
 
-  const vectorLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
-
+  // ベクターレイヤーの表示・非表示制御
   useEffect(() => {
     if (!map) return;
 
-    const existingVectorLayer = map.getLayers().getArray().find(
-      layer => layer.get('type') === 'vector'
-    ) as VectorLayer<VectorSource>;
+    const existingVectorLayer = map
+      .getLayers()
+      .getArray()
+      .find((layer) => layer.get('type') === 'vector') as
+      | VectorLayer<VectorSource>
+      | undefined;
 
     if (isVectorVisible) {
       if (!existingVectorLayer) {
         const vectorSource = new VectorSource();
-        vectorLayerRef.current = new VectorLayer({
+        const vectorLayer = new VectorLayer({
           source: vectorSource,
           properties: { type: 'vector' },
         });
         addFeature(map, vectorSource);
-        map.addLayer(vectorLayerRef.current);
-        console.log('Vector layer added');
+        map.addLayer(vectorLayer);
       }
     } else {
       if (existingVectorLayer) {
         map.removeLayer(existingVectorLayer);
-        vectorLayerRef.current = null;
-        console.log('Vector layer removed');
       }
     }
   }, [isVectorVisible, map]);
 
-  // レイヤー切り替え処理
-  const switchBaseLayer = (layerName: string) => {
-    if (!map) return;
-
-    map.getLayers().forEach((layer) => {
-      if (layer instanceof TileLayer && layer.get('name')) {
-        const isVisible = layer.get('name') === layerName;
-        layer.setVisible(isVisible);
-      }
-    });
-
-    setActiveLayer(layerName);
-  };
+  // ベースレイヤー切り替え
+  const switchBaseLayer = useCallback(
+    (layerName: string) => {
+      if (!map) return;
+      map.getLayers().forEach((layer) => {
+        if (layer instanceof TileLayer && layer.get('name')) {
+          layer.setVisible(layer.get('name') === layerName);
+        }
+      });
+      setActiveLayer(layerName);
+    },
+    [map]
+  );
 
   return {
     map,
@@ -104,6 +101,6 @@ export const useInitializeMap = () => {
     switchBaseLayer,
     baseLayers,
     isVectorVisible,
-    setIsVectorVisible
+    setIsVectorVisible,
   };
 };

@@ -17,37 +17,35 @@ export const useMapClick = (map: Map | null) => {
     (event: MapBrowserEvent<UIEvent>) => {
       if (!map) return;
 
-      // 地図上で選択されたフィーチャー情報を定義
-      const clickedFeature = map.forEachFeatureAtPixel(
-        event.pixel,
-        (feature) => feature
-      );
+      // ピクセル位置からフィーチャーを取得
+      const clickedFeature = map.forEachFeatureAtPixel(event.pixel, (f) => f);
 
-      if (!clickedFeature) {
+      // フィーチャーがなければ状態リセット
+      if (!clickedFeature || !isFeature(clickedFeature)) {
         setIsFeatureClick(true);
         setSelectedFeature(null);
         return;
       }
 
-      if (isFeature(clickedFeature)) {
-        const properties = clickedFeature.getProperties();
-        setSelectedFeature({
-          geometry: properties.geometry,
-          name: properties.name,
-          height: properties.height,
-          googlemaplink: properties.googlemaplink,
-          YAMAP: properties.YAMAP,
-          image: properties.image,
-          area: properties.area,
-        });
+      // プロパティ取得
+      const properties = clickedFeature.getProperties();
+      setSelectedFeature({
+        geometry: properties.geometry,
+        name: properties.name,
+        height: properties.height,
+        googlemaplink: properties.googlemaplink,
+        YAMAP: properties.YAMAP,
+        image: properties.image,
+        area: properties.area,
+      });
 
-        // フィーチャーの中心座標に地図を移動
-        const geometry = properties.geometry;
-        if (!(geometry instanceof Point)) return;
-        const coordinate = geometry.getCoordinates();
+      // geometryがPoint型なら地図を移動
+      if (properties.geometry instanceof Point) {
+        const coordinate = properties.geometry.getCoordinates();
         map.getView().animate({ center: coordinate, duration: 500 });
-        setIsFeatureClick(true);
       }
+
+      setIsFeatureClick(true);
     },
     [map, setSelectedFeature, setIsFeatureClick]
   );
