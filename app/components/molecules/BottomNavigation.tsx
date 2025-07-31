@@ -1,6 +1,7 @@
 import { color } from '@/app/css/color';
 import { FC, ReactNode } from 'react';
 import Image from 'next/image';
+
 import { Button } from '@mui/material';
 
 import { Dispatch, SetStateAction } from 'react';
@@ -71,31 +72,6 @@ export const BottomNavigation = ({
     );
   };
 
-  const NavigationTitle: FC<{ children: ReactNode }> = ({ children }) => {
-    const imageSize = 25;
-    return (
-      <>
-        <div
-          className={`flex items-center justify-center min-w-[${imageSize}px] min-h-[${imageSize}px]`}
-          style={{ minWidth: imageSize, minHeight: imageSize }}
-        >
-          <Image
-            src="/img/logo.png"
-            width={imageSize}
-            height={imageSize}
-            alt="Logo Icon"
-          />
-        </div>
-        <h2
-          className="flex items-center justify-center font-bold"
-          style={{ color: color.EcruWhite }}
-        >
-          {children}
-        </h2>
-      </>
-    );
-  };
-
   const NavigationImageWrapper: FC<{ children: ReactNode }> = ({
     children,
   }) => {
@@ -111,7 +87,6 @@ export const BottomNavigation = ({
       <NavigationWrapper>
         <NavigationList>
           <SwipeableDrawerWithCloseButton />
-          <NavigationTitle>Neichizu</NavigationTitle>
           <NavigationItem
             onClick={() => {
               setTimeout(() => setIsVectorVisible(!isVectorVisible), 300);

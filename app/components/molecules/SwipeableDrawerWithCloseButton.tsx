@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { color } from '@/app/css/color';
+import React, { useState, useEffect, useRef, FC, ReactNode } from 'react';
+import Image from 'next/image';
 
 export const SwipeableDrawerWithCloseButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -7,6 +9,32 @@ export const SwipeableDrawerWithCloseButton = () => {
   const [isDragging, setIsDragging] = useState(false);
   const drawerRef = useRef(null);
 
+  const NavigationTitle: FC<{ children: ReactNode }> = ({ children }) => {
+    const imageSize = 25;
+    return (
+      <>
+        <button
+          onClick={toggleDrawer}
+          className="inline-flex items-center gap-2"
+        >
+          <div
+            className={`flex items-center justify-center min-w-[${imageSize}px] min-h-[${imageSize}px]`}
+            style={{ minWidth: imageSize, minHeight: imageSize }}
+          >
+            <Image
+              src="/img/logo.png"
+              width={imageSize}
+              height={imageSize}
+              alt="Logo Icon"
+            />
+          </div>
+          <span className="font-bold" style={{ color: color.EcruWhite }}>
+            {children}
+          </span>
+        </button>
+      </>
+    );
+  };
   const toggleDrawer = () => {
     setIsOpen(!isOpen);
   };
@@ -71,14 +99,7 @@ export const SwipeableDrawerWithCloseButton = () => {
 
   return (
     <>
-      <button
-        onClick={toggleDrawer}
-        className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
-      >
-        <span>☰</span>
-        ドロワーを開く
-      </button>
-
+      <NavigationTitle>Neichizu</NavigationTitle>
       {/* バックドロップ */}
       {isOpen && (
         <div
