@@ -71,10 +71,19 @@ export const BottomNavigation = ({
   };
 
   const NavigationTitle: FC<{ children: ReactNode }> = ({ children }) => {
+    const imageSize = 25;
     return (
       <>
-        <div className="flex items-center justify-center">
-          <Image src="/img/logo.png" width={25} height={25} alt="Logo Icon" />
+        <div
+          className={`flex items-center justify-center min-w-[${imageSize}px] min-h-[${imageSize}px]`}
+          style={{ minWidth: imageSize, minHeight: imageSize }}
+        >
+          <Image
+            src="/img/logo.png"
+            width={imageSize}
+            height={imageSize}
+            alt="Logo Icon"
+          />
         </div>
         <h2
           className="flex items-center justify-center font-bold"
@@ -99,8 +108,8 @@ export const BottomNavigation = ({
   return (
     <UnvisualContainer>
       <NavigationWrapper>
-        <NavigationTitle>Neichizu</NavigationTitle>
         <NavigationList>
+          <NavigationTitle>Neichizu</NavigationTitle>
           <NavigationItem
             onClick={() => {
               setTimeout(() => setIsVectorVisible(!isVectorVisible), 300);
