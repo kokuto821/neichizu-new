@@ -8,10 +8,12 @@ import { useMapClick } from '../feature/map/hyakumeizan/hooks/useMapClick';
 import { useImageLoader } from '../feature/map/hyakumeizan/hooks/useImageLoader';
 import { BottomNavigation } from '../components/molecules/BottomNavigation';
 import { RoadingSpinner } from '../components/molecules/RoadingSpinner';
+import { useVectorLayerVisibility } from '../feature/map/hyakumeizan/hooks/useVectorLayerVisibility';
 
 const Hyakumeizan = () => {
-  const { map, mapRef, switchBaseLayer, isVectorVisible, setIsVectorVisible } =
-    useInitializeMap();
+  const { map, mapRef, switchBaseLayer } = useInitializeMap();
+
+  const { isVectorVisible, setIsVectorVisible } = useVectorLayerVisibility(map);
 
   const { selectedFeature, isFeatureClick, setIsFeatureClick } =
     useMapClick(map);

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import { Map } from 'ol';
@@ -26,8 +26,8 @@ const addVectorLayer = (map: Map) => {
 
 export const useVectorLayerVisibility = (
   map: Map | null,
-  isVectorVisible: boolean
 ) => {
+  const [isVectorVisible, setIsVectorVisible] = useState(true);
   useEffect(() => {
     if (!map) return;
 
@@ -39,4 +39,6 @@ export const useVectorLayerVisibility = (
       map.removeLayer(existingVectorLayer);
     }
   }, [isVectorVisible, map]);
+  
+  return { isVectorVisible, setIsVectorVisible}
 };

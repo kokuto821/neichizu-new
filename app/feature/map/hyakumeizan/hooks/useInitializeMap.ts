@@ -1,37 +1,39 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { Map, View } from 'ol';
-import { fromLonLat } from 'ol/proj';
-import { defaults as defaultControls } from 'ol/control';
-import { gsi, layers, osm, osmTopo, photo, relief } from '../utils/layers';
+import { Map } from 'ol';
+import { gsi, osm, osmTopo, photo, relief } from '../utils/layers';
 import TileLayer from 'ol/layer/Tile';
 import { useVectorLayerVisibility } from './useVectorLayerVisibility';
+import { useServiceWorker } from './useServiceWorker';
+import { initializeMap } from '../utils/initializeMap';
 
 type BaseLayerConfig = {
   name: string;
   layer: TileLayer;
 };
 
-export const useInitializeMap = () => {
+type MapHookReturn = {
+  map: Map | null;
+  mapRef: React.RefObject<HTMLDivElement | null>;
+  setMap: (map: Map | null) => void;
+  setActiveLayer: (layer: string) => void;
+  activeLayer: string;
+  switchBaseLayer: (layerName: string) => void;
+  baseLayers: BaseLayerConfig[];
+};
+
+export const useInitializeMap = (): MapHookReturn => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<Map | null>(null);
   const [baseLayers, setBaseLayers] = useState<BaseLayerConfig[]>([]);
   const [activeLayer, setActiveLayer] = useState('gsi');
-  const [isVectorVisible, setIsVectorVisible] = useState(true);
+
+  useServiceWorker()
+
   // マップ初期化
   useEffect(() => {
     if (typeof window === 'undefined' || !mapRef.current) return;
 
-    const center = [139, 35]; // 初期中心座標
-
-    const initializedMap = new Map({
-      target: mapRef.current,
-      layers: layers,
-      view: new View({
-        center: fromLonLat(center),
-        zoom: 5.5,
-      }),
-      controls: defaultControls({ zoom: false }),
-    });
+    const initializedMap = initializeMap(mapRef.current);
 
     setMap(initializedMap);
 
@@ -48,7 +50,7 @@ export const useInitializeMap = () => {
     };
   }, []);
 
-  useVectorLayerVisibility(map, isVectorVisible);
+  useVectorLayerVisibility(map);
 
   // ベースレイヤー切り替え
   const switchBaseLayer = useCallback(
@@ -72,7 +74,5 @@ export const useInitializeMap = () => {
     activeLayer,
     switchBaseLayer,
     baseLayers,
-    isVectorVisible,
-    setIsVectorVisible,
   };
 };
