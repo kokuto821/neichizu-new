@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
     if (typeof config.entry === 'object' && !Array.isArray(config.entry)) {
       config.entry = {
         ...config.entry,
-        'service-worker':  './public/sw.js'
+        'service-worker':  './public/service-worker.js'
       };
     }
 
@@ -23,17 +23,21 @@ const nextConfig: NextConfig = {
   // Service Worker用のセキュリティヘッダーを追加
   headers: async () => [
     {
-      source: '/sw.js',
+      source: '/service-worker.js',
       headers: [
-        {
-          key: 'Service-Worker-Allowed',
-          value: '/'
-        },
-        {
-          key: 'Cache-Control',
-          value: 'public, max-age=0, must-revalidate'
-        }
-      ]
+            {
+              key: 'Service-Worker-Allowed',
+              value: '/'
+            },
+            {
+              key: 'Cache-Control',
+              value: 'public, max-age=0, must-revalidate'
+            },
+            {
+              key: 'Content-Type',
+              value: 'application/javascript; charset=utf-8'
+            }
+          ]
     }
   ],
 };

@@ -2,24 +2,22 @@ import { useEffect } from 'react';
 
 const registerSW = async (): Promise<void> => {
   try {
-    const registration = await navigator.serviceWorker.register('/sw.js');
-    console.log('Service Worker registered:', registration);
+    // 登録時にログを追加
+    console.log('Service Workerの登録を開始');
+    const registration = await navigator.serviceWorker.register('/service-worker.js');
+    console.log('Service Worker登録成功:', registration);
   } catch (error) {
-    console.error('Service Worker registration failed:', error);
+    console.error('Service Worker登録失敗:', error);
   }
 };
 
-const isServiceWorkerSupported = (): boolean => 
-  typeof window !== 'undefined' && 'serviceWorker' in navigator;
-
 export const useServiceWorker = () => {
   useEffect(() => {
-    if (!isServiceWorkerSupported()) return;
+    if (!('serviceWorker' in navigator)) {
+      console.log('Service Worker未対応');
+      return;
+    }
 
-    window.addEventListener('load', registerSW);
-
-    return () => {
-      window.removeEventListener('load', registerSW);
-    };
+    registerSW();
   }, []);
 };
