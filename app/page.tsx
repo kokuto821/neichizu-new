@@ -1,56 +1,45 @@
-import React from 'react';
-import { Header } from './components/molecules/header';
-import { MainFooter } from './components/molecules/mainFooter';
-import { ItemBoxEyecatch } from './components/molecules/ItemBoxEyecatch';
+// app/feature/map/hyakumeizan/page.tsx
+'use client';
+import { MapRenderer } from '@/app/feature/map/hyakumeizan/component/MapRenderer';
+import { PopupCard } from './components/molecules/popupCard';
+import { MapToolbar } from './components/molecules/mapToolbar';
+import { useInitializeMap } from './feature/map/hyakumeizan/hooks/useInitializeMap';
+import { useMapClick } from './feature/map/hyakumeizan/hooks/useMapClick';
+import { useImageLoader } from './feature/map/hyakumeizan/hooks/useImageLoader';
+import { BottomNavigation } from './components/molecules/BottomNavigation';
+import { RoadingSpinner } from './components/molecules/RoadingSpinner';
+import { useVectorLayerVisibility } from './feature/map/hyakumeizan/hooks/useVectorLayerVisibility';
 
-export default function Home() {
+const Hyakumeizan = () => {
+  const { map, mapRef, switchBaseLayer } = useInitializeMap();
+
+  const { isVectorVisible, setIsVectorVisible } = useVectorLayerVisibility(map);
+
+  const { selectedFeature, isFeatureClick, setIsFeatureClick } =
+    useMapClick(map);
+
+  const { isImageLoaded } = useImageLoader(selectedFeature, setIsFeatureClick);
+
   return (
-    <div className="wrapper">
-      <Header />
-
-      <div className="map_title">
-        <h2 className="h2-title_text">トップページ</h2>
+    <div className="flex flex-col h-full">
+      <div className="relative h-[100vh]">
+        <MapRenderer mapRef={mapRef} />
+        {isFeatureClick && selectedFeature !== null && <RoadingSpinner />}
+        {isImageLoaded && <PopupCard selectedFeature={selectedFeature} />}
+        <BottomNavigation
+          isVectorVisible={isVectorVisible}
+          setIsVectorVisible={setIsVectorVisible}
+        />
+        <MapToolbar
+          changeGSILayer={() => switchBaseLayer('gsi')}
+          changePHOTOLayer={() => switchBaseLayer('photo')}
+          changeRELIEFLayer={() => switchBaseLayer('relief')}
+          changeOSMLayer={() => switchBaseLayer('osm')}
+          changeTOPOLayer={() => switchBaseLayer('osmTopo')}
+        />
       </div>
-
-      <div className="content">
-        <div className="white_back">
-          <div className="white_back_inner">
-            <ItemBoxEyecatch
-              title="百名山マップ"
-              url="/hyakumeizan"
-              img="/img/hyakumeizan-eyecatch.webp"
-              reference="https://www.momonayama.net/hundred_mt_list_data/list.html"
-            >
-              日本百名山のマップです
-            </ItemBoxEyecatch>
-            <ItemBoxEyecatch
-              title="ジオパークマップ"
-              url="/geopark"
-              img="/img/geopark-eyecatch.webp"
-              reference="https://geopark.jp/geopark/"
-            >
-              日本ジオパークのマップです
-            </ItemBoxEyecatch>
-          </div>
-        </div>
-        <div className="white_back">
-          <div className="white_back_inner">
-            <ItemBoxEyecatch
-              title="東京23区の緑被分布図"
-              url="/tokyo-green"
-              img="/img/tokyo-green_eyecatch.webp"
-              reference="#"
-            >
-              卒業研究で作成した、衛星画像から作成した東京都23区の年代別の緑被分布図です
-              <br />
-              (1984-2023)
-            </ItemBoxEyecatch>
-          </div>
-        </div>
-        <div className="white_back"></div>
-        <div className="space"></div>
-      </div>
-      <MainFooter />
     </div>
   );
-}
+};
+
+export default Hyakumeizan;
