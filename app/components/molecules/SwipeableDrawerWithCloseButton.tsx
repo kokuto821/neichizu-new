@@ -107,7 +107,7 @@ export const SwipeableDrawerWithCloseButton = () => {
       {/* ドロワー（下から表示） */}
       <div
         ref={drawerRef}
-        className={`fixed bottom-0 left-0 right-0 bg-white shadow-xl z-50 transform transition-transform duration-300 rounded-t-2xl h-[80vh] overflow-y-auto ${
+        className={`fixed bottom-0 left-0 right-0 bg-white shadow-xl z-50 transform transition-transform duration-300 rounded-t-2xl h-[98vh] overflow-y-auto ${
           isOpen ? 'translate-y-0' : 'translate-y-full'
         }`}
         onTouchStart={handleTouchStart}
@@ -129,7 +129,7 @@ export const SwipeableDrawerWithCloseButton = () => {
             />
             <button
               onClick={handleClose}
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors absolute top-0 right-0  bg-white opacity-80 m-2"
+              className="p-2 rounded-full hover:bg-gray-100 transition-colors absolute top-4 right-4 bg-white opacity-80"
               aria-label="閉じる"
             >
               <svg
@@ -147,7 +147,7 @@ export const SwipeableDrawerWithCloseButton = () => {
               </svg>
             </button>
           </div>
-          <div className="p-4">
+          <div className="p-4 pt-8">
             Neichizu(ねいちず)は日本百名山やジオパークなど日本の自然スポットにまつわる地点をまとめた地図です。
           </div>
 
