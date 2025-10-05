@@ -1,6 +1,6 @@
-import { color } from '@/app/css/color';
 import React, { useState, useEffect, useRef, FC, ReactNode } from 'react';
 import Image from 'next/image';
+import { color } from '@/app/css/color';
 
 export const SwipeableDrawerWithCloseButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,7 +9,10 @@ export const SwipeableDrawerWithCloseButton = () => {
   const [isDragging, setIsDragging] = useState(false);
   const drawerRef = useRef(null);
 
-  const NavigationTitle: FC<{ children: ReactNode }> = ({ children }) => {
+  const NavigationTitle: FC<{ children: ReactNode; textColor?: string }> = ({
+    children,
+    textColor = color.EcruWhite,
+  }) => {
     const imageSize = 25;
     return (
       <>
@@ -28,7 +31,7 @@ export const SwipeableDrawerWithCloseButton = () => {
               alt="Logo Icon"
             />
           </div>
-          <span className="font-bold" style={{ color: color.EcruWhite }}>
+          <span className="font-bold" style={{ color: textColor }}>
             {children}
           </span>
         </button>
@@ -90,13 +93,6 @@ export const SwipeableDrawerWithCloseButton = () => {
     }
   };
 
-  const menuItems = [
-    { text: 'ホーム', icon: '🏠' },
-    { text: 'プロフィール', icon: '👤' },
-    { text: '設定', icon: '⚙️' },
-    { text: 'ヘルプ', icon: 'ℹ️' },
-  ];
-
   return (
     <>
       <NavigationTitle>Neichizu</NavigationTitle>
@@ -124,11 +120,11 @@ export const SwipeableDrawerWithCloseButton = () => {
         </div>
 
         {/* ヘッダー（×ボタン付き） */}
-        <div className="flex items-center justify-between px-4 pb-4">
-          <h2 className="text-xl font-semibold text-gray-800">メニュー</h2>
+        <div className="flex items-center justify-between px-4 pb-4 relative w-full h-[30vh]">
+          <Image src="/img/hyakumeizan-eyecatch.png" fill alt="Logo Icon" />
           <button
             onClick={handleClose}
-            className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors absolute top-0 right-0  bg-white opacity-80 m-2"
             aria-label="閉じる"
           >
             <svg
@@ -146,24 +142,15 @@ export const SwipeableDrawerWithCloseButton = () => {
             </svg>
           </button>
         </div>
-
-        {/* メニューリスト */}
-        <div className="px-4 pb-4">
-          {menuItems.map((item, index) => (
-            <button
-              key={index}
-              onClick={handleClose}
-              className="w-full flex items-center gap-3 px-4 py-4 hover:bg-gray-100 transition-colors text-left rounded-lg mb-2"
-            >
-              <span className="text-2xl">{item.icon}</span>
-              <span className="text-gray-700 text-lg">{item.text}</span>
-            </button>
-          ))}
+        <div className="p-4">
+          Neichizu(ねいちず)は日本百名山やジオパークなど日本の自然スポットにまつわる地点をまとめた地図です。
         </div>
 
-        <div className="px-4 pb-6 pt-2 border-t border-gray-200">
-          <p className="text-sm text-gray-500 text-center">
-            SwipeableDrawer (Bottom Sheet)
+        <div className="p-4 border-t border-gray-200 flex items-center justify-center">
+          <p className="text-center">
+            <NavigationTitle textColor={color.DarkGreen}>
+              Neichizu
+            </NavigationTitle>
           </p>
         </div>
       </div>
