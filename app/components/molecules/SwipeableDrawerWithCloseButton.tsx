@@ -107,51 +107,57 @@ export const SwipeableDrawerWithCloseButton = () => {
       {/* ドロワー（下から表示） */}
       <div
         ref={drawerRef}
-        className={`fixed bottom-0 left-0 right-0 bg-white shadow-xl z-50 transform transition-transform duration-300 rounded-t-2xl max-h-[80vh] overflow-y-auto ${
+        className={`fixed bottom-0 left-0 right-0 bg-white shadow-xl z-50 transform transition-transform duration-300 rounded-t-2xl h-[80vh] overflow-y-auto ${
           isOpen ? 'translate-y-0' : 'translate-y-full'
         }`}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* ハンドルバー */}
-        <div className="flex justify-center py-3">
-          <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
-        </div>
-
-        {/* ヘッダー（×ボタン付き） */}
-        <div className="flex items-center justify-between px-4 pb-4 relative w-full h-[30vh]">
-          <Image src="/img/hyakumeizan-eyecatch.png" fill alt="Logo Icon" />
-          <button
-            onClick={handleClose}
-            className="p-2 rounded-full hover:bg-gray-100 transition-colors absolute top-0 right-0  bg-white opacity-80 m-2"
-            aria-label="閉じる"
+        <div className="flex flex-col h-full">
+          {/* ヘッダー（×ボタン付き） */}
+          <div
+            className="flex items-center justify-center relative w-full h-auto"
+            style={{ backgroundColor: color.LightGreen }}
           >
-            <svg
-              className="w-6 h-6 text-gray-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+            <Image
+              src="/img/hyakumeizan-eyecatch.png"
+              alt="Logo Icon"
+              height={300}
+              width={300}
+              style={{ objectFit: 'contain' }}
+            />
+            <button
+              onClick={handleClose}
+              className="p-2 rounded-full hover:bg-gray-100 transition-colors absolute top-0 right-0  bg-white opacity-80 m-2"
+              aria-label="閉じる"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-        <div className="p-4">
-          Neichizu(ねいちず)は日本百名山やジオパークなど日本の自然スポットにまつわる地点をまとめた地図です。
-        </div>
+              <svg
+                className="w-6 h-6 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+          <div className="p-4">
+            Neichizu(ねいちず)は日本百名山やジオパークなど日本の自然スポットにまつわる地点をまとめた地図です。
+          </div>
 
-        <div className="p-4 border-t border-gray-200 flex items-center justify-center">
-          <p className="text-center">
-            <NavigationTitle textColor={color.DarkGreen}>
-              Neichizu
-            </NavigationTitle>
-          </p>
+          <div className="p-4 border-t border-gray-200 flex items-center justify-center mt-auto">
+            <p className="text-center">
+              <NavigationTitle textColor={color.DarkGreen}>
+                Neichizu
+              </NavigationTitle>
+            </p>
+          </div>
         </div>
       </div>
     </>
