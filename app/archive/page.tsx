@@ -1,7 +1,7 @@
 import React from 'react';
-import { Header } from '../components/molecules/header';
-import { MainFooter } from '../components/molecules/mainFooter';
-import { ItemBoxEyecatch } from '../components/molecules/ItemBoxEyecatch';
+import { Header } from './header';
+import { MainFooter } from './mainFooter';
+import { ItemBoxEyecatch } from './ItemBoxEyecatch';
 
 export default function Home() {
   return (
