@@ -102,7 +102,7 @@ export const SwipeableDrawerWithCloseButton = () => {
   const toggleDrawer = () => setIsOpen(!isOpen);
   const handleClose = () => setIsOpen(false);
 
-  // スワイプ処理
+  // スワイプ処理（モバイルのみ）
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     setStartX(e.touches[0].clientY);
     setCurrentX(e.touches[0].clientY);
@@ -141,11 +141,22 @@ export const SwipeableDrawerWithCloseButton = () => {
     <>
       <NavigationTitle onClick={toggleDrawer}>Neichizu</NavigationTitle>
       <Backdrop isOpen={isOpen} onClick={handleBackdropClick} />
+      
+      {/* モバイル: 下からスライド、PC: 左からスライド */}
       <div
         ref={drawerRef}
-        className={`fixed bottom-0 left-0 right-0 bg-white shadow-xl z-50 transform transition-transform duration-300 rounded-t-2xl h-[98vh] overflow-y-auto ${
-          isOpen ? 'translate-y-0' : 'translate-y-full'
-        }`}
+        className={`
+          fixed bg-white shadow-xl z-50 transform transition-transform duration-300 overflow-y-auto
+          
+          /* モバイル: 下から */
+          bottom-0 left-0 right-0 rounded-t-2xl h-[98vh]
+          ${isOpen ? 'translate-y-0' : 'translate-y-full'}
+          
+          /* PC: 左から */
+          md:top-0 md:bottom-0 md:left-0 md:right-auto md:rounded-none md:w-[400px] md:h-full
+          ${isOpen ? 'md:translate-x-0' : 'md:-translate-x-full'}
+          md:translate-y-0
+        `}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
