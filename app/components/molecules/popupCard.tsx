@@ -8,7 +8,6 @@ import Typography from '@mui/material/Typography';
 import { FeatureProperties } from '@/app/feature/map/hyakumeizan/types/types';
 import Link from 'next/link';
 import { usePopupVisible } from '@/app/feature/map/hyakumeizan/hooks/usePopupVisible';
-import { FC, ReactNode } from 'react';
 import { color } from '@/app/css/color';
 
 type Props = {
@@ -18,24 +17,17 @@ type Props = {
 export const PopupCard = ({ selectedFeature }: Props) => {
   const { isVisible } = usePopupVisible(selectedFeature);
 
-  const PopupWrapper: FC<{ isVisible: boolean; children: ReactNode }> = ({
-    children,
-  }) => {
-    return (
-      <div
-        className="pt-0 px-[5%] pb-[110px] md:px-[20%] absolute  bottom-0 left-0 w-full"
-        style={{
-          visibility: isVisible ? 'visible' : 'hidden', // isVisibleステートで制御
-          transition: 'visibility 0.3s ease', // 必要に応じてトランジションを追加
-        }}
-      >
-        {children}
-      </div>
-    );
-  };
+  // selectedFeatureがnullの場合は完全に非表示
+  if (!selectedFeature) return null;
 
   return (
-    <PopupWrapper isVisible={isVisible}>
+    <div
+      className="pt-0 px-[5%] pb-[110px] md:px-[20%] absolute bottom-0 left-0 w-full transition-opacity duration-300"
+      style={{
+        opacity: isVisible ? 1 : 0,
+        pointerEvents: isVisible ? 'auto' : 'none',
+      }}
+    >
       <Card
         sx={{
           display: 'flex',
@@ -87,6 +79,6 @@ export const PopupCard = ({ selectedFeature }: Props) => {
           </CardContent>
         </Box>
       </Card>
-    </PopupWrapper>
+    </div>
   );
 };

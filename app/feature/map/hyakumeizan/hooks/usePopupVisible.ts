@@ -1,30 +1,24 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { FeatureProperties } from '../types/types';
 
 export const usePopupVisible = (selectedFeature: FeatureProperties | null) => {
-  const [isVisible, setIsVisible] = useState(false); // 表示状態を管理するステート
+  const [isVisible, setIsVisible] = useState(false);
 
-  const handleVisible = useCallback(() => {
+  useEffect(() => {
+    // まず非表示にする（フィーチャ切り替え時の対応）
+    setIsVisible(false);
+
     if (selectedFeature) {
-      // 0.5秒後に表示状態をtrueにする
+      // 0.5秒後に表示
       const timer = setTimeout(() => {
         setIsVisible(true);
       }, 500);
 
-      // クリーンアップ関数でタイマーをクリア
       return () => {
         clearTimeout(timer);
-        setIsVisible(false); // 表示状態をリセット
       };
-    } else {
-      setIsVisible(false); // selectedFeatureがnullの場合は非表示
     }
-  }, [selectedFeature]); // クリックイベントのハンドラ
+  }, [selectedFeature]);
 
-  useEffect(() => {
-    const cleanup = handleVisible();
-    return cleanup;
-  }, [handleVisible]); // selectedFeatureが変更されたときに実行
-
-  return { isVisible }; // isVisibleを返す
+  return { isVisible };
 };
