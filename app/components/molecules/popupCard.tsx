@@ -8,7 +8,6 @@ import Typography from '@mui/material/Typography';
 import { FeatureProperties } from '@/app/feature/map/hyakumeizan/types/types';
 import Link from 'next/link';
 import { usePopupVisible } from '@/app/feature/map/hyakumeizan/hooks/usePopupVisible';
-import { FC, ReactNode } from 'react';
 import { color } from '@/app/css/color';
 
 type Props = {
@@ -16,26 +15,19 @@ type Props = {
 };
 
 export const PopupCard = ({ selectedFeature }: Props) => {
-  const { isVisible } = usePopupVisible(selectedFeature);
+  const { isVisible, shouldRender, displayFeature } = usePopupVisible(selectedFeature);
 
-  const PopupWrapper: FC<{ isVisible: boolean; children: ReactNode }> = ({
-    children,
-  }) => {
-    return (
-      <div
-        className="pt-0 px-[5%] pb-[110px] md:px-[20%] absolute  bottom-0 left-0 w-full"
-        style={{
-          visibility: isVisible ? 'visible' : 'hidden', // isVisibleステートで制御
-          transition: 'visibility 0.3s ease', // 必要に応じてトランジションを追加
-        }}
-      >
-        {children}
-      </div>
-    );
-  };
+  // フェードアウトアニメーション完了後にアンマウント
+  if (!shouldRender) return null;
 
   return (
-    <PopupWrapper isVisible={isVisible}>
+    <div
+      className="pt-0 px-[5%] pb-[110px] md:px-[20%] absolute bottom-0 left-0 w-full transition-opacity duration-300"
+      style={{
+        opacity: isVisible ? 1 : 0,
+        pointerEvents: isVisible ? 'auto' : 'none',
+      }}
+    >
       <Card
         sx={{
           display: 'flex',
@@ -43,30 +35,30 @@ export const PopupCard = ({ selectedFeature }: Props) => {
           backgroundColor: color.EcruWhite,
         }}
       >
-        {selectedFeature?.image && (
+        {displayFeature?.image && (
           <CardMedia
             component="img"
             sx={{
               width: 151,
               height: 130,
             }}
-            image={selectedFeature.image}
-            alt={selectedFeature.name}
+            image={displayFeature.image}
+            alt={displayFeature.name}
           />
         )}
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <CardContent style={{ padding: '0px 0px 0px 10px' }}>
             <Typography component="div" variant="h5">
-              {selectedFeature?.name}
+              {displayFeature?.name}
             </Typography>
             <Typography
               variant="subtitle1"
               component="div"
               sx={{ color: 'text.secondary' }}
             >
-              {selectedFeature?.area} {selectedFeature?.height}
+              {displayFeature?.area} {displayFeature?.height}
             </Typography>
-            <Link href={selectedFeature?.googlemaplink || '#'} target="_blank">
+            <Link href={displayFeature?.googlemaplink || '#'} target="_blank">
               <Image
                 className="link-img-logo"
                 src={'/img/g_map_logo.png'}
@@ -75,7 +67,7 @@ export const PopupCard = ({ selectedFeature }: Props) => {
                 height={110}
               />
             </Link>
-            <Link href={selectedFeature?.YAMAP || '#'} target="_blank">
+            <Link href={displayFeature?.YAMAP || '#'} target="_blank">
               <Image
                 className="link-img-logo"
                 src={'/img/yamap-logo.png'}
@@ -87,6 +79,6 @@ export const PopupCard = ({ selectedFeature }: Props) => {
           </CardContent>
         </Box>
       </Card>
-    </PopupWrapper>
+    </div>
   );
 };

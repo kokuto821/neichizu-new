@@ -1,7 +1,6 @@
 import React from 'react';
 import { StoryFn, Meta } from '@storybook/react';
-import { Header } from '../header';
-
+import { Header } from '../../../archive/header';
 
 export default {
   title: 'Components/Header', // Storybookのサイドバーに表示されるタイトル

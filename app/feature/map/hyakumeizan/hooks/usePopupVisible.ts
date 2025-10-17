@@ -1,30 +1,48 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FeatureProperties } from '../types/types';
 
+const FADE_IN_DELAY = 500;
+const FADE_OUT_DURATION = 300;
+
 export const usePopupVisible = (selectedFeature: FeatureProperties | null) => {
-  const [isVisible, setIsVisible] = useState(false); // 表示状態を管理するステート
+  const [isVisible, setIsVisible] = useState(false);
+  const [shouldRender, setShouldRender] = useState(false);
+  const [displayFeature, setDisplayFeature] = useState<FeatureProperties | null>(null);
+  const previousFeature = useRef<FeatureProperties | null>(null);
 
-  const handleVisible = useCallback(() => {
-    if (selectedFeature) {
-      // 0.5秒後に表示状態をtrueにする
-      const timer = setTimeout(() => {
-        setIsVisible(true);
-      }, 500);
+  // フィーチャ選択時の処理
+  const handleFeatureSelect = (feature: FeatureProperties) => {
+    previousFeature.current = feature;
+    setDisplayFeature(feature);
+    setShouldRender(true);
 
-      // クリーンアップ関数でタイマーをクリア
-      return () => {
-        clearTimeout(timer);
-        setIsVisible(false); // 表示状態をリセット
-      };
-    } else {
-      setIsVisible(false); // selectedFeatureがnullの場合は非表示
-    }
-  }, [selectedFeature]); // クリックイベントのハンドラ
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, FADE_IN_DELAY);
+
+    return () => clearTimeout(timer);
+  };
+
+  // フィーチャ解除時の処理
+  const handleFeatureDeselect = () => {
+    const timer = setTimeout(() => {
+      setShouldRender(false);
+      setDisplayFeature(null);
+      previousFeature.current = null;
+    }, FADE_OUT_DURATION);
+
+    return () => clearTimeout(timer);
+  };
 
   useEffect(() => {
-    const cleanup = handleVisible();
-    return cleanup;
-  }, [handleVisible]); // selectedFeatureが変更されたときに実行
+    setIsVisible(false);
 
-  return { isVisible }; // isVisibleを返す
+    if (selectedFeature) {
+      return handleFeatureSelect(selectedFeature);
+    } else {
+      return handleFeatureDeselect();
+    }
+  }, [selectedFeature]);
+
+  return { isVisible, shouldRender, displayFeature };
 };
