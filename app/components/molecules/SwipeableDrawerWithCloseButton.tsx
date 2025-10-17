@@ -152,15 +152,6 @@ export const SwipeableDrawerWithCloseButton = () => {
     setCurrentX(0);
   };
 
-  // ESCキーで閉じる
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) setIsOpen(false);
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen]);
-
   // バックドロップクリックで閉じる
   const handleBackdropClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -172,7 +163,6 @@ export const SwipeableDrawerWithCloseButton = () => {
     <>
       <NavigationTitle onClick={toggleDrawer}>Neichizu</NavigationTitle>
       <Backdrop isOpen={isOpen} onClick={handleBackdropClick} />
-      
       <DrawerContainer
         isOpen={isOpen}
         drawerRef={drawerRef}
