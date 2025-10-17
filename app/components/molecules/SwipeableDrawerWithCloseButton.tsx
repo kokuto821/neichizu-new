@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, FC, ReactNode } from 'react';
+import React, { useState, useRef, FC, ReactNode } from 'react';
 import Image from 'next/image';
 import { color } from '@/app/css/color';
 
@@ -92,17 +92,48 @@ const DrawerBody: FC = () => (
   </div>
 );
 
+// ドロワーコンテナ
+const DrawerContainer: FC<{
+  isOpen: boolean;
+  drawerRef: React.RefObject<HTMLDivElement | null>;
+  onTouchStart: (e: React.TouchEvent<HTMLDivElement>) => void;
+  onTouchMove: (e: React.TouchEvent<HTMLDivElement>) => void;
+  onTouchEnd: () => void;
+  children: ReactNode;
+}> = ({ isOpen, drawerRef, onTouchStart, onTouchMove, onTouchEnd, children }) => (
+  <div
+    ref={drawerRef}
+    className={`
+      fixed bg-white shadow-xl z-50 transform transition-transform duration-300 overflow-y-auto
+      
+      /* モバイル: 下から */
+      bottom-0 left-0 right-0 rounded-t-2xl h-[98vh]
+      ${isOpen ? 'translate-y-0' : 'translate-y-full'}
+      
+      /* PC: 左から */
+      md:top-0 md:bottom-0 md:left-0 md:right-auto md:rounded-none md:w-[400px] md:h-full
+      ${isOpen ? 'md:translate-x-0' : 'md:-translate-x-full'}
+      md:translate-y-0
+    `}
+    onTouchStart={onTouchStart}
+    onTouchMove={onTouchMove}
+    onTouchEnd={onTouchEnd}
+  >
+      {children}
+  </div>
+);
+
 export const SwipeableDrawerWithCloseButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [startX, setStartX] = useState(0);
   const [currentX, setCurrentX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const drawerRef = useRef(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
 
   const toggleDrawer = () => setIsOpen(!isOpen);
   const handleClose = () => setIsOpen(false);
 
-  // スワイプ処理
+  // スワイプ処理（モバイルのみ）
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     setStartX(e.touches[0].clientY);
     setCurrentX(e.touches[0].clientY);
@@ -121,15 +152,6 @@ export const SwipeableDrawerWithCloseButton = () => {
     setCurrentX(0);
   };
 
-  // ESCキーで閉じる
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) setIsOpen(false);
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen]);
-
   // バックドロップクリックで閉じる
   const handleBackdropClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -141,21 +163,17 @@ export const SwipeableDrawerWithCloseButton = () => {
     <>
       <NavigationTitle onClick={toggleDrawer}>Neichizu</NavigationTitle>
       <Backdrop isOpen={isOpen} onClick={handleBackdropClick} />
-      <div
-        ref={drawerRef}
-        className={`fixed bottom-0 left-0 right-0 bg-white shadow-xl z-50 transform transition-transform duration-300 rounded-t-2xl h-[98vh] overflow-y-auto ${
-          isOpen ? 'translate-y-0' : 'translate-y-full'
-        }`}
+      <DrawerContainer
+        isOpen={isOpen}
+        drawerRef={drawerRef}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="flex flex-col h-full">
-          <DrawerHeader onClose={handleClose} />
-          <DrawerBody />
-          <DrawerFooter />
-        </div>
-      </div>
+        <DrawerHeader onClose={handleClose} />
+        <DrawerBody />
+        <DrawerFooter />
+      </DrawerContainer>
     </>
   );
 };
