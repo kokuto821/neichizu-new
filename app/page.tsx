@@ -1,5 +1,6 @@
 // app/feature/map/hyakumeizan/page.tsx
 'use client';
+import { useEffect } from 'react';
 import { MapRenderer } from '@/app/feature/map/hyakumeizan/component/MapRenderer';
 import { PopupCard } from './components/molecules/popupCard';
 import { MapToolbar } from './components/molecules/mapToolbar';
@@ -15,10 +16,17 @@ const Hyakumeizan = () => {
 
   const { isVectorVisible, setIsVectorVisible } = useVectorLayerVisibility(map);
 
-  const { selectedFeature, isFeatureClick, setIsFeatureClick } =
+  const { selectedFeature, setSelectedFeature, isFeatureClick, setIsFeatureClick } =
     useMapClick(map);
 
   const { isImageLoaded } = useImageLoader(selectedFeature, setIsFeatureClick);
+
+  // 百名山レイヤーが非表示になったらPopupCardを消す
+  useEffect(() => {
+    if (!isVectorVisible) {
+      setSelectedFeature(null);
+    }
+  }, [isVectorVisible, setSelectedFeature]);
 
   return (
     <div className="flex flex-col h-full">
