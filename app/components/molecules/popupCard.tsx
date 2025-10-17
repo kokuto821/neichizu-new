@@ -15,10 +15,10 @@ type Props = {
 };
 
 export const PopupCard = ({ selectedFeature }: Props) => {
-  const { isVisible } = usePopupVisible(selectedFeature);
+  const { isVisible, shouldRender, displayFeature } = usePopupVisible(selectedFeature);
 
-  // selectedFeatureがnullの場合は完全に非表示
-  if (!selectedFeature) return null;
+  // フェードアウトアニメーション完了後にアンマウント
+  if (!shouldRender) return null;
 
   return (
     <div
@@ -35,30 +35,30 @@ export const PopupCard = ({ selectedFeature }: Props) => {
           backgroundColor: color.EcruWhite,
         }}
       >
-        {selectedFeature?.image && (
+        {displayFeature?.image && (
           <CardMedia
             component="img"
             sx={{
               width: 151,
               height: 130,
             }}
-            image={selectedFeature.image}
-            alt={selectedFeature.name}
+            image={displayFeature.image}
+            alt={displayFeature.name}
           />
         )}
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <CardContent style={{ padding: '0px 0px 0px 10px' }}>
             <Typography component="div" variant="h5">
-              {selectedFeature?.name}
+              {displayFeature?.name}
             </Typography>
             <Typography
               variant="subtitle1"
               component="div"
               sx={{ color: 'text.secondary' }}
             >
-              {selectedFeature?.area} {selectedFeature?.height}
+              {displayFeature?.area} {displayFeature?.height}
             </Typography>
-            <Link href={selectedFeature?.googlemaplink || '#'} target="_blank">
+            <Link href={displayFeature?.googlemaplink || '#'} target="_blank">
               <Image
                 className="link-img-logo"
                 src={'/img/g_map_logo.png'}
@@ -67,7 +67,7 @@ export const PopupCard = ({ selectedFeature }: Props) => {
                 height={110}
               />
             </Link>
-            <Link href={selectedFeature?.YAMAP || '#'} target="_blank">
+            <Link href={displayFeature?.YAMAP || '#'} target="_blank">
               <Image
                 className="link-img-logo"
                 src={'/img/yamap-logo.png'}
