@@ -1,42 +1,46 @@
 import { useState, useEffect, useRef } from 'react';
 import { FeatureProperties } from '../types/types';
 
+const FADE_IN_DELAY = 500;
+const FADE_OUT_DURATION = 300;
+
 export const usePopupVisible = (selectedFeature: FeatureProperties | null) => {
   const [isVisible, setIsVisible] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
   const [displayFeature, setDisplayFeature] = useState<FeatureProperties | null>(null);
   const previousFeature = useRef<FeatureProperties | null>(null);
 
+  // フィーチャ選択時の処理
+  const handleFeatureSelect = (feature: FeatureProperties) => {
+    previousFeature.current = feature;
+    setDisplayFeature(feature);
+    setShouldRender(true);
+
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, FADE_IN_DELAY);
+
+    return () => clearTimeout(timer);
+  };
+
+  // フィーチャ解除時の処理
+  const handleFeatureDeselect = () => {
+    const timer = setTimeout(() => {
+      setShouldRender(false);
+      setDisplayFeature(null);
+      previousFeature.current = null;
+    }, FADE_OUT_DURATION);
+
+    return () => clearTimeout(timer);
+  };
+
   useEffect(() => {
-    // まず非表示にする（フィーチャ切り替え時の対応）
     setIsVisible(false);
 
     if (selectedFeature) {
-      // 新しいフィーチャが選択された
-      previousFeature.current = selectedFeature;
-      setDisplayFeature(selectedFeature);
-      setShouldRender(true);
-      
-      // 0.5秒後に表示
-      const timer = setTimeout(() => {
-        setIsVisible(true);
-      }, 500);
-
-      return () => {
-        clearTimeout(timer);
-      };
+      return handleFeatureSelect(selectedFeature);
     } else {
-      // selectedFeatureがnullになったら、フェードアウト後にアンマウント
-      // フェードアウト中は前のデータを表示し続ける
-      const timer = setTimeout(() => {
-        setShouldRender(false);
-        setDisplayFeature(null);
-        previousFeature.current = null;
-      }, 300); // transition-opacity duration-300と同じ
-
-      return () => {
-        clearTimeout(timer);
-      };
+      return handleFeatureDeselect();
     }
   }, [selectedFeature]);
 
