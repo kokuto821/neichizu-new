@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, FC, ReactNode } from 'react';
+import React, { useState, useRef, FC, ReactNode } from 'react';
 import Image from 'next/image';
 import { color } from '@/app/css/color';
 
