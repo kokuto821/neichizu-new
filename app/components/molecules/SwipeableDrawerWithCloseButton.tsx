@@ -92,6 +92,13 @@ const DrawerBody: FC = () => (
   </div>
 );
 
+// ドロワーコンテンツ（Flexレイアウト）
+const DrawerContent: FC<{ children: ReactNode }> = ({ children }) => (
+  <div className="flex flex-col h-full">
+    {children}
+  </div>
+);
+
 // ドロワーコンテナ
 const DrawerContainer: FC<{
   isOpen: boolean;
@@ -119,7 +126,7 @@ const DrawerContainer: FC<{
     onTouchMove={onTouchMove}
     onTouchEnd={onTouchEnd}
   >
-      {children}
+    <DrawerContent>{children}</DrawerContent>
   </div>
 );
 
