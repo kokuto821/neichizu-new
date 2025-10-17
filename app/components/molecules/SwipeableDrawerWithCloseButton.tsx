@@ -87,8 +87,15 @@ const DrawerFooter: FC = () => (
 
 // ドロワー本文
 const DrawerBody: FC = () => (
-  <div className="p-4 pt-8">
+  <div className="p-4 pt-8 text-gray-800 dark:text-gray-800">
     Neichizu(ねいちず)は日本百名山やジオパークなど日本の自然スポットにまつわる地点をまとめた地図です。
+  </div>
+);
+
+// ドロワーコンテンツ（Flexレイアウト）
+const DrawerContent: FC<{ children: ReactNode }> = ({ children }) => (
+  <div className="flex flex-col h-full">
+    {children}
   </div>
 );
 
@@ -104,7 +111,7 @@ const DrawerContainer: FC<{
   <div
     ref={drawerRef}
     className={`
-      fixed bg-white shadow-xl z-50 transform transition-transform duration-300 overflow-y-auto
+      fixed bg-white dark:bg-white shadow-xl z-50 transform transition-transform duration-300 overflow-y-auto
       
       /* モバイル: 下から */
       bottom-0 left-0 right-0 rounded-t-2xl h-[98vh]
@@ -119,7 +126,7 @@ const DrawerContainer: FC<{
     onTouchMove={onTouchMove}
     onTouchEnd={onTouchEnd}
   >
-      {children}
+    <DrawerContent>{children}</DrawerContent>
   </div>
 );
 
