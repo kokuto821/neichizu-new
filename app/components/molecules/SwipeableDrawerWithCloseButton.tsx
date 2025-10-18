@@ -1,6 +1,8 @@
-import React, { useState, useRef, FC, ReactNode } from 'react';
+import React, { useState, useRef, FC, ReactNode, useEffect } from 'react';
 import Image from 'next/image';
 import { color } from '@/app/css/color';
+import { getAllTodos } from '@/app/utils/supabaseFunctions';
+import TodoList from './TodoList';
 
 // タイトルボタン
 const NavigationTitle: FC<{
@@ -166,6 +168,17 @@ export const SwipeableDrawerWithCloseButton = () => {
     if (e.target === e.currentTarget) setIsOpen(false);
   };
 
+  const [todos,setTodos] = useState<any>([]);
+
+  useEffect(() => {
+    const getTodos = async()=>{
+      const todos= await getAllTodos();
+      setTodos(todos.data);
+      console.log(todos);
+    }
+    getTodos();
+  }, []);
+
   return (
     <>
       <NavigationTitle onClick={toggleDrawer}>Neichizu</NavigationTitle>
@@ -179,6 +192,7 @@ export const SwipeableDrawerWithCloseButton = () => {
       >
         <DrawerHeader onClose={handleClose} />
         <DrawerBody />
+        <TodoList todos={todos}/>
         <DrawerFooter />
       </DrawerContainer>
     </>
