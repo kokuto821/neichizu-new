@@ -20,7 +20,7 @@ export const PopupCard = ({ selectedFeature, children }: Props) => {
 
   return (
     <div
-      className="pt-0 px-[5%] pb-[110px] md:px-[20%] absolute bottom-0 left-0 w-full transition-opacity duration-300"
+      className="pt-0 px-[5%] pb-[12.5vh] md:px-[20%] absolute bottom-0 left-0 w-full transition-opacity duration-300"
       style={{
         opacity: isVisible ? 1 : 0,
         pointerEvents: isVisible ? 'auto' : 'none',

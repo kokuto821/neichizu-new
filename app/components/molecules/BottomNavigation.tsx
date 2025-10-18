@@ -31,7 +31,7 @@ export const BottomNavigation = ({
   const NavigationWrapper: FC<{ children: ReactNode }> = ({ children }) => {
     return (
       <div
-        className="p-[5px] rounded-xl flex gap-2 alngn-center"
+        className="h-[10vh] p-[5px] rounded-xl flex gap-2 alngn-center"
         style={{
           backgroundColor: color.SemiDarkGreen,
           boxShadow:
