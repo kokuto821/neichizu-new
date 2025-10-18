@@ -10,9 +10,13 @@ import { SwipeableDrawerWithCloseButton } from './SwipeableDrawerWithCloseButton
 export const BottomNavigation = ({
   isVectorVisible,
   setIsVectorVisible,
+  isGeoparkVisible,
+  setIsGeoparkVisible,
 }: {
   isVectorVisible: boolean;
   setIsVectorVisible: Dispatch<SetStateAction<boolean>>;
+  isGeoparkVisible: boolean;
+  setIsGeoparkVisible: Dispatch<SetStateAction<boolean>>;
 }) => {
   const UnvisualContainer: FC<{
     children: ReactNode;
@@ -103,7 +107,22 @@ export const BottomNavigation = ({
             </NavigationImageWrapper>
             百名山
           </NavigationItem>
-          <NavigationItem>Hello</NavigationItem>
+          <NavigationItem
+            onClick={() => {
+              setTimeout(() => setIsGeoparkVisible(!isGeoparkVisible), 300);
+            }}
+            isVisible={isGeoparkVisible}
+          >
+            <NavigationImageWrapper>
+              <Image
+                src="/img/geopark_w.png"
+                width={30}
+                height={30}
+                alt="Geopark Icon"
+              />
+            </NavigationImageWrapper>
+            世界ジオパーク
+          </NavigationItem>
           <NavigationItem>Hello</NavigationItem>
           <NavigationItem>Hello</NavigationItem>
           <NavigationItem>Hello</NavigationItem>

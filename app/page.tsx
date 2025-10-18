@@ -10,11 +10,13 @@ import { useImageLoader } from './feature/map/hyakumeizan/hooks/useImageLoader';
 import { BottomNavigation } from './components/molecules/BottomNavigation';
 import { RoadingSpinner } from './components/molecules/RoadingSpinner';
 import { useVectorLayerVisibility } from './feature/map/hyakumeizan/hooks/useVectorLayerVisibility';
+import { useGeoparkLayerVisibility } from './feature/map/geopark/hooks/useGeoparkLayerVisibility';
 
 const Hyakumeizan = () => {
   const { map, mapRef, switchBaseLayer } = useInitializeMap();
 
   const { isVectorVisible, setIsVectorVisible } = useVectorLayerVisibility(map);
+  const { isGeoparkVisible, setIsGeoparkVisible } = useGeoparkLayerVisibility(map);
 
   const { selectedFeature, setSelectedFeature, isFeatureClick, setIsFeatureClick } =
     useMapClick(map);
@@ -28,6 +30,13 @@ const Hyakumeizan = () => {
     }
   }, [isVectorVisible, setSelectedFeature]);
 
+  // ジオパークレイヤーが非表示になったらPopupCardを消す
+  useEffect(() => {
+    if (!isGeoparkVisible) {
+      setSelectedFeature(null);
+    }
+  }, [isGeoparkVisible, setSelectedFeature]);
+
   return (
     <div className="flex flex-col h-full">
       <div className="relative h-[100vh]">
@@ -37,6 +46,8 @@ const Hyakumeizan = () => {
         <BottomNavigation
           isVectorVisible={isVectorVisible}
           setIsVectorVisible={setIsVectorVisible}
+          isGeoparkVisible={isGeoparkVisible}
+          setIsGeoparkVisible={setIsGeoparkVisible}
         />
         <MapToolbar
           changeGSILayer={() => switchBaseLayer('gsi')}

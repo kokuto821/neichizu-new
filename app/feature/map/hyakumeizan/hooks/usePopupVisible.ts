@@ -4,14 +4,21 @@ import { FeatureProperties } from '../types/types';
 const FADE_IN_DELAY = 500;
 const FADE_OUT_DURATION = 300;
 
-export const usePopupVisible = (selectedFeature: FeatureProperties | null) => {
+// 百名山とジオパークの両方に対応する型
+type CombinedFeatureProperties = FeatureProperties & {
+  category?: string;
+  comment?: string;
+  website?: string;
+};
+
+export const usePopupVisible = (selectedFeature: CombinedFeatureProperties | null) => {
   const [isVisible, setIsVisible] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
-  const [displayFeature, setDisplayFeature] = useState<FeatureProperties | null>(null);
-  const previousFeature = useRef<FeatureProperties | null>(null);
+  const [displayFeature, setDisplayFeature] = useState<CombinedFeatureProperties | null>(null);
+  const previousFeature = useRef<CombinedFeatureProperties | null>(null);
 
   // フィーチャ選択時の処理
-  const handleFeatureSelect = (feature: FeatureProperties) => {
+  const handleFeatureSelect = (feature: CombinedFeatureProperties) => {
     previousFeature.current = feature;
     setDisplayFeature(feature);
     setShouldRender(true);
