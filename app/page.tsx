@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import { MapRenderer } from '@/app/feature/map/hyakumeizan/component/MapRenderer';
 import { PopupCard } from './components/molecules/popupCard';
 import { MapToolbar } from './components/molecules/mapToolbar';
+import { MountainFeatureContent } from './components/molecules/MountainFeatureContent';
+import { GeoparkFeatureContent } from './components/molecules/GeoparkFeatureContent';
 import { useInitializeMap } from './feature/map/hyakumeizan/hooks/useInitializeMap';
 import { useMapClick } from './feature/map/hyakumeizan/hooks/useMapClick';
 import { useImageLoader } from './feature/map/hyakumeizan/hooks/useImageLoader';
@@ -62,7 +64,30 @@ const Hyakumeizan = () => {
       <div className="relative h-[100vh]">
         <MapRenderer mapRef={mapRef} />
         {isFeatureClick && selectedFeature !== null && <RoadingSpinner />}
-        {isImageLoaded && <PopupCard selectedFeature={selectedFeature} />}
+        {isImageLoaded && (
+          <PopupCard selectedFeature={selectedFeature}>
+            {(feature) =>
+              feature.category ? (
+                <GeoparkFeatureContent
+                  name={feature.name}
+                  area={feature.area}
+                  category={feature.category}
+                  comment={feature.comment}
+                  googlemaplink={feature.googlemaplink}
+                  website={feature.website}
+                />
+              ) : (
+                <MountainFeatureContent
+                  name={feature.name}
+                  area={feature.area}
+                  height={feature.height}
+                  googlemaplink={feature.googlemaplink}
+                  YAMAP={feature.YAMAP}
+                />
+              )
+            }
+          </PopupCard>
+        )}
         <BottomNavigation
           isVectorVisible={isVectorVisible}
           setIsVectorVisible={setIsVectorVisible}

@@ -1,15 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { FeatureProperties } from '../types/types';
 import { Map, MapBrowserEvent } from 'ol';
 import Point from 'ol/geom/Point';
 import Feature, { FeatureLike } from 'ol/Feature';
-
-// 百名山とジオパークの両方に対応する型
-type CombinedFeatureProperties = FeatureProperties & {
-  category?: string;
-  comment?: string;
-  website?: string;
-};
+import { CombinedFeatureProperties } from '../../types/types';
 
 // 型ガード関数
 const isFeature = (feature: FeatureLike): feature is Feature => {

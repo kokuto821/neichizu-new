@@ -1,15 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { FeatureProperties } from '../types/types';
+import { CombinedFeatureProperties } from '../../types/types';
 
 const FADE_IN_DELAY = 500;
 const FADE_OUT_DURATION = 300;
-
-// 百名山とジオパークの両方に対応する型
-type CombinedFeatureProperties = FeatureProperties & {
-  category?: string;
-  comment?: string;
-  website?: string;
-};
 
 export const usePopupVisible = (selectedFeature: CombinedFeatureProperties | null) => {
   const [isVisible, setIsVisible] = useState(false);
