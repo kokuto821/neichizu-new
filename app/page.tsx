@@ -9,17 +9,37 @@ import { useMapClick } from './feature/map/hyakumeizan/hooks/useMapClick';
 import { useImageLoader } from './feature/map/hyakumeizan/hooks/useImageLoader';
 import { BottomNavigation } from './components/molecules/BottomNavigation';
 import { RoadingSpinner } from './components/molecules/RoadingSpinner';
-import { useVectorLayerVisibility } from './feature/map/hyakumeizan/hooks/useVectorLayerVisibility';
-import { useGeoparkLayerVisibility } from './feature/map/geopark/hooks/useGeoparkLayerVisibility';
+import { useLayerVisibility } from './feature/map/hooks/useLayerVisibility';
+import { addFeature } from './feature/map/hyakumeizan/utils/addFeature';
+import { addGeoparkFeature } from './feature/map/geopark/utils/addFeature';
 
 const Hyakumeizan = () => {
   const { map, mapRef, switchBaseLayer } = useInitializeMap();
 
-  const { isVectorVisible, setIsVectorVisible } = useVectorLayerVisibility(map);
-  const { isGeoparkVisible, setIsGeoparkVisible } = useGeoparkLayerVisibility(map);
+  // 百名山レイヤー
+  const { isVisible: isVectorVisible, setIsVisible: setIsVectorVisible } =
+    useLayerVisibility({
+      map,
+      layerType: 'hyakumeizan',
+      addFeatures: addFeature,
+      initialVisible: true,
+    });
 
-  const { selectedFeature, setSelectedFeature, isFeatureClick, setIsFeatureClick } =
-    useMapClick(map);
+  // 世界ジオパークレイヤー
+  const { isVisible: isGeoparkVisible, setIsVisible: setIsGeoparkVisible } =
+    useLayerVisibility({
+      map,
+      layerType: 'geopark',
+      addFeatures: addGeoparkFeature,
+      initialVisible: false,
+    });
+
+  const {
+    selectedFeature,
+    setSelectedFeature,
+    isFeatureClick,
+    setIsFeatureClick,
+  } = useMapClick(map);
 
   const { isImageLoaded } = useImageLoader(selectedFeature, setIsFeatureClick);
 
