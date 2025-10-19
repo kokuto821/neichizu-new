@@ -2,7 +2,6 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { Map } from 'ol';
 import { gsi, osm, osmTopo, photo, relief } from '../utils/layers';
 import TileLayer from 'ol/layer/Tile';
-import { useVectorLayerVisibility } from './useVectorLayerVisibility';
 import { useServiceWorker } from './useServiceWorker';
 import { initializeMap } from '../utils/initializeMap';
 
@@ -49,8 +48,6 @@ export const useInitializeMap = (): MapHookReturn => {
       initializedMap.setTarget(undefined);
     };
   }, []);
-
-  useVectorLayerVisibility(map);
 
   // ベースレイヤー切り替え
   const switchBaseLayer = useCallback(

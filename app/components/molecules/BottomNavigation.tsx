@@ -93,7 +93,8 @@ export const BottomNavigation = ({
           <SwipeableDrawerWithCloseButton />
           <NavigationItem
             onClick={() => {
-              setTimeout(() => setIsVectorVisible(!isVectorVisible), 300);
+              console.log('🖱️ [BottomNav] 百名山クリック - 現在:', isVectorVisible, '→ 変更後:', !isVectorVisible);
+              setIsVectorVisible(!isVectorVisible);
             }}
             isVisible={isVectorVisible}
           >
@@ -109,7 +110,8 @@ export const BottomNavigation = ({
           </NavigationItem>
           <NavigationItem
             onClick={() => {
-              setTimeout(() => setIsGeoparkVisible(!isGeoparkVisible), 300);
+              console.log('🖱️ [BottomNav] ジオパーククリック - 現在:', isGeoparkVisible, '→ 変更後:', !isGeoparkVisible);
+              setIsGeoparkVisible(!isGeoparkVisible);
             }}
             isVisible={isGeoparkVisible}
           >
