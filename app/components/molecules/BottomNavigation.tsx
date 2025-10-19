@@ -123,7 +123,9 @@ export const BottomNavigation = ({
                 alt="Geopark Icon"
               />
             </NavigationImageWrapper>
-            世界ジオパーク
+            <span className="text-[10px] sm:text-xs whitespace-nowrap">
+              世界ジオパーク
+            </span>
           </NavigationItem>
           <NavigationItem>Hello</NavigationItem>
           <NavigationItem>Hello</NavigationItem>
