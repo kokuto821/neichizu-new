@@ -1,9 +1,6 @@
-import React, { useState, useRef, FC, ReactNode, useEffect } from 'react';
+import React, { useState, useRef, FC, ReactNode } from 'react';
 import Image from 'next/image';
 import { color } from '@/app/css/color';
-import { getAllTodos } from '@/app/utils/supabaseFunctions';
-import TodoList from './TodoList';
-import { Todo } from '@/app/utils/types';
 
 // タイトルボタン
 const NavigationTitle: FC<{
@@ -122,7 +119,7 @@ const DrawerContainer: FC<{
       fixed bg-white dark:bg-white shadow-xl z-50 transform transition-transform duration-300 overflow-y-auto
       
       /* モバイル: 下から */
-      bottom-0 left-0 right-0 rounded-t-2xl h-[98vh]
+      bottom-0 left-0 right-0 rounded-t-2xl h-[90%]
       ${isOpen ? 'translate-y-0' : 'translate-y-full'}
       
       /* PC: 左から */
@@ -174,18 +171,6 @@ export const SwipeableDrawerWithCloseButton = () => {
     if (e.target === e.currentTarget) setIsOpen(false);
   };
 
-  const [todos, setTodos] = useState<Todo[]>([]);
-
-  useEffect(() => {
-    const getTodos = async () => {
-      const todos = await getAllTodos();
-      if (!todos.data) return;
-      setTodos(todos.data);
-      console.log(todos);
-    };
-    getTodos();
-  }, []);
-
   return (
     <>
       <NavigationTitle onClick={toggleDrawer}>Neichizu</NavigationTitle>
@@ -199,7 +184,6 @@ export const SwipeableDrawerWithCloseButton = () => {
       >
         <DrawerHeader onClose={handleClose} />
         <DrawerBody />
-        <TodoList todos={todos} />
         <DrawerFooter />
       </DrawerContainer>
     </>
