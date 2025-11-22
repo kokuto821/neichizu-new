@@ -109,26 +109,26 @@ export const SwipeableDrawer = () => {
   });
 
   // pull-to-refresh を抑止するためのラッパー
-  const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+  const onTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
     // フックの開始ハンドラを呼ぶ
-    swipeHandlers.onTouchStart(e);
+    swipeHandlers.onTouchStart(event);
   };
 
-  const onTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+  const onTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
     // ドロワー内部で一番上にある（スクロールトップが0）かつ下方向への移動なら
     try {
-      const el = e.currentTarget as HTMLDivElement;
-      const start = swipeRefs.startRef.current ?? 0;
-      const pos = e.touches[0].clientY;
-      const diff = pos - start;
+      const targetElement = event.currentTarget as HTMLDivElement;
+      const startPosition = swipeRefs.startRef.current ?? 0;
+      const currentPosition = event.touches[0].clientY;
+      const delta = currentPosition - startPosition;
 
-      if (diff > 0 && el.scrollTop === 0) {
+      if (delta > 0 && targetElement.scrollTop === 0) {
         // iOS などで pull-to-refresh をキャンセルするため preventDefault
-        e.preventDefault();
+        event.preventDefault();
       }
     } catch {}
 
-    swipeHandlers.onTouchMove(e);
+    swipeHandlers.onTouchMove(event);
   };
 
   const onTouchEnd = () => {
@@ -137,9 +137,9 @@ export const SwipeableDrawer = () => {
 
   // バックドロップクリックで閉じる
   const handleBackdropClick = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    if (e.target === e.currentTarget) setIsOpen(false);
+    if (event.target === event.currentTarget) setIsOpen(false);
   };
 
   return (

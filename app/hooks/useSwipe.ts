@@ -1,5 +1,27 @@
 import { useRef, useCallback, useEffect } from 'react';
 
+export type SwipeHandlers = {
+  onTouchStart: (e: React.TouchEvent) => void;
+  onTouchMove: (e: React.TouchEvent) => void;
+  onTouchEnd: () => void;
+  onMouseDown: (e: React.MouseEvent) => void;
+};
+
+export type SwipeRefs = {
+  // 公開時は RefObject（current が null の可能性あり）にして外部からの書き換えを防ぐ
+  // 呼び出し側は null チェックが必要になります。
+  startRef: React.RefObject<number>;
+  currentRef: React.RefObject<number>;
+  draggingRef: React.RefObject<boolean>;
+};
+
+export type UseSwipeReturn = {
+  swipeHandlers: SwipeHandlers;
+  swipeRefs: SwipeRefs;
+  setThreshold: (v: number) => void;
+  checkThreshold: (delta: number, optThreshold?: number) => boolean;
+};
+
 type Options = {
   onClose?: () => void;
   threshold?: number;
@@ -16,7 +38,7 @@ export const useSwipe = ({
   onClose,
   threshold = 100,
   axis = 'y',
-}: Options = {}) => {
+}: Options = {}): UseSwipeReturn => {
   const startPositionRef = useRef<number>(0);
   const currentPositionRef = useRef<number>(0);
   const isDraggingRef = useRef(false);
@@ -30,6 +52,24 @@ export const useSwipe = ({
   useEffect(() => {
     onCloseCallbackRef.current = onClose;
   }, [onClose]);
+
+  // ランタイムで閾値を更新するヘルパー
+  const setThreshold = useCallback((value: number): void => {
+    thresholdValueRef.current = value;
+  }, []);
+
+  // 指定した閾値（または現在の threshold）で閉じる判定を行い、true/false を返す
+  const checkThreshold = useCallback(
+    (delta: number, optThreshold?: number): boolean => {
+      // optThreshold が数値で渡されていればそれを使い、そうでなければ thresholdValueRef.current（既定の閾値）を使う
+      const effectiveThreshold =
+        typeof optThreshold === 'number'
+          ? optThreshold
+          : thresholdValueRef.current;
+      return delta > effectiveThreshold;
+    },
+    []
+  );
 
   const getPointerPosition = useCallback(
     (
@@ -83,11 +123,11 @@ export const useSwipe = ({
     // タッチ終了: 移動量を判定して onClose を呼ぶ
     if (!isDraggingRef.current) return;
     const diff = currentPositionRef.current - startPositionRef.current;
-    if (diff > thresholdValueRef.current) onCloseCallbackRef.current?.();
+    if (checkThreshold(diff)) onCloseCallbackRef.current?.();
     isDraggingRef.current = false;
     startPositionRef.current = 0;
     currentPositionRef.current = 0;
-  }, []);
+  }, [checkThreshold]);
 
   const handleMouseDown = useCallback(
     (e: React.MouseEvent): void => {
@@ -110,11 +150,11 @@ export const useSwipe = ({
   const handleMouseUp = useCallback((): void => {
     if (!isDraggingRef.current) return;
     const diff = currentPositionRef.current - startPositionRef.current;
-    if (diff > thresholdValueRef.current) onCloseCallbackRef.current?.();
+    if (checkThreshold(diff)) onCloseCallbackRef.current?.();
     isDraggingRef.current = false;
     startPositionRef.current = 0;
     currentPositionRef.current = 0;
-  }, []);
+  }, [checkThreshold]);
   // グローバルなマウスリスナー（mousemove, mouseup）を一度だけ登録
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove);
@@ -137,5 +177,8 @@ export const useSwipe = ({
       currentRef: currentPositionRef,
       draggingRef: isDraggingRef,
     },
+    // 追加 API: ランタイムで閾値を変更したいときや、任意の閾値で判定したいときに使う
+    setThreshold,
+    checkThreshold,
   };
 };
