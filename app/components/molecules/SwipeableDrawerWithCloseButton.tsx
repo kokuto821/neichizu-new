@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { color } from '@/app/css/color';
 import { getAllTodos } from '@/app/utils/supabaseFunctions';
 import TodoList from './TodoList';
+import { Todo } from '@/app/utils/types';
 
 // タイトルボタン
 const NavigationTitle: FC<{
@@ -96,9 +97,7 @@ const DrawerBody: FC = () => (
 
 // ドロワーコンテンツ（Flexレイアウト）
 const DrawerContent: FC<{ children: ReactNode }> = ({ children }) => (
-  <div className="flex flex-col h-full">
-    {children}
-  </div>
+  <div className="flex flex-col h-full">{children}</div>
 );
 
 // ドロワーコンテナ
@@ -109,7 +108,14 @@ const DrawerContainer: FC<{
   onTouchMove: (e: React.TouchEvent<HTMLDivElement>) => void;
   onTouchEnd: () => void;
   children: ReactNode;
-}> = ({ isOpen, drawerRef, onTouchStart, onTouchMove, onTouchEnd, children }) => (
+}> = ({
+  isOpen,
+  drawerRef,
+  onTouchStart,
+  onTouchMove,
+  onTouchEnd,
+  children,
+}) => (
   <div
     ref={drawerRef}
     className={`
@@ -168,14 +174,15 @@ export const SwipeableDrawerWithCloseButton = () => {
     if (e.target === e.currentTarget) setIsOpen(false);
   };
 
-  const [todos,setTodos] = useState<any>([]);
+  const [todos, setTodos] = useState<Todo[]>([]);
 
   useEffect(() => {
-    const getTodos = async()=>{
-      const todos= await getAllTodos();
+    const getTodos = async () => {
+      const todos = await getAllTodos();
+      if (!todos.data) return;
       setTodos(todos.data);
       console.log(todos);
-    }
+    };
     getTodos();
   }, []);
 
@@ -192,7 +199,7 @@ export const SwipeableDrawerWithCloseButton = () => {
       >
         <DrawerHeader onClose={handleClose} />
         <DrawerBody />
-        <TodoList todos={todos}/>
+        <TodoList todos={todos} />
         <DrawerFooter />
       </DrawerContainer>
     </>
