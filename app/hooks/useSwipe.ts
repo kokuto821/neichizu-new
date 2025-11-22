@@ -73,25 +73,25 @@ export const useSwipe = ({
 
   const getPointerPosition = useCallback(
     (
-      e: TouchEvent | MouseEvent | React.TouchEvent | React.MouseEvent
+      event: TouchEvent | MouseEvent | React.TouchEvent | React.MouseEvent
     ): number => {
       // タッチイベントかどうかの判定
       const hasTouches =
-        'touches' in e &&
-        (e as TouchEvent).touches &&
-        (e as TouchEvent).touches.length > 0;
+        'touches' in event &&
+        (event as TouchEvent).touches &&
+        (event as TouchEvent).touches.length > 0;
       // マウスイベントかどうかの判定
       const hasClient =
-        'clientY' in e && typeof (e as MouseEvent).clientY === 'number';
+        'clientY' in event && typeof (event as MouseEvent).clientY === 'number';
 
       if (hasTouches) {
-        const touches = (e as React.TouchEvent).touches;
+        const touches = (event as React.TouchEvent).touches;
         const touchPoint = touches[0];
         return axis === 'y' ? touchPoint.clientY : touchPoint.clientX;
       }
 
       if (hasClient) {
-        const pointerEvent = e as MouseEvent;
+        const pointerEvent = event as MouseEvent;
         return axis === 'y' ? pointerEvent.clientY : pointerEvent.clientX;
       }
 
@@ -101,9 +101,9 @@ export const useSwipe = ({
   );
 
   const handleTouchStart = useCallback(
-    (e: React.TouchEvent): void => {
+    (event: React.TouchEvent): void => {
       // タッチ開始: 開始位置を保存しドラッグ開始フラグを立てる
-      startPositionRef.current = getPointerPosition(e);
+      startPositionRef.current = getPointerPosition(event);
       currentPositionRef.current = startPositionRef.current;
       isDraggingRef.current = true;
     },
@@ -111,10 +111,10 @@ export const useSwipe = ({
   );
 
   const handleTouchMove = useCallback(
-    (e: React.TouchEvent): void => {
+    (event: React.TouchEvent): void => {
       // タッチ移動: ドラッグ中のみ現在位置を更新
       if (!isDraggingRef.current) return;
-      currentPositionRef.current = getPointerPosition(e);
+      currentPositionRef.current = getPointerPosition(event);
     },
     [getPointerPosition]
   );
@@ -130,9 +130,9 @@ export const useSwipe = ({
   }, [checkThreshold]);
 
   const handleMouseDown = useCallback(
-    (e: React.MouseEvent): void => {
+    (event: React.MouseEvent): void => {
       // マウスダウン: デスクトップ向けの開始処理
-      startPositionRef.current = getPointerPosition(e);
+      startPositionRef.current = getPointerPosition(event);
       currentPositionRef.current = startPositionRef.current;
       isDraggingRef.current = true;
     },
@@ -140,9 +140,9 @@ export const useSwipe = ({
   );
 
   const handleMouseMove = useCallback(
-    (e: MouseEvent): void => {
+    (event: MouseEvent): void => {
       if (!isDraggingRef.current) return;
-      currentPositionRef.current = axis === 'y' ? e.clientY : e.clientX;
+      currentPositionRef.current = axis === 'y' ? event.clientY : event.clientX;
     },
     [axis]
   );
