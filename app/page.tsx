@@ -4,20 +4,44 @@ import { useEffect } from 'react';
 import { MapRenderer } from '@/app/feature/map/hyakumeizan/component/MapRenderer';
 import { PopupCard } from './components/molecules/popupCard';
 import { MapToolbar } from './components/molecules/mapToolbar';
+import { MountainFeatureContent } from './components/molecules/MountainFeatureContent';
+import { GeoparkFeatureContent } from './components/molecules/GeoparkFeatureContent';
 import { useInitializeMap } from './feature/map/hyakumeizan/hooks/useInitializeMap';
 import { useMapClick } from './feature/map/hyakumeizan/hooks/useMapClick';
 import { useImageLoader } from './feature/map/hyakumeizan/hooks/useImageLoader';
 import { BottomNavigation } from './components/molecules/BottomNavigation';
 import { RoadingSpinner } from './components/molecules/RoadingSpinner';
-import { useVectorLayerVisibility } from './feature/map/hyakumeizan/hooks/useVectorLayerVisibility';
+import { useLayerVisibility } from './feature/map/hooks/useLayerVisibility';
+import { addFeature } from './feature/map/hyakumeizan/utils/addFeature';
+import { addGeoparkFeature } from './feature/map/geopark/utils/addFeature';
 
 const Hyakumeizan = () => {
   const { map, mapRef, switchBaseLayer } = useInitializeMap();
 
-  const { isVectorVisible, setIsVectorVisible } = useVectorLayerVisibility(map);
+  // 百名山レイヤー
+  const { isVisible: isVectorVisible, setIsVisible: setIsVectorVisible } =
+    useLayerVisibility({
+      map,
+      layerType: 'hyakumeizan',
+      addFeatures: addFeature,
+      initialVisible: true,
+    });
 
-  const { selectedFeature, setSelectedFeature, isFeatureClick, setIsFeatureClick } =
-    useMapClick(map);
+  // 世界ジオパークレイヤー
+  const { isVisible: isGeoparkVisible, setIsVisible: setIsGeoparkVisible } =
+    useLayerVisibility({
+      map,
+      layerType: 'geopark',
+      addFeatures: addGeoparkFeature,
+      initialVisible: false,
+    });
+
+  const {
+    selectedFeature,
+    setSelectedFeature,
+    isFeatureClick,
+    setIsFeatureClick,
+  } = useMapClick(map);
 
   const { isImageLoaded } = useImageLoader(selectedFeature, setIsFeatureClick);
 
@@ -28,15 +52,47 @@ const Hyakumeizan = () => {
     }
   }, [isVectorVisible, setSelectedFeature]);
 
+  // ジオパークレイヤーが非表示になったらPopupCardを消す
+  useEffect(() => {
+    if (!isGeoparkVisible) {
+      setSelectedFeature(null);
+    }
+  }, [isGeoparkVisible, setSelectedFeature]);
+
   return (
     <div className="flex flex-col h-full">
       <div className="relative h-[100vh]">
         <MapRenderer mapRef={mapRef} />
         {isFeatureClick && selectedFeature !== null && <RoadingSpinner />}
-        {isImageLoaded && <PopupCard selectedFeature={selectedFeature} />}
+        {isImageLoaded && (
+          <PopupCard selectedFeature={selectedFeature}>
+            {(feature) =>
+              feature.category ? (
+                <GeoparkFeatureContent
+                  name={feature.name}
+                  area={feature.area}
+                  category={feature.category}
+                  comment={feature.comment}
+                  googlemaplink={feature.googlemaplink}
+                  website={feature.website}
+                />
+              ) : (
+                <MountainFeatureContent
+                  name={feature.name}
+                  area={feature.area}
+                  height={feature.height}
+                  googlemaplink={feature.googlemaplink}
+                  YAMAP={feature.YAMAP}
+                />
+              )
+            }
+          </PopupCard>
+        )}
         <BottomNavigation
           isVectorVisible={isVectorVisible}
           setIsVectorVisible={setIsVectorVisible}
+          isGeoparkVisible={isGeoparkVisible}
+          setIsGeoparkVisible={setIsGeoparkVisible}
         />
         <MapToolbar
           changeGSILayer={() => switchBaseLayer('gsi')}

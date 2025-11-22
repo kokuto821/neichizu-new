@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { FeatureProperties } from '../types/types';
 import { Map, MapBrowserEvent } from 'ol';
 import Point from 'ol/geom/Point';
 import Feature, { FeatureLike } from 'ol/Feature';
+import { CombinedFeatureProperties } from '../../types/types';
 
 // 型ガード関数
 const isFeature = (feature: FeatureLike): feature is Feature => {
@@ -11,7 +11,7 @@ const isFeature = (feature: FeatureLike): feature is Feature => {
 
 export const useMapClick = (map: Map | null) => {
   const [selectedFeature, setSelectedFeature] =
-    useState<FeatureProperties | null>(null);
+    useState<CombinedFeatureProperties | null>(null);
   const [isFeatureClick, setIsFeatureClick] = useState<boolean>(false);
   const handleMapClick = useCallback(
     (event: MapBrowserEvent<UIEvent>) => {
@@ -37,6 +37,10 @@ export const useMapClick = (map: Map | null) => {
         YAMAP: properties.YAMAP,
         image: properties.image,
         area: properties.area,
+        // ジオパーク用のプロパティ
+        category: properties.category,
+        comment: properties.comment,
+        website: properties.website,
       });
 
       // geometryがPoint型なら地図を移動

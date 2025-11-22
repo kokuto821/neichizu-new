@@ -1,10 +1,10 @@
 import { Map, Feature } from "ol";
 import VectorSource from "ol/source/Vector";
 import { mountainIcon } from "./styles";
-import { fetchCSVData } from "./fetchCSVData";
+import { fetchSupabaseData } from "./fetchSupabaseData";
 
 export const addFeature = async (map: Map, vectorSource: VectorSource) => {
-  const data = await fetchCSVData("/csv/hyakumeizan.csv");
+  const data = await fetchSupabaseData();
 
   data.forEach(
     ({ name, height, googlemaplink, YAMAP, image, area, geometry }) => {

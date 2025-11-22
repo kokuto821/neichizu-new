@@ -1,6 +1,8 @@
 import React, { useState, useRef, FC, ReactNode } from 'react';
 import Image from 'next/image';
 import { color } from '@/app/css/color';
+import { useSwipe } from '@/app/hooks/useSwipe';
+import DrawerContainer from './DrawerContainer';
 
 // タイトルボタン
 const NavigationTitle: FC<{
@@ -92,78 +94,52 @@ const DrawerBody: FC = () => (
   </div>
 );
 
-// ドロワーコンテンツ（Flexレイアウト）
-const DrawerContent: FC<{ children: ReactNode }> = ({ children }) => (
-  <div className="flex flex-col h-full">
-    {children}
-  </div>
-);
-
-// ドロワーコンテナ
-const DrawerContainer: FC<{
-  isOpen: boolean;
-  drawerRef: React.RefObject<HTMLDivElement | null>;
-  onTouchStart: (e: React.TouchEvent<HTMLDivElement>) => void;
-  onTouchMove: (e: React.TouchEvent<HTMLDivElement>) => void;
-  onTouchEnd: () => void;
-  children: ReactNode;
-}> = ({ isOpen, drawerRef, onTouchStart, onTouchMove, onTouchEnd, children }) => (
-  <div
-    ref={drawerRef}
-    className={`
-      fixed bg-white dark:bg-white shadow-xl z-50 transform transition-transform duration-300 overflow-y-auto
-      
-      /* モバイル: 下から */
-      bottom-0 left-0 right-0 rounded-t-2xl h-[98vh]
-      ${isOpen ? 'translate-y-0' : 'translate-y-full'}
-      
-      /* PC: 左から */
-      md:top-0 md:bottom-0 md:left-0 md:right-auto md:rounded-none md:w-[400px] md:h-full
-      ${isOpen ? 'md:translate-x-0' : 'md:-translate-x-full'}
-      md:translate-y-0
-    `}
-    onTouchStart={onTouchStart}
-    onTouchMove={onTouchMove}
-    onTouchEnd={onTouchEnd}
-  >
-    <DrawerContent>{children}</DrawerContent>
-  </div>
-);
-
-export const SwipeableDrawerWithCloseButton = () => {
+export const SwipeableDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [currentX, setCurrentX] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
 
-  const toggleDrawer = () => setIsOpen(!isOpen);
   const handleClose = () => setIsOpen(false);
+  const toggleDrawer = () => setIsOpen(!isOpen);
 
-  // スワイプ処理（モバイルのみ）
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    setStartX(e.touches[0].clientY);
-    setCurrentX(e.touches[0].clientY);
-    setIsDragging(true);
+  // useSwipe フックを使用
+  const { swipeHandlers, swipeRefs } = useSwipe({
+    onClose: handleClose,
+    threshold: 100,
+    axis: 'y',
+  });
+
+  // pull-to-refresh を抑止するためのラッパー
+  const onTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    // フックの開始ハンドラを呼ぶ
+    swipeHandlers.onTouchStart(event);
   };
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (!isDragging) return;
-    setCurrentX(e.touches[0].clientY);
+
+  const onTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
+    // ドロワー内部で一番上にある（スクロールトップが0）かつ下方向への移動なら
+    try {
+      const targetElement = event.currentTarget as HTMLDivElement;
+      const startPosition = swipeRefs.startRef.current ?? 0;
+      const currentPosition = event.touches[0].clientY;
+      const delta = currentPosition - startPosition;
+
+      if (delta > 0 && targetElement.scrollTop === 0) {
+        // iOS などで pull-to-refresh をキャンセルするため preventDefault
+        event.preventDefault();
+      }
+    } catch {}
+
+    swipeHandlers.onTouchMove(event);
   };
-  const handleTouchEnd = () => {
-    if (!isDragging) return;
-    const diffY = currentX - startX;
-    if (diffY > 100) setIsOpen(false);
-    setIsDragging(false);
-    setStartX(0);
-    setCurrentX(0);
+
+  const onTouchEnd = () => {
+    swipeHandlers.onTouchEnd();
   };
 
   // バックドロップクリックで閉じる
   const handleBackdropClick = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    if (e.target === e.currentTarget) setIsOpen(false);
+    if (event.target === event.currentTarget) setIsOpen(false);
   };
 
   return (
@@ -173,9 +149,10 @@ export const SwipeableDrawerWithCloseButton = () => {
       <DrawerContainer
         isOpen={isOpen}
         drawerRef={drawerRef}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        onMouseDown={swipeHandlers.onMouseDown}
       >
         <DrawerHeader onClose={handleClose} />
         <DrawerBody />

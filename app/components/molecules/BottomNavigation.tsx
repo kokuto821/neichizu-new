@@ -5,14 +5,18 @@ import Image from 'next/image';
 import { Button } from '@mui/material';
 
 import { Dispatch, SetStateAction } from 'react';
-import { SwipeableDrawerWithCloseButton } from './SwipeableDrawerWithCloseButton';
+import { SwipeableDrawer } from './SwipeableDrawer';
 
 export const BottomNavigation = ({
   isVectorVisible,
   setIsVectorVisible,
+  isGeoparkVisible,
+  setIsGeoparkVisible,
 }: {
   isVectorVisible: boolean;
   setIsVectorVisible: Dispatch<SetStateAction<boolean>>;
+  isGeoparkVisible: boolean;
+  setIsGeoparkVisible: Dispatch<SetStateAction<boolean>>;
 }) => {
   const UnvisualContainer: FC<{
     children: ReactNode;
@@ -27,7 +31,7 @@ export const BottomNavigation = ({
   const NavigationWrapper: FC<{ children: ReactNode }> = ({ children }) => {
     return (
       <div
-        className="p-[5px] rounded-xl flex gap-2 alngn-center"
+        className="h-[10vh] p-[5px] rounded-xl flex gap-2 alngn-center"
         style={{
           backgroundColor: color.SemiDarkGreen,
           boxShadow:
@@ -86,10 +90,16 @@ export const BottomNavigation = ({
     <UnvisualContainer>
       <NavigationWrapper>
         <NavigationList>
-          <SwipeableDrawerWithCloseButton />
+          <SwipeableDrawer />
           <NavigationItem
             onClick={() => {
-              setTimeout(() => setIsVectorVisible(!isVectorVisible), 300);
+              console.log(
+                '🖱️ [BottomNav] 百名山クリック - 現在:',
+                isVectorVisible,
+                '→ 変更後:',
+                !isVectorVisible
+              );
+              setIsVectorVisible(!isVectorVisible);
             }}
             isVisible={isVectorVisible}
           >
@@ -103,7 +113,30 @@ export const BottomNavigation = ({
             </NavigationImageWrapper>
             百名山
           </NavigationItem>
-          <NavigationItem>Hello</NavigationItem>
+          <NavigationItem
+            onClick={() => {
+              console.log(
+                '🖱️ [BottomNav] ジオパーククリック - 現在:',
+                isGeoparkVisible,
+                '→ 変更後:',
+                !isGeoparkVisible
+              );
+              setIsGeoparkVisible(!isGeoparkVisible);
+            }}
+            isVisible={isGeoparkVisible}
+          >
+            <NavigationImageWrapper>
+              <Image
+                src="/img/geopark_w.png"
+                width={30}
+                height={30}
+                alt="Geopark Icon"
+              />
+            </NavigationImageWrapper>
+            <span className="text-[10px] sm:text-xs whitespace-nowrap">
+              世界ジオパーク
+            </span>
+          </NavigationItem>
           <NavigationItem>Hello</NavigationItem>
           <NavigationItem>Hello</NavigationItem>
           <NavigationItem>Hello</NavigationItem>
