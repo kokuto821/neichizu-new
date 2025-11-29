@@ -30,6 +30,7 @@ const DrawerContainer: FC<Props> = ({
     'duration-300',
     'overflow-y-auto',
     'overscroll-contain',
+    'touch-none',
   ];
 
   const mobile = [
