@@ -100,7 +100,7 @@ export const useSwipe = ({
     [axis]
   );
 
-  const handleTouchStart = useCallback(
+  const onTouchStart = useCallback(
     (event: React.TouchEvent): void => {
       // タッチ開始: 開始位置を保存しドラッグ開始フラグを立てる
       startPositionRef.current = getPointerPosition(event);
@@ -110,16 +110,15 @@ export const useSwipe = ({
     [getPointerPosition]
   );
 
-  const handleTouchMove = useCallback(
+  const onTouchMove = useCallback(
     (event: React.TouchEvent): void => {
-      // タッチ移動: ドラッグ中のみ現在位置を更新
       if (!isDraggingRef.current) return;
       currentPositionRef.current = getPointerPosition(event);
     },
     [getPointerPosition]
   );
 
-  const handleTouchEnd = useCallback((): void => {
+  const onTouchEnd = useCallback((): void => {
     // タッチ終了: 移動量を判定して onClose を呼ぶ
     if (!isDraggingRef.current) return;
     const diff = currentPositionRef.current - startPositionRef.current;
@@ -129,7 +128,7 @@ export const useSwipe = ({
     currentPositionRef.current = 0;
   }, [checkThreshold]);
 
-  const handleMouseDown = useCallback(
+  const onMouseDown = useCallback(
     (event: React.MouseEvent): void => {
       // マウスダウン: デスクトップ向けの開始処理
       startPositionRef.current = getPointerPosition(event);
@@ -139,7 +138,7 @@ export const useSwipe = ({
     [getPointerPosition]
   );
 
-  const handleMouseMove = useCallback(
+  const onMouseMove = useCallback(
     (event: MouseEvent): void => {
       if (!isDraggingRef.current) return;
       currentPositionRef.current = axis === 'y' ? event.clientY : event.clientX;
@@ -147,7 +146,7 @@ export const useSwipe = ({
     [axis]
   );
 
-  const handleMouseUp = useCallback((): void => {
+  const onMouseUp = useCallback((): void => {
     if (!isDraggingRef.current) return;
     const diff = currentPositionRef.current - startPositionRef.current;
     if (checkThreshold(diff)) onCloseCallbackRef.current?.();
@@ -157,20 +156,20 @@ export const useSwipe = ({
   }, [checkThreshold]);
   // グローバルなマウスリスナー（mousemove, mouseup）を一度だけ登録
   useEffect(() => {
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
     };
-  }, [axis, handleMouseMove, handleMouseUp]);
+  }, [axis, onMouseMove, onMouseUp]);
 
   return {
     swipeHandlers: {
-      onTouchStart: handleTouchStart,
-      onTouchMove: handleTouchMove,
-      onTouchEnd: handleTouchEnd,
-      onMouseDown: handleMouseDown,
+      onTouchStart,
+      onTouchMove,
+      onTouchEnd,
+      onMouseDown,
     },
     swipeRefs: {
       startRef: startPositionRef,
