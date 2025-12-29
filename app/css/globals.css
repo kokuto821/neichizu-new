@@ -5,6 +5,12 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --ecruWhite: #F6F7E8;
+  --darkGreen: #1F3A3D;
+  --semiDarkGreen: #4B8B8A;
+  --middleGreen: #7DB5B1;
+  --lightGreen: #B7E1D8;
+  --gray: #E5E7EB;
 }
 
 @media (prefers-color-scheme: dark) {

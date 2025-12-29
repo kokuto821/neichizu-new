@@ -1,21 +1,23 @@
-import type { Config } from "tailwindcss";
-import scrollbarHide from 'tailwind-scrollbar-hide';
+import type { Config } from 'tailwindcss';
 
 export default {
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        // CSS変数ではなく直接定義
+        ecruWhite: 'var(--ecruWhite)', // RGBからHEXに変換
+        darkGreen: 'var(--darkGreen)',
+        semiDarkGreen: 'var(--semiDarkGreen)',
+        middleGreen: 'var(--middleGreen)',
+        lightGreen: 'var(--lightGreen)',
+        gray: 'var(--gray)',
       },
-    }
+    },
   },
-  plugins: [
-    scrollbarHide
-  ]
+  plugins: [],
 } satisfies Config;
