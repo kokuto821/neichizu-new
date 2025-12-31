@@ -1,44 +1,41 @@
 import { useRef, useCallback, useEffect } from 'react';
+import { getPointerPosition, preventPullToRefresh } from '../utils/swipeUtils';
 
-export type SwipeHandlers = {
-  onTouchStart: (e: React.TouchEvent) => void;
-  onTouchMove: (e: React.TouchEvent) => void;
-  onTouchEnd: () => void;
-  onMouseDown: (e: React.MouseEvent) => void;
-};
-
-export type SwipeRefs = {
-  // 公開時は RefObject（current が null の可能性あり）にして外部からの書き換えを防ぐ
-  // 呼び出し側は null チェックが必要になります。
-  startRef: React.RefObject<number>;
-  currentRef: React.RefObject<number>;
-  draggingRef: React.RefObject<boolean>;
-};
-
-export type UseSwipeReturn = {
-  swipeHandlers: SwipeHandlers;
-  swipeRefs: SwipeRefs;
-  setThreshold: (v: number) => void;
-  checkThreshold: (delta: number, optThreshold?: number) => boolean;
-};
-
-type Options = {
+type Props = {
+  /** スワイプ完了時のコールバック */
   onClose?: () => void;
+  /** スワイプ検出の閾値（デフォルト: 100px） */
   threshold?: number;
+  /** スワイプ検出の軸（デフォルト: 'y'） */
   axis?: 'x' | 'y';
+  /** スワイプ操作を監視するコンテナ要素の ref */
+  containerRef?: React.RefObject<HTMLElement | null>;
+};
+
+type UseSwipeReturn = {
+  /** タッチ／マウス開始ハンドラ */
+  onTouchStart: (e: React.TouchEvent) => void;
+  /** タッチ／マウス移動ハンドラ */
+  onTouchMove: (e: React.TouchEvent) => void;
+  /** タッチ／マウス終了ハンドラ */
+  onTouchEnd: () => void;
+  /** マウスダウンハンドラ */
+  onMouseDown: (e: React.MouseEvent) => void;
+  /** スワイプ開始位置 */
+  startPositionRef: React.RefObject<number>;
 };
 
 /**
- * useSwipe
- * - タッチ／マウスのスワイプ（開始／移動／終了）ハンドラを提供するフック
- * - 位置やドラッグ状態は refs で管理し再レンダリングを避ける
- * - グローバルなマウスイベントリスナーは一度だけ登録し、refs を参照して処理する
+ * タッチ／マウスのスワイプ（開始／移動／終了）ハンドラを提供するフック
+ * 位置やドラッグ状態は refs で管理し再レンダリングを避ける
+ * グローバルなマウスイベントリスナーは一度だけ登録し、refs を参照して処理する
  */
 export const useSwipe = ({
   onClose,
   threshold = 100,
   axis = 'y',
-}: Options = {}): UseSwipeReturn => {
+  containerRef,
+}: Props): UseSwipeReturn => {
   const startPositionRef = useRef<number>(0);
   const currentPositionRef = useRef<number>(0);
   const isDraggingRef = useRef(false);
@@ -53,69 +50,46 @@ export const useSwipe = ({
     onCloseCallbackRef.current = onClose;
   }, [onClose]);
 
-  // ランタイムで閾値を更新するヘルパー
-  const setThreshold = useCallback((value: number): void => {
-    thresholdValueRef.current = value;
-  }, []);
-
-  // 指定した閾値（または現在の threshold）で閉じる判定を行い、true/false を返す
+  /**
+   * 指定した閾値（または現在の threshold）で閉じる判定を行い、true/false を返す
+   * @param delta 移動量
+   * @param optThreshold オプションの閾値
+   * @return boolean 閾値を超えていれば true、そうでなければ false
+   */
   const checkThreshold = useCallback(
     (delta: number, optThreshold?: number): boolean => {
       // optThreshold が数値で渡されていればそれを使い、そうでなければ thresholdValueRef.current（既定の閾値）を使う
-      const effectiveThreshold =
-        typeof optThreshold === 'number'
-          ? optThreshold
-          : thresholdValueRef.current;
-      return delta > effectiveThreshold;
+      const effectiveThreshold = optThreshold ?? thresholdValueRef.current;
+      // 差分が閾値を超えているか判定
+      const isOverThreshold = delta > effectiveThreshold;
+      return isOverThreshold;
     },
     []
   );
 
-  const getPointerPosition = useCallback(
-    (
-      event: TouchEvent | MouseEvent | React.TouchEvent | React.MouseEvent
-    ): number => {
-      // タッチイベントかどうかの判定
-      const hasTouches =
-        'touches' in event &&
-        (event as TouchEvent).touches &&
-        (event as TouchEvent).touches.length > 0;
-      // マウスイベントかどうかの判定
-      const hasClient =
-        'clientY' in event && typeof (event as MouseEvent).clientY === 'number';
-
-      if (hasTouches) {
-        const touches = (event as React.TouchEvent).touches;
-        const touchPoint = touches[0];
-        return axis === 'y' ? touchPoint.clientY : touchPoint.clientX;
-      }
-
-      if (hasClient) {
-        const pointerEvent = event as MouseEvent;
-        return axis === 'y' ? pointerEvent.clientY : pointerEvent.clientX;
-      }
-
-      return 0;
+  const onTouchStart = useCallback(
+    (touchEvent: React.TouchEvent): void => {
+      // タッチ開始: 開始位置を保存しドラッグ開始フラグを立てる
+      startPositionRef.current = getPointerPosition(touchEvent, axis);
+      currentPositionRef.current = startPositionRef.current;
+      isDraggingRef.current = true;
     },
     [axis]
   );
 
-  const onTouchStart = useCallback(
-    (event: React.TouchEvent): void => {
-      // タッチ開始: 開始位置を保存しドラッグ開始フラグを立てる
-      startPositionRef.current = getPointerPosition(event);
-      currentPositionRef.current = startPositionRef.current;
-      isDraggingRef.current = true;
-    },
-    [getPointerPosition]
-  );
-
   const onTouchMove = useCallback(
-    (event: React.TouchEvent): void => {
+    (touchEvent: React.TouchEvent): void => {
       if (!isDraggingRef.current) return;
-      currentPositionRef.current = getPointerPosition(event);
+
+      preventPullToRefresh(
+        touchEvent,
+        startPositionRef.current,
+        containerRef?.current
+      );
+
+      currentPositionRef.current = getPointerPosition(touchEvent, axis);
     },
-    [getPointerPosition]
+    [axis, containerRef]
   );
 
   const onTouchEnd = useCallback((): void => {
@@ -129,19 +103,20 @@ export const useSwipe = ({
   }, [checkThreshold]);
 
   const onMouseDown = useCallback(
-    (event: React.MouseEvent): void => {
+    (mouseEvent: React.MouseEvent): void => {
       // マウスダウン: デスクトップ向けの開始処理
-      startPositionRef.current = getPointerPosition(event);
+      startPositionRef.current = getPointerPosition(mouseEvent, axis);
       currentPositionRef.current = startPositionRef.current;
       isDraggingRef.current = true;
     },
-    [getPointerPosition]
+    [axis]
   );
 
   const onMouseMove = useCallback(
-    (event: MouseEvent): void => {
+    (mouseEvent: MouseEvent): void => {
       if (!isDraggingRef.current) return;
-      currentPositionRef.current = axis === 'y' ? event.clientY : event.clientX;
+      currentPositionRef.current =
+        axis === 'y' ? mouseEvent.clientY : mouseEvent.clientX;
     },
     [axis]
   );
@@ -154,7 +129,8 @@ export const useSwipe = ({
     startPositionRef.current = 0;
     currentPositionRef.current = 0;
   }, [checkThreshold]);
-  // グローバルなマウスリスナー（mousemove, mouseup）を一度だけ登録
+
+  //グローバルなマウスリスナー（mousemove, mouseup）を一度だけ登録
   useEffect(() => {
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
@@ -165,19 +141,10 @@ export const useSwipe = ({
   }, [axis, onMouseMove, onMouseUp]);
 
   return {
-    swipeHandlers: {
-      onTouchStart,
-      onTouchMove,
-      onTouchEnd,
-      onMouseDown,
-    },
-    swipeRefs: {
-      startRef: startPositionRef,
-      currentRef: currentPositionRef,
-      draggingRef: isDraggingRef,
-    },
-    // 追加 API: ランタイムで閾値を変更したいときや、任意の閾値で判定したいときに使う
-    setThreshold,
-    checkThreshold,
+    onTouchStart,
+    onTouchMove,
+    onTouchEnd,
+    onMouseDown,
+    startPositionRef,
   };
 };
