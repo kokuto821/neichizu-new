@@ -2,8 +2,8 @@
 'use client';
 import { useEffect } from 'react';
 import { MapRenderer } from '@/app/feature/map/hyakumeizan/component/MapRenderer';
-import { PopupCard } from './components/molecules/popupCard';
-import { MapToolbar } from './components/molecules/mapToolbar';
+import { PopupCard } from './components/molecules/PopupCard';
+import { MapToolbar } from './components/molecules/MapToolbar';
 import { MountainFeatureContent } from './components/molecules/MountainFeatureContent';
 import { GeoparkFeatureContent } from './components/molecules/GeoparkFeatureContent';
 import { useInitializeMap } from './feature/map/hyakumeizan/hooks/useInitializeMap';

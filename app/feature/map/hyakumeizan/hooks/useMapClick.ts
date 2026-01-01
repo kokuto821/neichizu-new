@@ -14,7 +14,7 @@ export const useMapClick = (map: Map | null) => {
     useState<CombinedFeatureProperties | null>(null);
   const [isFeatureClick, setIsFeatureClick] = useState<boolean>(false);
   const handleMapClick = useCallback(
-    (event: MapBrowserEvent<UIEvent>) => {
+    (event: MapBrowserEvent) => {
       if (!map) return;
 
       // ピクセル位置からフィーチャーを取得

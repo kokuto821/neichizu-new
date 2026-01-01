@@ -2,7 +2,7 @@ import { FC, ReactNode } from 'react';
 
 const style = {
   footerWrapper:
-    'p-4 border-t border-gray-200 flex items-center justify-center mt-auto',
+    'p-4 border-t border-gray flex items-center justify-center mt-auto',
   center: 'text-center',
 };
 
