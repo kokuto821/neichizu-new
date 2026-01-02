@@ -6,10 +6,11 @@ import {
   SetStateAction,
   useCallback,
 } from 'react';
-import { FeatureProperties } from '../types/types';
+import { HyakumeizanFromSelected } from '../types/types';
+import { WGeoparkFromSelected } from '../../geopark/types/types';
 
 export const useImageLoader = (
-  selectedFeature: FeatureProperties | null,
+  selectedFeature: HyakumeizanFromSelected | WGeoparkFromSelected | null,
   setIsFeatureClick: Dispatch<SetStateAction<boolean>>
 ) => {
   const [isImageLoaded, setIsImageLoaded] = useState(false);

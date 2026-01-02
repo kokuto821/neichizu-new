@@ -1,11 +1,7 @@
-import { color } from '@/app/css/color';
-import { FC, ReactNode } from 'react';
-import Image from 'next/image';
-
-import { Button } from '@mui/material';
-
 import { Dispatch, SetStateAction } from 'react';
 import { SwipeableDrawer } from './SwipeableDrawer';
+import { DrawerContent } from '../atoms/DrawerContent';
+import { NavigationItem } from '../atoms/NavigationItem';
 
 export const BottomNavigation = ({
   isVectorVisible,
@@ -18,130 +14,44 @@ export const BottomNavigation = ({
   isGeoparkVisible: boolean;
   setIsGeoparkVisible: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const UnvisualContainer: FC<{
-    children: ReactNode;
-  }> = ({ children }) => {
-    return (
-      <div className="pt-0 px-[5%] pb-[10px] md:px-[20%] absolute bottom-0 left-0 w-full">
-        {children}
-      </div>
-    );
-  };
-
-  const NavigationWrapper: FC<{ children: ReactNode }> = ({ children }) => {
-    return (
-      <div
-        className="h-[10vh] p-[5px] rounded-xl flex gap-2 alngn-center"
-        style={{
-          backgroundColor: color.SemiDarkGreen,
-          boxShadow:
-            '0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)',
-        }}
-      >
-        {children}
-      </div>
-    );
-  };
-
-  const NavigationList: FC<{ children: ReactNode }> = ({ children }) => {
-    return (
-      <div className="flex gap-2 overflow-scroll overflow-y-hidden hidden-scrollbar">
-        {children}
-      </div>
-    );
-  };
-
-  const NavigationItem: FC<{
-    children: ReactNode;
-    onClick?: () => void;
-    isVisible?: boolean;
-  }> = ({ children, onClick, isVisible }) => {
-    return (
-      <div
-        className="flex flex-col items-center justify-center text-xs rounded-xl cursor-pointer border-4"
-        style={{
-          color: color.SemiDarkGreen,
-          backgroundColor: color.EcruWhite,
-          borderColor: isVisible ? color.LightGreen : 'transparent',
-        }}
-      >
-        <Button
-          className="flex-col"
-          sx={{ color: color.SemiDarkGreen }}
-          onClick={onClick}
-        >
-          {children}
-        </Button>
-      </div>
-    );
-  };
-
-  const NavigationImageWrapper: FC<{ children: ReactNode }> = ({
-    children,
-  }) => {
-    return (
-      <div className="w-[50px] h-[30px] flex flex-col justify-center items-center">
-        {children}
-      </div>
-    );
+  const style = {
+    unvisualContainer: `pt-0 px-[5%] pb-[10px] md:px-[20%] absolute bottom-0 left-0 w-full`,
+    navigationWrapper:
+      'h-[10vh] p-[5px] rounded-xl flex gap-2 items-center bg-semiDarkGreen  shadow-md',
+    navigationList:
+      'flex gap-2 overflow-scroll overflow-y-hidden hidden-scrollbar h-full',
   };
 
   return (
-    <UnvisualContainer>
-      <NavigationWrapper>
-        <NavigationList>
-          <SwipeableDrawer />
+    <div className={style.unvisualContainer}>
+      <div className={style.navigationWrapper}>
+        <div className={style.navigationList}>
+          <SwipeableDrawer imagePath={'/img/hyakumeizan-eyecatch.png'}>
+            <DrawerContent>
+              Neichizu(ねいちず)は日本百名山やジオパークなど日本の自然スポットにまつわる地点をまとめた地図です。
+            </DrawerContent>
+          </SwipeableDrawer>
           <NavigationItem
+            imagePath="/img/mountain.png"
+            label="百名山"
             onClick={() => {
-              console.log(
-                '🖱️ [BottomNav] 百名山クリック - 現在:',
-                isVectorVisible,
-                '→ 変更後:',
-                !isVectorVisible
-              );
               setIsVectorVisible(!isVectorVisible);
             }}
             isVisible={isVectorVisible}
-          >
-            <NavigationImageWrapper>
-              <Image
-                src="/img/mountain.png"
-                width={30}
-                height={30}
-                alt="Logo Icon"
-              />
-            </NavigationImageWrapper>
-            百名山
-          </NavigationItem>
+          />
           <NavigationItem
+            imagePath="/img/geopark_w.png"
+            label="世界ジオパーク"
             onClick={() => {
-              console.log(
-                '🖱️ [BottomNav] ジオパーククリック - 現在:',
-                isGeoparkVisible,
-                '→ 変更後:',
-                !isGeoparkVisible
-              );
               setIsGeoparkVisible(!isGeoparkVisible);
             }}
             isVisible={isGeoparkVisible}
-          >
-            <NavigationImageWrapper>
-              <Image
-                src="/img/geopark_w.png"
-                width={30}
-                height={30}
-                alt="Geopark Icon"
-              />
-            </NavigationImageWrapper>
-            <span className="text-[10px] sm:text-xs whitespace-nowrap">
-              世界ジオパーク
-            </span>
-          </NavigationItem>
-          <NavigationItem>Hello</NavigationItem>
-          <NavigationItem>Hello</NavigationItem>
-          <NavigationItem>Hello</NavigationItem>
-        </NavigationList>
-      </NavigationWrapper>
-    </UnvisualContainer>
+          />
+          <NavigationItem label="Hello" />
+          <NavigationItem label="Hello" />
+          <NavigationItem label="Hello" />
+        </div>
+      </div>
+    </div>
   );
 };

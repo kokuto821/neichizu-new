@@ -1,14 +1,14 @@
-import Papa from "papaparse";
-import Point from "ol/geom/Point";
-import { fromLonLat } from "ol/proj";
-import { fetchMountainData } from "../types/types";
+import Papa from 'papaparse';
+import Point from 'ol/geom/Point';
+import { fromLonLat } from 'ol/proj';
+import { HyakumeizanFromDB } from '../types/types';
 
 export const fetchCSVData = async (url: string) => {
   try {
     const response = await fetch(url);
     const csvString = await response.text();
 
-    const { data } = Papa.parse<fetchMountainData>(csvString, {
+    const { data } = Papa.parse<HyakumeizanFromDB>(csvString, {
       header: true,
       dynamicTyping: false,
     });
@@ -19,14 +19,14 @@ export const fetchCSVData = async (url: string) => {
       height: row.height,
       googlemaplink: row.googlemaplink,
       YAMAP: row.YAMAP,
-      image: row.画像,
-      area: row.エリア,
+      image: row.image,
+      area: row.area,
       geometry: new Point(
-        fromLonLat([parseFloat(row.経度), parseFloat(row.緯度)])
+        fromLonLat([parseFloat(row.longitude), parseFloat(row.latitude)])
       ),
     }));
   } catch (error) {
-    console.error("Error loading CSV:", error);
+    console.error('Error loading CSV:', error);
     return [];
   }
 };

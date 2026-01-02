@@ -1,13 +1,13 @@
 import Point from 'ol/geom/Point';
 import { fromLonLat } from 'ol/proj';
 import { getAllGeoparks } from '@/app/utils/supabaseFunctions';
-import { GeoparkFromDB } from '../types/types';
+import { WGeoparkFromDB } from '../types/types';
 
 /**
  * Supabase から世界ジオパークの生データを取得し、地図用オブジェクトにマッピングして返す
  * @returns {Promise<Array<any>>} マッピング済みのジオパーク配列（geometry は ol/geom/Point）
  */
-export const fetchGeoparkData = async () => {
+export const fetchWGeoparkData = async () => {
   try {
     console.log('🔄 Supabaseから世界ジオパークデータを取得中...');
     const { data, error } = await getAllGeoparks();
@@ -33,19 +33,19 @@ export const fetchGeoparkData = async () => {
     console.log('最初のデータ:', data[0]);
     console.log('カラム名:', Object.keys(data[0]));
 
-    return data.map((row: GeoparkFromDB) => {
+    return data.map((row: WGeoparkFromDB) => {
       const mappedData = {
         name: row.name,
-        area: row['エリア'] || row.area || '',
-        category: row['区分'] || row.category || '世界ジオパーク',
-        comment: row['コメント'] || row.comment || '',
+        area: row.area || '',
+        category: row.category || '世界ジオパーク',
+        comment: row.comment || '',
         googlemaplink: row.googlemaplink,
-        website: row['ジオパーク公式サイト'] || row.website || '',
+        website: row.website || '',
         image: row.image || '/img/geopark_w.png',
         geometry: new Point(
           fromLonLat([
-            parseFloat(row.Longitude || row.longitude || '0'),
-            parseFloat(row.Latitude || row.latitude || '0'),
+            parseFloat(row.longitude || '0'),
+            parseFloat(row.latitude || '0'),
           ])
         ),
       };

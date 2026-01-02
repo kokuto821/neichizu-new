@@ -10,7 +10,7 @@ type Props = {
   children?: ReactNode;
 };
 
-const DrawerContainer: FC<Props> = ({
+export const DrawerContainer: FC<Props> = ({
   isOpen,
   drawerRef,
   onTouchStart,
@@ -54,20 +54,23 @@ const DrawerContainer: FC<Props> = ({
     'md:translate-y-0',
   ];
 
-  const className = [...base, ...mobile, ...desktop].join(' ');
+  const drawerContainer = [...base, ...mobile, ...desktop].join(' ');
+
+  const style = {
+    drawerContainer: drawerContainer,
+    content: 'flex flex-col h-full',
+  };
 
   return (
     <div
       ref={drawerRef}
-      className={className}
+      className={style.drawerContainer}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
       onMouseDown={onMouseDown}
     >
-      <div className="flex flex-col h-full">{children}</div>
+      <div className={style.content}>{children}</div>
     </div>
   );
 };
-
-export default DrawerContainer;

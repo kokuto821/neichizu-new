@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { Map, MapBrowserEvent } from 'ol';
 import Point from 'ol/geom/Point';
 import Feature, { FeatureLike } from 'ol/Feature';
-import { CombinedFeatureProperties } from '../../types/types';
+import { WGeoparkFromSelected } from '../../geopark/types/types';
+import { HyakumeizanFromSelected } from '../types/types';
 
 // 型ガード関数
 const isFeature = (feature: FeatureLike): feature is Feature => {
@@ -10,11 +11,13 @@ const isFeature = (feature: FeatureLike): feature is Feature => {
 };
 
 export const useMapClick = (map: Map | null) => {
-  const [selectedFeature, setSelectedFeature] =
-    useState<CombinedFeatureProperties | null>(null);
+  const [selectedFeature, setSelectedFeature] = useState<
+    HyakumeizanFromSelected | WGeoparkFromSelected | null
+  >(null);
   const [isFeatureClick, setIsFeatureClick] = useState<boolean>(false);
+
   const handleMapClick = useCallback(
-    (event: MapBrowserEvent<UIEvent>) => {
+    (event: MapBrowserEvent) => {
       if (!map) return;
 
       // ピクセル位置からフィーチャーを取得
@@ -29,19 +32,40 @@ export const useMapClick = (map: Map | null) => {
 
       // プロパティ取得
       const properties = clickedFeature.getProperties();
-      setSelectedFeature({
+
+      const worldGeoparkSelectedFeature: WGeoparkFromSelected = {
         geometry: properties.geometry,
-        name: properties.name,
-        height: properties.height,
-        googlemaplink: properties.googlemaplink,
-        YAMAP: properties.YAMAP,
-        image: properties.image,
-        area: properties.area,
-        // ジオパーク用のプロパティ
+        id: properties.id,
         category: properties.category,
+        name: properties.name,
+        area: properties.area,
+        googlemaplink: properties.googlemaplink,
         comment: properties.comment,
         website: properties.website,
-      });
+        image: properties.image,
+      };
+
+      const hyakumeizanSelectedFeature: HyakumeizanFromSelected = {
+        geometry: properties.geometry,
+        id: properties.id,
+        category: properties.category,
+        name: properties.name,
+        area: properties.area,
+        height: properties.height,
+        googlemaplink: properties.googlemaplink,
+        image: properties.image,
+        YAMAP: properties.YAMAP,
+      };
+
+      const category = properties.category;
+      if (category === 'world_geopark') {
+        setSelectedFeature(worldGeoparkSelectedFeature);
+        console.log('Geopark feature clicked:', properties.geometry);
+      } else if (category === 'hyakumeizan') {
+        setSelectedFeature(hyakumeizanSelectedFeature);
+      } else {
+        return;
+      }
 
       // geometryがPoint型なら地図を移動
       if (properties.geometry instanceof Point) {

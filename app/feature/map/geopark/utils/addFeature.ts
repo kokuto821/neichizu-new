@@ -1,13 +1,25 @@
-import { Map, Feature } from "ol";
-import VectorSource from "ol/source/Vector";
-import { geoparkIcon } from "./styles";
-import { fetchGeoparkData } from "./fetchSupabaseData";
+import { Map, Feature } from 'ol';
+import VectorSource from 'ol/source/Vector';
+import { geoparkIcon } from './styles';
+import { fetchWGeoparkData } from './fetchWGeoparkData';
 
-export const addGeoparkFeature = async (map: Map, vectorSource: VectorSource) => {
-  const data = await fetchGeoparkData();
+export const addGeoparkFeature = async (
+  map: Map,
+  vectorSource: VectorSource
+) => {
+  const data = await fetchWGeoparkData();
 
   data.forEach(
-    ({ name, area, category, comment, googlemaplink, website, image, geometry }) => {
+    ({
+      name,
+      area,
+      category,
+      comment,
+      googlemaplink,
+      website,
+      image,
+      geometry,
+    }) => {
       const feature = new Feature({
         geometry: geometry,
         name: name,
@@ -23,7 +35,7 @@ export const addGeoparkFeature = async (map: Map, vectorSource: VectorSource) =>
       feature.setStyle(geoparkIcon);
 
       vectorSource.addFeature(feature);
-      console.log("Geopark Feature added:", {
+      console.log('Geopark Feature added:', {
         name,
         category,
         comment,
@@ -32,7 +44,7 @@ export const addGeoparkFeature = async (map: Map, vectorSource: VectorSource) =>
           category: feature.get('category'),
           comment: feature.get('comment'),
           website: feature.get('website'),
-        }
+        },
       });
     }
   );

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import { Map } from 'ol';
-import { addFeature } from '../utils/addFeature';
+import { addHyakumeizanFeature } from '../utils/addFeature';
 
 // 既存のベクターレイヤーを取得する関数
 const findVectorLayer = (map: Map) =>
@@ -20,13 +20,11 @@ const addVectorLayer = (map: Map) => {
     source: vectorSource,
     properties: { type: 'vector' },
   });
-  addFeature(map, vectorSource);
+  addHyakumeizanFeature(map, vectorSource);
   map.addLayer(vectorLayer);
 };
 
-export const useVectorLayerVisibility = (
-  map: Map | null,
-) => {
+export const useVectorLayerVisibility = (map: Map | null) => {
   const [isVectorVisible, setIsVectorVisible] = useState(true);
   useEffect(() => {
     if (!map) return;
@@ -39,6 +37,6 @@ export const useVectorLayerVisibility = (
       map.removeLayer(existingVectorLayer);
     }
   }, [isVectorVisible, map]);
-  
-  return { isVectorVisible, setIsVectorVisible}
+
+  return { isVectorVisible, setIsVectorVisible };
 };

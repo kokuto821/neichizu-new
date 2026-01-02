@@ -18,7 +18,6 @@ type Props = {
 export const GeoparkFeatureContent = ({
   name,
   area,
-  category,
   comment,
   googlemaplink,
   website,
@@ -27,12 +26,6 @@ export const GeoparkFeatureContent = ({
     <CardContent style={{ padding: '0px 0px 0px 10px' }}>
       <FeatureTitle>{name}</FeatureTitle>
       <FeatureSubtitle>{area}</FeatureSubtitle>
-
-      {category && (
-        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
-          区分: {category}
-        </Typography>
-      )}
 
       {comment && (
         <Typography variant="body2" sx={{ mt: 0.5, fontSize: '0.875rem' }}>
