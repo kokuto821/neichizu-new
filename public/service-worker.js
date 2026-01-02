@@ -8,12 +8,10 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       caches.match(event.request).then((response) => {
         if (response) {
-          console.log('キャッシュからの読み込み:', event.request.url);
           return response;
         }
 
         return fetch(event.request).then((res) => {
-          console.log('新規キャッシュの保存:', event.request.url);
           const cacheRes = res.clone();
           caches
             .open('map-tiles')

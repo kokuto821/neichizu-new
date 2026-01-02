@@ -1,31 +1,24 @@
-export type GeoparkProperties = {
-  geometry: string;
+export type WGeoparkFromDB = {
+  id: number;
   name: string;
   area: string;
+  latitude: string;
+  longitude: string;
   category: string;
-  comment: string;
   googlemaplink: string;
+  comment: string;
   website: string;
   image: string;
 };
 
-export type GeoparkFromDB = {
-  id?: number;
-  no?: number;
+export type WGeoparkFromSelected = {
+  geometry: string;
+  id: number;
+  category: string;
   name: string;
-  エリア?: string;
-  area?: string;
-  Latitude?: string;
-  Longitude?: string;
-  latitude?: string;
-  longitude?: string;
-  区分?: string;
-  category?: string;
+  area: string;
   googlemaplink: string;
-  コメント?: string;
-  comment?: string;
-  ジオパーク公式サイト?: string;
-  website?: string;
-  image?: string;
-  created_at?: string;
+  comment: string;
+  website: string;
+  image: string;
 };

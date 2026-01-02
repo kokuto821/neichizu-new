@@ -4,15 +4,13 @@ import { useEffect } from 'react';
 import { MapRenderer } from '@/app/feature/map/hyakumeizan/component/MapRenderer';
 import { PopupCard } from './components/molecules/PopupCard';
 import { MapToolbar } from './components/molecules/MapToolbar';
-import { MountainFeatureContent } from './components/molecules/MountainFeatureContent';
-import { GeoparkFeatureContent } from './components/molecules/GeoparkFeatureContent';
 import { useInitializeMap } from './feature/map/hyakumeizan/hooks/useInitializeMap';
 import { useMapClick } from './feature/map/hyakumeizan/hooks/useMapClick';
 import { useImageLoader } from './feature/map/hyakumeizan/hooks/useImageLoader';
 import { BottomNavigation } from './components/molecules/BottomNavigation';
 import { RoadingSpinner } from './components/molecules/RoadingSpinner';
 import { useLayerVisibility } from './feature/map/hooks/useLayerVisibility';
-import { addFeature } from './feature/map/hyakumeizan/utils/addFeature';
+import { addHyakumeizanFeature } from './feature/map/hyakumeizan/utils/addFeature';
 import { addGeoparkFeature } from './feature/map/geopark/utils/addFeature';
 
 const Hyakumeizan = () => {
@@ -23,7 +21,7 @@ const Hyakumeizan = () => {
     useLayerVisibility({
       map,
       layerType: 'hyakumeizan',
-      addFeatures: addFeature,
+      addFeatures: addHyakumeizanFeature,
       initialVisible: true,
     });
 
@@ -64,30 +62,7 @@ const Hyakumeizan = () => {
       <div className="relative h-[100vh]">
         <MapRenderer mapRef={mapRef} />
         {isFeatureClick && selectedFeature !== null && <RoadingSpinner />}
-        {isImageLoaded && (
-          <PopupCard selectedFeature={selectedFeature}>
-            {(feature) =>
-              feature.category ? (
-                <GeoparkFeatureContent
-                  name={feature.name}
-                  area={feature.area}
-                  category={feature.category}
-                  comment={feature.comment}
-                  googlemaplink={feature.googlemaplink}
-                  website={feature.website}
-                />
-              ) : (
-                <MountainFeatureContent
-                  name={feature.name}
-                  area={feature.area}
-                  height={feature.height}
-                  googlemaplink={feature.googlemaplink}
-                  YAMAP={feature.YAMAP}
-                />
-              )
-            }
-          </PopupCard>
-        )}
+        {isImageLoaded && <PopupCard selectedFeature={selectedFeature} />}
         <BottomNavigation
           isVectorVisible={isVectorVisible}
           setIsVectorVisible={setIsVectorVisible}

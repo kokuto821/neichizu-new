@@ -1,17 +1,26 @@
 import { useState, useEffect, useRef } from 'react';
-import { CombinedFeatureProperties } from '../../types/types';
+import { WGeoparkFromSelected } from '../../geopark/types/types';
+import { HyakumeizanFromSelected } from '../types/types';
 
 const FADE_IN_DELAY = 500;
 const FADE_OUT_DURATION = 300;
 
-export const usePopupVisible = (selectedFeature: CombinedFeatureProperties | null) => {
+export const usePopupVisible = (
+  selectedFeature: HyakumeizanFromSelected | WGeoparkFromSelected | null
+) => {
   const [isVisible, setIsVisible] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
-  const [displayFeature, setDisplayFeature] = useState<CombinedFeatureProperties | null>(null);
-  const previousFeature = useRef<CombinedFeatureProperties | null>(null);
+  const [displayFeature, setDisplayFeature] = useState<
+    HyakumeizanFromSelected | WGeoparkFromSelected | null
+  >(null);
+  const previousFeature = useRef<
+    HyakumeizanFromSelected | WGeoparkFromSelected | null
+  >(null);
 
   // フィーチャ選択時の処理
-  const handleFeatureSelect = (feature: CombinedFeatureProperties) => {
+  const handleFeatureSelect = (
+    feature: HyakumeizanFromSelected | WGeoparkFromSelected
+  ) => {
     previousFeature.current = feature;
     setDisplayFeature(feature);
     setShouldRender(true);

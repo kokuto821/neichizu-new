@@ -1,15 +1,17 @@
 import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
-import { CombinedFeatureProperties } from '@/app/feature/map/types/types';
 import { usePopupVisible } from '@/app/feature/map/hyakumeizan/hooks/usePopupVisible';
+import { WGeoparkFromSelected } from '@/app/feature/map/geopark/types/types';
+import { HyakumeizanFromSelected } from '@/app/feature/map/hyakumeizan/types/types';
+import { GeoparkFeatureContent } from './GeoparkFeatureContent';
+import { MountainFeatureContent } from './MountainFeatureContent';
 
 type Props = {
-  selectedFeature: CombinedFeatureProperties | null;
-  children: (feature: CombinedFeatureProperties) => React.ReactNode;
+  selectedFeature: HyakumeizanFromSelected | WGeoparkFromSelected | null;
 };
 
-export const PopupCard = ({ selectedFeature, children }: Props) => {
+export const PopupCard = ({ selectedFeature }: Props) => {
   const { isVisible, shouldRender, displayFeature } =
     usePopupVisible(selectedFeature);
 
@@ -21,6 +23,19 @@ export const PopupCard = ({ selectedFeature, children }: Props) => {
     }`,
     card: 'flex items-center bg-ecruWhite',
     cardContentRight: 'flex flex-col pt-[2px] pr-0 pb-[2px] pl-[10px] flex-1',
+  };
+
+  // 型ガード関数
+  const isWGeopark = (
+    f: HyakumeizanFromSelected | WGeoparkFromSelected
+  ): f is WGeoparkFromSelected => {
+    return (f as WGeoparkFromSelected).comment !== undefined;
+  };
+
+  const isHyakumeizan = (
+    f: HyakumeizanFromSelected | WGeoparkFromSelected
+  ): f is HyakumeizanFromSelected => {
+    return (f as HyakumeizanFromSelected).height !== undefined;
   };
 
   // フェードアウトアニメーション完了後にアンマウント
@@ -40,7 +55,25 @@ export const PopupCard = ({ selectedFeature, children }: Props) => {
             alt={displayFeature.name}
           />
         )}
-        <div className={style.cardContentRight}>{children(displayFeature)}</div>
+        <div className={style.cardContentRight}>
+          {isWGeopark(displayFeature) ? (
+            <GeoparkFeatureContent
+              name={displayFeature.name}
+              area={displayFeature.area}
+              comment={displayFeature.comment}
+              googlemaplink={displayFeature.googlemaplink}
+              website={displayFeature.website}
+            />
+          ) : isHyakumeizan(displayFeature) ? (
+            <MountainFeatureContent
+              name={displayFeature.name}
+              area={displayFeature.area}
+              height={displayFeature.height}
+              googlemaplink={displayFeature.googlemaplink}
+              YAMAP={displayFeature.YAMAP}
+            />
+          ) : null}
+        </div>
       </Card>
     </div>
   );

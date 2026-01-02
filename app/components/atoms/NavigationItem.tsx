@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import Image from 'next/image';
+import { CiImageOff } from 'react-icons/ci';
 
 type Props = {
   /** 画像パス */
@@ -31,7 +32,11 @@ export const NavigationItem: FC<Props> = ({
     >
       <button className={style.navigationItemButton} onClick={onClick}>
         <div className={style.navigationImageWrapper}>
-          <Image src={imagePath ?? ''} width={30} height={30} alt={label} />
+          {imagePath ? (
+            <Image src={imagePath} width={30} height={30} alt={label} />
+          ) : (
+            <CiImageOff />
+          )}
         </div>
         {label}
       </button>
