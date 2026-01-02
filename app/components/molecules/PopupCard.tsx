@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import { usePopupVisible } from '@/app/feature/map/hyakumeizan/hooks/usePopupVisible';
 import { WGeoparkFromSelected } from '@/app/feature/map/geopark/types/types';
@@ -21,7 +20,9 @@ export const PopupCard = ({ selectedFeature }: Props) => {
         ? 'opacity-100 pointer-events-auto'
         : 'opacity-0 pointer-events-none'
     }`,
-    card: 'flex items-center bg-ecruWhite',
+    card: 'bg-ecruWhite flex items-center ',
+    neiCard:
+      'flex items-center bg-ecruWhite border rounded-lg shadow-sm border-neutral-200/60 overflow-hidden',
     cardContentRight: 'flex flex-col pt-[2px] pr-0 pb-[2px] pl-[10px] flex-1',
   };
 
@@ -43,13 +44,18 @@ export const PopupCard = ({ selectedFeature }: Props) => {
 
   return (
     <div className={style.cardWrapper}>
-      <Card className={style.card}>
+      {/* <Card className={style.card}> */}
+      <div className={style.neiCard}>
         {displayFeature.image && (
           <CardMedia
+            className="rounded-l-lg object-cover block"
             component="img"
             sx={{
-              width: 151,
-              height: 130,
+              width: 152, // 1px大きくする
+              height: 131, // 1px大きくする
+              marginLeft: '-1px', // ボーダーに被せる
+              marginTop: '-0.5px',
+              marginBottom: '-0.5px',
             }}
             image={displayFeature.image}
             alt={displayFeature.name}
@@ -74,7 +80,7 @@ export const PopupCard = ({ selectedFeature }: Props) => {
             />
           ) : null}
         </div>
-      </Card>
+      </div>
     </div>
   );
 };
