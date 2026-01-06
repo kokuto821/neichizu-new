@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import { Map } from 'ol';
-import { addGeoparkFeature } from '../utils/addFeature';
+import { addGeoparkFeature } from '../utils/addWGeoparkFeature';
 
 // 既存のジオパークレイヤーを取得する関数
 const findGeoparkLayer = (map: Map) =>
@@ -26,7 +26,7 @@ const addGeoparkLayer = (map: Map) => {
 
 export const useGeoparkLayerVisibility = (map: Map | null) => {
   const [isGeoparkVisible, setIsGeoparkVisible] = useState(false);
-  
+
   useEffect(() => {
     if (!map) return;
 

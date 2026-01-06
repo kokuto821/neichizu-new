@@ -10,8 +10,8 @@ import { useImageLoader } from './feature/map/hyakumeizan/hooks/useImageLoader';
 import { BottomNavigation } from './components/molecules/BottomNavigation';
 import { RoadingSpinner } from './components/molecules/RoadingSpinner';
 import { useLayerVisibility } from './feature/map/hooks/useLayerVisibility';
-import { addHyakumeizanFeature } from './feature/map/hyakumeizan/utils/addFeature';
-import { addGeoparkFeature } from './feature/map/geopark/utils/addFeature';
+import { addHyakumeizanFeature } from './feature/map/hyakumeizan/utils/addHyakumeizanFeature';
+import { addWGeoparkFeature } from './feature/map/geopark/utils/addWGeoparkFeature';
 
 const Hyakumeizan = () => {
   const { map, mapRef, switchBaseLayer } = useInitializeMap();
@@ -30,7 +30,7 @@ const Hyakumeizan = () => {
     useLayerVisibility({
       map,
       layerType: 'geopark',
-      addFeatures: addGeoparkFeature,
+      addFeatures: addWGeoparkFeature,
       initialVisible: false,
     });
 

@@ -13,15 +13,10 @@ type UseLayerVisibilityProps = {
 // 既存のレイヤーを取得する関数
 const findLayer = (map: Map, layerType: string) => {
   const layers = map.getLayers().getArray();
-  console.log(`🔎 [findLayer] 全レイヤー数: ${layers.length}`);
-  
   const found = layers.find((layer) => {
     const type = layer.get('type');
-    console.log(`  - レイヤー type: ${type}`);
     return type === layerType;
   }) as VectorLayer<VectorSource> | undefined;
-  
-  console.log(`🔎 [findLayer] ${layerType}を検索:`, found ? '見つかった' : '見つからない');
   return found;
 };
 
@@ -53,18 +48,10 @@ export const useLayerVisibility = ({
 
     const existingLayer = findLayer(map, layerType);
 
-    console.log(`🔍 [useLayerVisibility] ${layerType}:`, {
-      isVisible,
-      existingLayer: !!existingLayer,
-    });
-
     if (isVisible && !existingLayer) {
-      console.log(`➕ [useLayerVisibility] レイヤーを追加: ${layerType}`);
       addLayer(map, layerType, addFeatures);
     } else if (!isVisible && existingLayer) {
-      console.log(`➖ [useLayerVisibility] レイヤーを削除: ${layerType}`);
       map.removeLayer(existingLayer);
-      console.log(`✅ [useLayerVisibility] レイヤー削除完了: ${layerType}`);
     }
     // addFeaturesは依存配列から除外（外部関数なので変更されない）
     // eslint-disable-next-line react-hooks/exhaustive-deps

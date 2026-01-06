@@ -9,10 +9,7 @@ import { WGeoparkFromDB } from '../types/types';
  */
 export const fetchWGeoparkData = async () => {
   try {
-    console.log('🔄 Supabaseから世界ジオパークデータを取得中...');
     const { data, error } = await getAllGeoparks();
-
-    console.log('📊 Supabase Response:', { data, error });
 
     if (error) {
       console.error('❌ Supabaseからのデータ取得エラー:', error);
@@ -29,12 +26,9 @@ export const fetchWGeoparkData = async () => {
       return [];
     }
 
-    console.log(`✅ ${data.length}件の世界ジオパークデータを取得しました`);
-    console.log('最初のデータ:', data[0]);
-    console.log('カラム名:', Object.keys(data[0]));
-
     return data.map((row: WGeoparkFromDB) => {
       const mappedData = {
+        id: row.id,
         name: row.name,
         area: row.area || '',
         category: row.category || '世界ジオパーク',
@@ -49,11 +43,6 @@ export const fetchWGeoparkData = async () => {
           ])
         ),
       };
-      console.log('マッピング後:', {
-        name: mappedData.name,
-        comment: mappedData.comment,
-        website: mappedData.website,
-      });
       return mappedData;
     });
   } catch (error) {

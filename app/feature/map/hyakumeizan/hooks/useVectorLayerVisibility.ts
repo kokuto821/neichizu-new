@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import { Map } from 'ol';
-import { addHyakumeizanFeature } from '../utils/addFeature';
+import { addHyakumeizanFeature } from '../utils/addHyakumeizanFeature';
 
 // 既存のベクターレイヤーを取得する関数
 const findVectorLayer = (map: Map) =>
