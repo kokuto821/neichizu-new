@@ -10,7 +10,7 @@ import { Style } from 'ol/style';
  * @param {Map} params.map OpenLayersのマップインスタンス
  * @param {VectorSource} params.vectorSource フィーチャーを追加するベクターソース
  * @param {() => Promise<T[]>} params.fetchData データを取得する非同期関数
- * @param {(featureData: T) => Record<string, any>} params.createProperties フィーチャーのプロパティを作成する関数
+ * @param {(featureData: T) => Partial<T>} params.createProperties フィーチャーのプロパティを作成する関数
  * @param {Style} params.style フィーチャーに適用するスタイル
  * @returns {Promise<void>}
  */
@@ -26,7 +26,7 @@ export const addFeatures = async <
   map: Map;
   vectorSource: VectorSource;
   fetchData: () => Promise<T[]>;
-  createProperties: (featureData: T) => Record<string, any>;
+  createProperties: (featureData: T) => Partial<T>;
   style: Style;
 }): Promise<void> => {
   const data = await fetchData();
@@ -51,5 +51,5 @@ export type AddFeatureConfig<T> = {
   /** スタイル */
   style: Style;
   /** フィーチャープロパティ生成関数 */
-  createProperties: (data: T) => Record<string, any>;
+  createProperties: (data: T) => Partial<T>;
 };
