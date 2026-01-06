@@ -45,9 +45,7 @@ export const useLayerVisibility = ({
 
   useEffect(() => {
     if (!map) return;
-
     const existingLayer = findLayer(map, layerType);
-
     if (isVisible && !existingLayer) {
       addLayer(map, layerType, addFeatures);
     } else if (!isVisible && existingLayer) {
