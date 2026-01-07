@@ -35,6 +35,33 @@ export const metadata: Metadata = {
   icons: {
     icon: '/img/logo.svg',
     shortcut: '/img/logo.svg',
+    apple: '/img/logo.svg',
+    other: [
+      {
+        rel: 'apple-touch-icon',
+        url: '/img/logo.png',
+      },
+      {
+        rel: 'icon',
+        url: '/img/logo.png',
+        sizes: '192x192',
+      },
+      {
+        rel: 'icon',
+        url: '/img/logo.png',
+        sizes: '512x512',
+      },
+      {
+        rel: 'android-chrome-192x192',
+        url: '/img/logo.png',
+        sizes: '192x192',
+      },
+      {
+        rel: 'android-chrome-512x512',
+        url: '/img/logo.png',
+        sizes: '512x512',
+      },
+    ],
   },
   manifest: '/manifest.json',
 } as const;
