@@ -2,9 +2,10 @@ import { FC, ReactNode } from 'react';
 
 type NeiIconButtonProps = {
   children: ReactNode;
-  onClick?: () => void;
+  onClick?: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   disabled?: boolean;
   isActive?: boolean;
+  className?: string;
 };
 
 export const NeiIconButton: FC<NeiIconButtonProps> = ({
@@ -12,10 +13,11 @@ export const NeiIconButton: FC<NeiIconButtonProps> = ({
   onClick,
   disabled = false,
   isActive = false,
+  className,
 }) => {
   const style = {
     NeiIconBtn:
-      'text-semiDarkGreen bg-ecruWhite border border-gray  rounded-[20px] w-[40px] h-[40px]  transition-colors flex justify-center items-center',
+      'bg-ecruWhite border border-gray  rounded-[20px] w-[40px] h-[40px]  transition-colors flex justify-center items-center',
     active: 'text-accentOrange',
     inactive: 'text-semiDarkGreen lg:hover:text-lightGreen',
   };
@@ -26,7 +28,7 @@ export const NeiIconButton: FC<NeiIconButtonProps> = ({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`${style.NeiIconBtn} ${buttonStyle}`}
+      className={`${style.NeiIconBtn} ${buttonStyle} ${className || ''}`}
     >
       {children}
     </button>

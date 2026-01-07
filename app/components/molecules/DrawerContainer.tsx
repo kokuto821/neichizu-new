@@ -21,8 +21,7 @@ export const DrawerContainer: FC<Props> = ({
 }) => {
   const base = [
     'fixed',
-    'bg-white',
-    'dark:bg-white',
+    'bg-ecruWhite',
     'shadow-xl',
     'z-50',
     'transform',
