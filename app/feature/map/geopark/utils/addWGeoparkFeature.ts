@@ -1,4 +1,3 @@
-import { Map } from 'ol';
 import VectorSource from 'ol/source/Vector';
 import { geoparkIcon } from './styles';
 import { fetchWGeoparkData } from './fetchWGeoparkData';

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import VectorSource from 'ol/source/Vector';
-import VectorLayer from 'ol/layer/Vector';
 import { Map } from 'ol';
 import { addLayer, findLayer } from '../shared/addFeatureUtils';
 

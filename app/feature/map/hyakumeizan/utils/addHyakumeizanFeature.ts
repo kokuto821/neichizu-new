@@ -1,4 +1,3 @@
-import { Map } from 'ol';
 import VectorSource from 'ol/source/Vector';
 import { mountainIcon } from './styles';
 import { HyakumeizanFromSelected } from '../types/types';
