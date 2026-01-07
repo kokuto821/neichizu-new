@@ -4,7 +4,7 @@ export type LayerType = 'gsi' | 'photo' | 'relief' | 'osm' | 'osmTopo';
 
 export const useChangeVisible = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [activeLayer, setActiveLayer] = useState<LayerType | null>(null);
+  const [activeLayer, setActiveLayer] = useState<LayerType>('gsi'); // デフォルトで地理院地図をアクティブに
 
   const changeVisible = useCallback(() => {
     setIsVisible((prev) => !prev);
