@@ -1,3 +1,5 @@
+import { Geometry } from 'ol/geom';
+
 export type WGeoparkFromDB = {
   id: number;
   name: string;
@@ -12,7 +14,7 @@ export type WGeoparkFromDB = {
 };
 
 export type WGeoparkFromSelected = {
-  geometry: string;
+  geometry: Geometry;
   id: number;
   category: string;
   name: string;

@@ -44,7 +44,7 @@ export const GeoparkFeatureContent = ({
       >
         <LinkIcon
           href={googlemaplink}
-          src="/img/g_map_logo.png"
+          src="/img/g_map_logo.svg"
           alt="Google Map"
         />
 

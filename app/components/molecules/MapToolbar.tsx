@@ -1,117 +1,76 @@
-import { Box, Button, IconButton, styled } from '@mui/material';
-import LayersRoundedIcon from '@mui/icons-material/LayersRounded';
-import { color } from '@/app/css/color';
-import { useChangeVisible } from '@/app/feature/map/hyakumeizan/hooks/useChangeVisible';
+import {
+  useChangeVisible,
+  LayerType,
+} from '@/app/feature/map/hyakumeizan/hooks/useChangeVisible';
+import { NeiButton } from './NeiButton';
+import { NeiIconButton } from './NeiIconButton';
+import { MdLayers } from 'react-icons/md';
 
 type Props = {
-  changeOSMLayer: () => void;
-  changeGSILayer: () => void;
-  changePHOTOLayer: () => void;
-  changeRELIEFLayer: () => void;
-  changeTOPOLayer: () => void;
+  switchBaseLayer: (layerName: string) => void;
 };
 
-export const MapToolbar = ({
-  changeOSMLayer,
-  changeGSILayer,
-  changePHOTOLayer,
-  changeRELIEFLayer,
-  changeTOPOLayer,
-}: Props) => {
-  const { isVisible: isLayerVisible, changeVisible: changeLayerVisible } =
+/**
+ * マップツールバーコンポーネント
+ * レイヤー表示切替と各種類の地図レイヤーを選択する機能を提供
+ */
+export const MapToolbar = ({ switchBaseLayer }: Props) => {
+  const { isVisible, changeVisible, changeLayer, isLayerActive } =
     useChangeVisible();
-  const IconButtonBox = styled('div')({
-    backgroundColor: color.EcruWhite,
-    borderRadius: '20px',
-    width: '40px',
-    height: '40px',
-  });
-  const MapToolbarInner = styled('div')({
-    display: 'flex',
-    flexDirection: 'column',
-    position: 'absolute',
-    top: '0',
-    left: '0',
-    padding: '15px',
-  });
+
+  const style = {
+    mapToolbarInner: 'flex flex-col absolute top-0 left-0 p-[15px]',
+    layerList: 'flex flex-col gap-[5px] pt-[7.5px]',
+  };
+
+  /**
+   * レイヤー変更を処理する共通関数
+   * @param layerType - レイヤーの種類
+   */
+  const handleLayerChange = (layerType: LayerType) => () => {
+    changeLayer(layerType);
+    switchBaseLayer(layerType);
+  };
 
   return (
-    <MapToolbarInner>
-      <IconButtonBox
+    <div className={style.mapToolbarInner}>
+      <NeiIconButton
         onClick={() => {
-          setTimeout(() => changeLayerVisible(), 300);
+          changeVisible();
         }}
+        isActive={isVisible}
       >
-        <IconButton
-          aria-label="layers"
-          sx={{
-            color: color.SemiDarkGreen,
-          }}
-        >
-          <LayersRoundedIcon />
-        </IconButton>
-      </IconButtonBox>
-      {isLayerVisible ? (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '5px',
-            padding: '7.5px 0px 0px 0px',
-          }}
-        >
-          <Button
-            variant="contained"
-            onClick={() => setTimeout(() => changeGSILayer(), 300)}
-            sx={{
-              backgroundColor: color.SemiDarkGreen,
-              color: color.EcruWhite,
-            }}
-          >
-            地理院地図
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => setTimeout(() => changePHOTOLayer(), 300)}
-            sx={{
-              backgroundColor: color.SemiDarkGreen,
-              color: color.EcruWhite,
-            }}
-          >
-            空中写真
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => setTimeout(() => changeRELIEFLayer(), 300)}
-            sx={{
-              backgroundColor: color.SemiDarkGreen,
-              color: color.EcruWhite,
-            }}
-          >
-            色別標高
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => setTimeout(() => changeOSMLayer(), 300)}
-            sx={{
-              backgroundColor: color.SemiDarkGreen,
-              color: color.EcruWhite,
-            }}
-          >
-            osm
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => setTimeout(() => changeTOPOLayer(), 300)}
-            sx={{
-              backgroundColor: color.SemiDarkGreen,
-              color: color.EcruWhite,
-            }}
-          >
-            osmTopo
-          </Button>
-        </Box>
+        <MdLayers className="w-6 h-6 bg-inherit text-inherit" />
+      </NeiIconButton>
+      {isVisible ? (
+        <div className={style.layerList}>
+          <NeiButton
+            onClick={handleLayerChange('gsi')}
+            isActive={isLayerActive('gsi')}
+            label="地理院地図"
+          />
+          <NeiButton
+            onClick={handleLayerChange('photo')}
+            isActive={isLayerActive('photo')}
+            label="空中写真"
+          />
+          <NeiButton
+            onClick={handleLayerChange('relief')}
+            isActive={isLayerActive('relief')}
+            label="色別標高"
+          />
+          <NeiButton
+            onClick={handleLayerChange('osm')}
+            isActive={isLayerActive('osm')}
+            label="OSM"
+          />
+          <NeiButton
+            onClick={handleLayerChange('osmTopo')}
+            isActive={isLayerActive('osmTopo')}
+            label="OSM Topo"
+          />
+        </div>
       ) : null}
-    </MapToolbarInner>
+    </div>
   );
 };

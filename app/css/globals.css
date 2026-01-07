@@ -5,12 +5,14 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --ecruWhite: #F6F7E8;
-  --darkGreen: #1F3A3D;
-  --semiDarkGreen: #4B8B8A;
-  --middleGreen: #7DB5B1;
-  --lightGreen: #B7E1D8;
-  --gray: #E5E7EB;
+  --ecruWhite: #f6f7e8;
+  --darkGreen: #1f3a3d;
+  --semiDarkGreen: #4b8b8a;
+  --middleGreen: #7db5b1;
+  --lightGreen: #b7e1d8;
+  --accentOrange: #fda648;
+  --accentLightOrange: #f7b978;
+  --gray: #e5e7eb;
 }
 
 /* @media (prefers-color-scheme: dark) {
