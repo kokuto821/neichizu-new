@@ -37,11 +37,11 @@ export const MountainFeatureContent = ({
       >
         <LinkIcon
           href={googlemaplink}
-          src="/img/g_map_logo.png"
+          src="/img/g_map_logo.svg"
           alt="Google Map"
         />
         {YAMAP && (
-          <LinkIcon href={YAMAP} src="/img/yamap-logo.png" alt="YAMAP" />
+          <LinkIcon href={YAMAP} src="/img/yamap-logo.svg" alt="YAMAP" />
         )}
       </Box>
     </CardContent>

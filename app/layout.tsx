@@ -48,7 +48,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${mPlusRounded1c.variable}`}
     >
       {/* faviconの読み込み */}
-      <link rel="icon" href="/img/logo.ico" />
+      <link rel="icon" href="/img/logo.svg" />
       {/* OpenLayers用のスタイルシート */}
       <link
         rel="stylesheet"

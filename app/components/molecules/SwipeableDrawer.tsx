@@ -47,7 +47,7 @@ export const SwipeableDrawer = ({ imagePath, children }: Props) => {
         onClick={toggleDrawer}
         titleText={'Neichizu'}
         textColor={color.EcruWhite}
-        titleImagePath={'/img/logo.png'}
+        titleImagePath={'/img/logo.svg'}
         altText={'Logo Icon'}
       />
       <NeiBackdrop isOpen={isOpen} onClick={handleBackdropClick} />
@@ -65,7 +65,7 @@ export const SwipeableDrawer = ({ imagePath, children }: Props) => {
           <NavigationTitle
             titleText={'Neichizu'}
             textColor={color.DarkGreen}
-            titleImagePath={'/img/logo.png'}
+            titleImagePath={'/img/logo.svg'}
             altText={'Logo Icon'}
           />
         </DrawerFooter>

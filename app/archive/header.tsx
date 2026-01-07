@@ -21,7 +21,7 @@ export const Header = () => {
     <div className="main_header">
       <TitleWrapper>
         <ImageWrapper>
-          <Image src="/img/logo.png" width={25} height={25} alt="Logo Icon" />
+          <Image src="/img/logo.svg" width={25} height={25} alt="Logo Icon" />
         </ImageWrapper>
 
         <h1 className="h1-title_text">
