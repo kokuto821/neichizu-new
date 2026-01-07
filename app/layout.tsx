@@ -34,8 +34,10 @@ export const metadata: Metadata = {
   robots: 'noindex,nofollow',
   icons: {
     icon: '/img/logo.svg',
+    shortcut: '/img/logo.svg',
   },
-};
+  manifest: '/manifest.json',
+} as const;
 
 export default function RootLayout({
   children,
