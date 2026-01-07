@@ -14,6 +14,8 @@ module.exports = {
         semiDarkGreen: 'var(--semiDarkGreen)',
         middleGreen: 'var(--middleGreen)',
         lightGreen: 'var(--lightGreen)',
+        accentOrange: 'var(--accentOrange)',
+        accentLightOrange: 'var(--accentLightOrange)',
         gray: 'var(--gray)',
       },
     },

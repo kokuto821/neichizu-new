@@ -69,13 +69,7 @@ const Hyakumeizan = () => {
           isGeoparkVisible={isGeoparkVisible}
           setIsGeoparkVisible={setIsGeoparkVisible}
         />
-        <MapToolbar
-          changeGSILayer={() => switchBaseLayer('gsi')}
-          changePHOTOLayer={() => switchBaseLayer('photo')}
-          changeRELIEFLayer={() => switchBaseLayer('relief')}
-          changeOSMLayer={() => switchBaseLayer('osm')}
-          changeTOPOLayer={() => switchBaseLayer('osmTopo')}
-        />
+        <MapToolbar switchBaseLayer={switchBaseLayer} />
       </div>
     </div>
   );

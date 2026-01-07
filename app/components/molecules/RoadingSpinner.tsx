@@ -1,22 +1,12 @@
-import { color } from '@/app/css/color';
 import { CircularProgress } from '@mui/material';
 
 export const RoadingSpinner = () => {
+  const style = {
+    roadingSpinnerWrapper:
+      'absolute bottom-[155px] left-0 w-screen flex justify-center items-center px-[20%] visible text-semiDarkGreen',
+  };
   return (
-    <div
-      style={{
-        position: 'absolute',
-        color: color.SemiDarkGreen,
-        bottom: '155px',
-        left: '0vw',
-        width: '100vw',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '0px 20% 0 20%',
-        visibility: 'visible', // isVisibleステートで制御
-      }}
-    >
+    <div className={style.roadingSpinnerWrapper}>
       <CircularProgress color="inherit" />
     </div>
   );

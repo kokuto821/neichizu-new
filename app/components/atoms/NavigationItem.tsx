@@ -25,10 +25,14 @@ export const NavigationItem: FC<Props> = ({
       'bg-ecruWhite inline-flex flex-col items-center justify-center w-auto rounded-xl cursor-pointer border-4 px-2',
     navigationItemButton:
       'whitespace-nowrap text-xs flex-col text-semiDarkGreen',
+    visibleBorder: 'border-accentLightOrange',
+    invisibleBorder: 'border-transparent lg:hover:border-lightGreen',
   };
   return (
     <div
-      className={`${style.navigationItem} ${isVisible ? 'border-lightGreen' : 'border-transparent'}`}
+      className={`${style.navigationItem} ${
+        isVisible ? style.visibleBorder : style.invisibleBorder
+      }`}
     >
       <button className={style.navigationItemButton} onClick={onClick}>
         <div className={style.navigationImageWrapper}>
