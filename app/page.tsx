@@ -2,37 +2,24 @@
 'use client';
 import { useEffect } from 'react';
 import { MapRenderer } from '@/app/feature/map/hyakumeizan/component/MapRenderer';
-import { PopupCard } from './components/molecules/PopupCard';
 import { MapToolbar } from './components/molecules/MapToolbar';
 import { useInitializeMap } from './feature/map/hyakumeizan/hooks/useInitializeMap';
 import { useMapClick } from './feature/map/hyakumeizan/hooks/useMapClick';
 import { useImageLoader } from './feature/map/hyakumeizan/hooks/useImageLoader';
 import { BottomNavigation } from './components/molecules/BottomNavigation';
 import { RoadingSpinner } from './components/molecules/RoadingSpinner';
-import { useLayerVisibility } from './feature/map/hooks/useLayerVisibility';
-import { addHyakumeizanFeature } from './feature/map/hyakumeizan/utils/addHyakumeizanFeature';
-import { addWGeoparkFeature } from './feature/map/geopark/utils/addWGeoparkFeature';
+import { NeiCard } from './components/molecules/NeiCard';
+import { useMapLayers } from './hooks/useMapLayers';
 
 const Hyakumeizan = () => {
   const { map, mapRef, switchBaseLayer } = useInitializeMap();
 
-  // 百名山レイヤー
-  const { isVisible: isVectorVisible, setIsVisible: setIsVectorVisible } =
-    useLayerVisibility({
-      map,
-      layerType: 'hyakumeizan',
-      addFeatures: addHyakumeizanFeature,
-      initialVisible: true,
-    });
-
-  // 世界ジオパークレイヤー
-  const { isVisible: isGeoparkVisible, setIsVisible: setIsGeoparkVisible } =
-    useLayerVisibility({
-      map,
-      layerType: 'geopark',
-      addFeatures: addWGeoparkFeature,
-      initialVisible: false,
-    });
+  const {
+    isVectorVisible,
+    setIsVectorVisible,
+    isGeoparkVisible,
+    setIsGeoparkVisible,
+  } = useMapLayers(map);
 
   const {
     selectedFeature,
@@ -43,14 +30,14 @@ const Hyakumeizan = () => {
 
   const { isImageLoaded } = useImageLoader(selectedFeature, setIsFeatureClick);
 
-  // 百名山レイヤーが非表示になったらPopupCardを消す
+  // 百名山レイヤーが非表示になったらNeiCompactCardを消す
   useEffect(() => {
     if (!isVectorVisible) {
       setSelectedFeature(null);
     }
   }, [isVectorVisible, setSelectedFeature]);
 
-  // ジオパークレイヤーが非表示になったらPopupCardを消す
+  // ジオパークレイヤーが非表示になったらNeiCompactCardを消す
   useEffect(() => {
     if (!isGeoparkVisible) {
       setSelectedFeature(null);
@@ -62,7 +49,11 @@ const Hyakumeizan = () => {
       <div className="relative h-[100vh]">
         <MapRenderer mapRef={mapRef} />
         {isFeatureClick && selectedFeature !== null && <RoadingSpinner />}
-        {isImageLoaded && <PopupCard selectedFeature={selectedFeature} />}
+        {isImageLoaded && (
+          <NeiCard
+            selectedFeature={selectedFeature}
+          />
+        )}
         <BottomNavigation
           isVectorVisible={isVectorVisible}
           setIsVectorVisible={setIsVectorVisible}

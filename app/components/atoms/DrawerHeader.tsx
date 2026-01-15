@@ -1,7 +1,7 @@
 import { color } from '@/app/css/color';
 import { FC } from 'react';
 import Image from 'next/image';
-import { NeiIconButton } from '../molecules/NeiIconButton';
+import { NeiCloseButton } from './NeiCloseButton';
 
 const style = {
   background: 'flex items-center justify-center relative w-full h-auto',
@@ -26,25 +26,7 @@ export const DrawerHeader: FC<{
         width={300}
         style={{ objectFit: 'contain' }}
       />
-      <NeiIconButton
-        onClick={onClose}
-        className="absolute top-4 right-4 opacity-80"
-        aria-label="閉じる"
-      >
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </NeiIconButton>
+      <NeiCloseButton onClose={onClose} />
     </div>
   );
 };
