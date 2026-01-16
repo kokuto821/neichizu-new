@@ -16,13 +16,13 @@ export const NeiCompactCard: FC<Props> = ({ selectedFeature, onExpand }) => {
     usePopupVisible(selectedFeature);
 
   const style = {
-    cardWrapper: `pt-0 px-[5vw] pb-[12.5vh] md:px-[20vw] absolute bottom-0 left-0 w-full transition-opacity duration-300 ${
+    cardWrapper: `pt-0 transition-opacity duration-300 ${
       isVisible
         ? 'opacity-100 pointer-events-auto'
         : 'opacity-0 pointer-events-none'
     }`,
     neiCard:
-      'flex items-center bg-ecruWhite border rounded-xl shadow-sm border-neutral-200/60 overflow-hidden',
+      'flex items-center bg-ecruWhite rounded-xl shadow-md overflow-hidden',
     cardImage:
       'w-[152px] h-[131px] flex-shrink-0 rounded-l-xl object-cover block',
     cardContentRight:

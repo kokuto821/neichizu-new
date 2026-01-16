@@ -1,4 +1,5 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 type Props = {
   isOpen: boolean;
@@ -14,5 +15,17 @@ const style = {
  * モーダルやドロワーの背後に表示される半透明のオーバーレイ。
  * 主な目的は背景コンテンツとの操作を遮断して注目を集めること（フォーカス保持）。
  */
-export const NeiBackdrop: FC<Props> = ({ isOpen, onClick }) =>
-  isOpen ? <div className={style.backdrop} onClick={onClick} /> : null;
+export const NeiBackdrop: FC<Props> = ({ isOpen, onClick }) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!isOpen || !mounted) return null;
+
+  return createPortal(
+    <div className={style.backdrop} onClick={onClick} />,
+    document.body
+  );
+};
