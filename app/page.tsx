@@ -10,6 +10,7 @@ import { BottomNavigation } from './components/molecules/BottomNavigation';
 import { RoadingSpinner } from './components/molecules/RoadingSpinner';
 import { NeiCard } from './components/molecules/NeiCard';
 import { useMapLayers } from './hooks/useMapLayers';
+import { BottomUIContainer } from './components/molecules/BottomUIContainer';
 
 const Hyakumeizan = () => {
   const { map, mapRef, switchBaseLayer } = useInitializeMap();
@@ -49,17 +50,20 @@ const Hyakumeizan = () => {
       <div className="relative h-[100vh]">
         <MapRenderer mapRef={mapRef} />
         {isFeatureClick && selectedFeature !== null && <RoadingSpinner />}
-        {isImageLoaded && (
-          <NeiCard
-            selectedFeature={selectedFeature}
+
+        <BottomUIContainer>
+          {isImageLoaded && (
+            <NeiCard
+              selectedFeature={selectedFeature}
+            />
+          )}
+          <BottomNavigation
+            isVectorVisible={isVectorVisible}
+            setIsVectorVisible={setIsVectorVisible}
+            isGeoparkVisible={isGeoparkVisible}
+            setIsGeoparkVisible={setIsGeoparkVisible}
           />
-        )}
-        <BottomNavigation
-          isVectorVisible={isVectorVisible}
-          setIsVectorVisible={setIsVectorVisible}
-          isGeoparkVisible={isGeoparkVisible}
-          setIsGeoparkVisible={setIsGeoparkVisible}
-        />
+        </BottomUIContainer>
         <MapToolbar switchBaseLayer={switchBaseLayer} />
       </div>
     </div>

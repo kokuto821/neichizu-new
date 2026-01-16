@@ -1,4 +1,5 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC, ReactNode, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 type Props = {
   isOpen: boolean;
@@ -19,6 +20,12 @@ export const DrawerContainer: FC<Props> = ({
   onMouseDown,
   children,
 }) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const base = [
     'fixed',
     'bg-ecruWhite',
@@ -60,7 +67,9 @@ export const DrawerContainer: FC<Props> = ({
     content: 'flex flex-col h-full',
   };
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <div
       ref={drawerRef}
       className={style.drawerContainer}
@@ -70,6 +79,7 @@ export const DrawerContainer: FC<Props> = ({
       onMouseDown={onMouseDown}
     >
       <div className={style.content}>{children}</div>
-    </div>
+    </div>,
+    document.body
   );
 };
