@@ -5,8 +5,9 @@ import { NeiCloseButton } from '../atoms/NeiCloseButton';
 import { usePopupVisible } from '@/app/feature/map/hyakumeizan/hooks/usePopupVisible';
 import { LinkIcon } from '../atoms/LinkIcon';
 import { WIDTH_CLASS } from '@/app/styles/layoutConstants';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { useSwipe } from '@/app/hooks/useSwipe';
 
 // 拡張表示のカードコンポーネント
 interface ExpandedCardProps {
@@ -16,11 +17,11 @@ interface ExpandedCardProps {
 
 const style = {
   overlay: 'fixed inset-0 bg-black/50 backdrop-blur-sm z-40',
-  wrapper: 'fixed inset-0 z-50 flex items-center justify-center pointer-events-none',
+  wrapper: 'fixed inset-0 z-50 flex items-center justify-center pointer-events-auto',
   container:
-    `${WIDTH_CLASS} h-[80vh] rounded-2xl shadow-2xl bg-ecruWhite flex flex-col overflow-hidden pointer-events-auto relative`,
+    `${WIDTH_CLASS} h-[80vh] rounded-2xl shadow-2xl bg-ecruWhite flex flex-col overflow-y-auto overscroll-contain pointer-events-auto relative`,
   imageWrapper: 'relative w-full flex-shrink-0',
-  contentWrapper: 'p-4 md:p-6 overflow-y-auto',
+  contentWrapper: 'p-4 md:p-6',
   title: 'text-2xl md:text-3xl font-bold',
   image: 'block w-full h-[40vh] object-cover',
   description: 'text-lg mb-8 text-gray-700',
@@ -38,6 +39,25 @@ const style = {
 export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({ selectedFeature, onClose }) => {
   const { isVisible, shouldRender, displayFeature } = usePopupVisible(selectedFeature);
   const [mounted, setMounted] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const {
+    onTouchStart,
+    onTouchMove,
+    onTouchEnd,
+    onMouseDown,
+  } = useSwipe({
+    onClose,
+    threshold: 100,
+    axis: 'y',
+    containerRef: containerRef,
+  });
+
+  const handleCardWrapperClick = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    if (event.target === event.currentTarget) onClose();
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -64,13 +84,18 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({ selectedFeature, 
             className={style.overlay}
             onClick={onClose}
           />
-          <div className={style.wrapper}>
+          <div className={style.wrapper} onClick={handleCardWrapperClick}>
             <motion.div
+              ref={containerRef}
               layoutId={`card-${displayFeature.id}`}
               className={style.container}
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.5 }}
+              initial={{ opacity: 0, scale: 0.9, y: 0 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 500, transition: { duration: 0.5 } }}
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
+              onMouseDown={onMouseDown}
             >
               <div className={style.imageWrapper}>
                 <motion.div
