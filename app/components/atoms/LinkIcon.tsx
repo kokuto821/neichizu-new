@@ -10,7 +10,7 @@ type Props = {
 export const LinkIcon = ({ href, src, alt }: Props) => {
   return (
     <Link href={href} target="_blank">
-      <Image className="link-img-logo" src={src} alt={alt} width={110} height={110} />
+      <Image src={src} alt={alt} width={110} height={110} />
     </Link>
   );
 };

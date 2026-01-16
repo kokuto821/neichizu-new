@@ -273,10 +273,6 @@ p {
   height: 50px;
 }
 
-.link-img-logo {
-  padding-bottom: 4px;
-}
-
 .foot_nav {
   display: flex;
   justify-content: center;
