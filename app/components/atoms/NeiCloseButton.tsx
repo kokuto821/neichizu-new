@@ -7,7 +7,7 @@ type Props = {
 
 const style = {
   button: 'absolute top-4 right-4 opacity-80',
-  icon: 'w-6 h-6',
+  icon: 'w-6 h-6 block',
 };
 
 export const NeiCloseButton = ({ onClose, className }: Props) => {
