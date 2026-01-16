@@ -17,9 +17,9 @@ interface ExpandedCardProps {
 
 const style = {
   overlay: 'fixed inset-0 bg-black/50 backdrop-blur-sm z-40',
-  wrapper: 'fixed inset-0 z-50 flex items-center justify-center pointer-events-auto',
+  wrapper: 'fixed inset-0 z-50 flex items-center justify-center pointer-events-auto overscroll-none touch-none',
   container:
-    `${WIDTH_CLASS} h-[80vh] rounded-2xl shadow-2xl bg-ecruWhite flex flex-col overflow-y-auto overscroll-contain pointer-events-auto relative`,
+    `${WIDTH_CLASS} h-[80vh] rounded-2xl shadow-2xl bg-ecruWhite flex flex-col overflow-y-auto overscroll-none pointer-events-auto relative`,
   imageWrapper: 'relative w-full flex-shrink-0',
   contentWrapper: 'p-4 md:p-6',
   title: 'text-2xl md:text-3xl font-bold',
@@ -61,6 +61,14 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({ selectedFeature, 
 
   useEffect(() => {
     setMounted(true);
+    // マウント時にbodyのスクロールをロック（リロード防止）
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      // アンマウント時に元に戻す
+      document.body.style.overflow = originalOverflow;
+    };
   }, []);
 
   if (!shouldRender || !displayFeature || !mounted) return null;
@@ -84,7 +92,13 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({ selectedFeature, 
             className={style.overlay}
             onClick={onClose}
           />
-          <div className={style.wrapper} onClick={handleCardWrapperClick}>
+          <div
+            className={style.wrapper}
+            onClick={handleCardWrapperClick}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          >
             <motion.div
               ref={containerRef}
               layoutId={`card-${displayFeature.id}`}
