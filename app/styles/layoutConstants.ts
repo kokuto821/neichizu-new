@@ -23,7 +23,7 @@ export const HORIZONTAL_POSITION_CLASS = 'left-[5vw] right-[5vw] md:left-[20vw] 
  */
 export const LAYOUT_WIDTH = {
   mobile: '90vw',   // 100vw - 5vw * 2
-  desktop: '60vw',  // 100vw - 20vw * 2
+  desktop: '65vw',  // 100vw - 20vw * 2
 } as const;
 
-export const WIDTH_CLASS = 'w-[90vw] md:w-[60vw]';
+export const WIDTH_CLASS = 'w-[90vw] md:w-[65vw]';

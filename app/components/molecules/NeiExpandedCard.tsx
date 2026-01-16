@@ -14,24 +14,24 @@ interface ExpandedCardProps {
   onClose: () => void;
 }
 
-const expandedCardStyle = {
+const style = {
   overlay: 'fixed inset-0 bg-black/50 backdrop-blur-sm z-40',
   wrapper: 'fixed inset-0 z-50 flex items-center justify-center pointer-events-none',
   container:
     `${WIDTH_CLASS} h-[80vh] rounded-2xl shadow-2xl bg-ecruWhite flex flex-col overflow-hidden pointer-events-auto relative`,
   imageWrapper: 'relative w-full flex-shrink-0',
-  contentWrapper: 'p-4 md:p-8 overflow-y-auto flex-1',
+  contentWrapper: 'p-4 md:p-6 overflow-y-auto',
   title: 'text-2xl md:text-3xl font-bold',
   image: 'block w-full h-[40vh] object-cover',
   description: 'text-lg mb-8 text-gray-700',
-  detailsContainer: 'space-y-4',
+  detailsWrapper: 'flex flex-col gap-4',
   detailsTitle: 'text-xl font-semibold mb-4',
   detailsText: 'leading-relaxed text-gray-700',
   grid: 'grid grid-cols-2 gap-4',
-  featureCard: 'bg-semiDarkGreen rounded-lg p-4 shadow-sm',
+  featureCard: 'bg-semiDarkGreen rounded-lg p-4 pt-3 shadow-sm',
   featureTitle: 'font-semibold mb-2 text-ecruWhite',
   featureDescription: 'text-ecruWhite text-sm',
-  linkContainer: 'flex gap-4 mt-3',
+  linkContainer: 'flex gap-4',
   linkCard: 'bg-ecruWhite rounded-lg p-2 flex items-center justify-center shadow-sm w-fit'
 };
 
@@ -61,18 +61,18 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({ selectedFeature, 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={expandedCardStyle.overlay}
+            className={style.overlay}
             onClick={onClose}
           />
-          <div className={expandedCardStyle.wrapper}>
+          <div className={style.wrapper}>
             <motion.div
               layoutId={`card-${displayFeature.id}`}
-              className={expandedCardStyle.container}
+              className={style.container}
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.5 }}
             >
-              <div className={expandedCardStyle.imageWrapper}>
+              <div className={style.imageWrapper}>
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -87,7 +87,7 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({ selectedFeature, 
                   <motion.img
                     src={displayFeature.image}
                     alt={displayFeature.name}
-                    className={expandedCardStyle.image}
+                    className={style.image}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.4 }}
@@ -95,32 +95,32 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({ selectedFeature, 
                 )}
               </div>
 
-              <div className={expandedCardStyle.contentWrapper}>
+              <div className={style.contentWrapper}>
 
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
-                  className={expandedCardStyle.detailsContainer}
+                  className={style.detailsWrapper}
                 >
                   <motion.h2 layoutId={`title-${displayFeature.id}`}
-                    className={expandedCardStyle.title}>
+                    className={style.title}>
                     {displayFeature.name}
                   </motion.h2>
                   {isWGeopark(displayFeature) && (
                     <>
-                      <p className={expandedCardStyle.detailsText}>
+                      <p className={style.detailsText}>
                         {displayFeature.comment}
                       </p>
-                      <div className={expandedCardStyle.grid}>
-                        <div className={expandedCardStyle.featureCard}>
-                          <h4 className={expandedCardStyle.featureTitle}>エリア</h4>
-                          <p className={expandedCardStyle.featureDescription}>
+                      <div className={style.grid}>
+                        <div className={style.featureCard}>
+                          <h4 className={style.featureTitle}>エリア</h4>
+                          <p className={style.featureDescription}>
                             {displayFeature.area}
                           </p>
                         </div>
-                        <div className={expandedCardStyle.featureCard}>
-                          <h4 className={expandedCardStyle.featureTitle}>Webサイト</h4>
+                        <div className={style.featureCard}>
+                          <h4 className={style.featureTitle}>Webサイト</h4>
                           <div className="mt-2">
                             {displayFeature.website && (
                               <a href={displayFeature.website} target="_blank" rel="noopener noreferrer" className="text-ecruWhite underline hover:text-white">
@@ -135,16 +135,16 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({ selectedFeature, 
 
                   {isHyakumeizan(displayFeature) && (
                     <>
-                      <div className={expandedCardStyle.grid}>
-                        <div className={expandedCardStyle.featureCard}>
-                          <h4 className={expandedCardStyle.featureTitle}>エリア</h4>
-                          <p className={expandedCardStyle.featureDescription}>
+                      <div className={style.grid}>
+                        <div className={style.featureCard}>
+                          <h4 className={style.featureTitle}>エリア</h4>
+                          <p className={style.featureDescription}>
                             {displayFeature.area}
                           </p>
                         </div>
-                        <div className={expandedCardStyle.featureCard}>
-                          <h4 className={expandedCardStyle.featureTitle}>標高</h4>
-                          <p className={expandedCardStyle.featureDescription}>
+                        <div className={style.featureCard}>
+                          <h4 className={style.featureTitle}>標高</h4>
+                          <p className={style.featureDescription}>
                             {displayFeature.height}
                           </p>
                         </div>
@@ -152,10 +152,10 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({ selectedFeature, 
                     </>
                   )}
 
-                  <div className={`${expandedCardStyle.featureCard} mt-6`}>
-                    <h4 className={expandedCardStyle.featureTitle}>リンク</h4>
-                    <div className={expandedCardStyle.linkContainer}>
-                      <div className={expandedCardStyle.linkCard}>
+                  <div className={style.featureCard}>
+                    <h4 className={style.featureTitle}>リンク</h4>
+                    <div className={style.linkContainer}>
+                      <div className={style.linkCard}>
                         <LinkIcon
                           href={displayFeature.googlemaplink}
                           src="/img/g_map_logo.svg"
@@ -163,7 +163,7 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({ selectedFeature, 
                         />
                       </div>
                       {isHyakumeizan(displayFeature) && displayFeature.YAMAP && (
-                        <div className={expandedCardStyle.linkCard}>
+                        <div className={style.linkCard}>
                           <LinkIcon href={displayFeature.YAMAP} src="/img/yamap-logo.svg" alt="YAMAP" />
                         </div>
                       )}

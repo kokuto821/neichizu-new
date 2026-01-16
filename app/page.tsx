@@ -50,7 +50,7 @@ const Hyakumeizan = () => {
       <div className="relative h-[100vh]">
         <MapRenderer mapRef={mapRef} />
         {isFeatureClick && selectedFeature !== null && <RoadingSpinner />}
-
+        <MapToolbar switchBaseLayer={switchBaseLayer} />
         <BottomUIContainer>
           {isImageLoaded && (
             <NeiCard
@@ -64,7 +64,7 @@ const Hyakumeizan = () => {
             setIsGeoparkVisible={setIsGeoparkVisible}
           />
         </BottomUIContainer>
-        <MapToolbar switchBaseLayer={switchBaseLayer} />
+
       </div>
     </div>
   );
