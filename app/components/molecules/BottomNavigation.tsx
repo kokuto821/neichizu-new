@@ -15,7 +15,7 @@ export const BottomNavigation = ({
   setIsGeoparkVisible: Dispatch<SetStateAction<boolean>>;
 }) => {
   const style = {
-    unvisualContainer: `pt-0 px-[5%] pb-[10px] md:px-[20%] absolute bottom-0 left-0 w-full`,
+    unvisualContainer: `pt-0 px-[5vw] pb-[10px] md:px-[20vw] absolute bottom-0 left-0 w-full`,
     navigationWrapper:
       'h-[10vh] p-[5px] rounded-xl flex gap-2 items-center bg-semiDarkGreen  shadow-md',
     navigationList:

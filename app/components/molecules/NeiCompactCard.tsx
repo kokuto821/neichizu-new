@@ -16,7 +16,7 @@ export const NeiCompactCard: FC<Props> = ({ selectedFeature, onExpand }) => {
     usePopupVisible(selectedFeature);
 
   const style = {
-    cardWrapper: `pt-0 px-[5%] pb-[12.5vh] md:px-[20%] absolute bottom-0 left-0 w-full transition-opacity duration-300 ${
+    cardWrapper: `pt-0 px-[5vw] pb-[12.5vh] md:px-[20vw] absolute bottom-0 left-0 w-full transition-opacity duration-300 ${
       isVisible
         ? 'opacity-100 pointer-events-auto'
         : 'opacity-0 pointer-events-none'

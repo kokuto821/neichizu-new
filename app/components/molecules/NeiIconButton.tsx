@@ -17,7 +17,7 @@ export const NeiIconButton: FC<NeiIconButtonProps> = ({
 }) => {
   const style = {
     NeiIconBtn:
-      'bg-ecruWhite border border-gray  rounded-[20px] w-[40px] h-[40px]  transition-colors flex justify-center items-center',
+      'bg-ecruWhite border border-gray rounded-[20px] w-[40px] h-[40px] transition-colors flex justify-center items-center p-0 leading-none overflow-hidden flex-shrink-0',
     active: 'text-accentOrange',
     inactive: 'text-semiDarkGreen lg:hover:text-lightGreen',
   };
