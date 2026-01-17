@@ -12,6 +12,7 @@ import { useSwipe } from '@/app/hooks/useSwipe';
 // 拡張表示のカードコンポーネント
 interface ExpandedCardProps {
   selectedFeature: HyakumeizanFromSelected | WGeoparkFromSelected | null;
+  isExpanded: boolean;
   onClose: () => void;
 }
 
@@ -36,8 +37,10 @@ const style = {
   linkCard: 'bg-ecruWhite rounded-lg p-2 flex items-center justify-center shadow-sm w-fit'
 };
 
-export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({ selectedFeature, onClose }) => {
-  const { isVisible, shouldRender, displayFeature } = usePopupVisible(selectedFeature);
+export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({ selectedFeature, isExpanded, onClose }) => {
+  const { isVisible, shouldRender, displayFeature } = usePopupVisible(isExpanded ? selectedFeature : null, {
+    fadeOutDuration: 500,
+  });
   const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -86,13 +89,15 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({ selectedFeature, 
       {isVisible && (
         <>
           <motion.div
+            key="overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className={style.overlay}
             onClick={onClose}
           />
-          <div
+          <motion.div
+            key="wrapper"
             className={style.wrapper}
             onClick={handleCardWrapperClick}
             onTouchStart={onTouchStart}
@@ -104,14 +109,14 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({ selectedFeature, 
               layoutId={`card-${displayFeature.id}`}
               className={style.container}
               initial={{ opacity: 0, scale: 0.9, y: 0 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 500, transition: { duration: 0.5 } }}
+              animate={{ opacity: 1, scale: 1, y: 0, transition: { duration: 0.5 } }}
+              exit={{ opacity: [1, 0, 0], transition: { duration: 0.5, times: [0, 0.5, 1] } }}
               onTouchStart={onTouchStart}
               onTouchMove={onTouchMove}
               onTouchEnd={onTouchEnd}
               onMouseDown={onMouseDown}
             >
-              <div className={style.imageWrapper}>
+              <motion.div className={style.imageWrapper}>
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -129,12 +134,11 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({ selectedFeature, 
                     className={style.image}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ duration: 0.4 }}
                   />
                 )}
-              </div>
+              </motion.div>
 
-              <div className={style.contentWrapper}>
+              <motion.div className={style.contentWrapper}>
 
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -209,9 +213,9 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({ selectedFeature, 
                     </div>
                   </div>
                 </motion.div>
-              </div>
+              </motion.div>
             </motion.div>
-          </div>
+          </motion.div>
         </>
       )}
     </AnimatePresence>,

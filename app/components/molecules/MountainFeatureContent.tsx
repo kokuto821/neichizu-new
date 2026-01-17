@@ -5,6 +5,7 @@ import { FeatureSubtitle } from '../atoms/FeatureSubtitle';
 import { LinkIcon } from '../atoms/LinkIcon';
 
 type Props = {
+  id: string;
   name: string;
   area: string;
   height?: string;
@@ -13,6 +14,7 @@ type Props = {
 };
 
 export const MountainFeatureContent = ({
+  id,
   name,
   area,
   height,

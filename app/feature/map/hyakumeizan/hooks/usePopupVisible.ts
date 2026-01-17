@@ -2,12 +2,16 @@ import { useState, useEffect, useRef } from 'react';
 import { WGeoparkFromSelected } from '../../geopark/types/types';
 import { HyakumeizanFromSelected } from '../types/types';
 
-const FADE_IN_DELAY = 500;
-const FADE_OUT_DURATION = 300;
+export const FADE_IN_DELAY = 500;
+export const FADE_OUT_DURATION = 300;
 
 export const usePopupVisible = (
-  selectedFeature: HyakumeizanFromSelected | WGeoparkFromSelected | null
+  selectedFeature: HyakumeizanFromSelected | WGeoparkFromSelected | null,
+  options?: { fadeInDelay?: number; fadeOutDuration?: number }
 ) => {
+  const fadeInDelay = options?.fadeInDelay ?? 0;
+  const fadeOutDuration = options?.fadeOutDuration ?? 0;
+
   const [isVisible, setIsVisible] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
   const [displayFeature, setDisplayFeature] = useState<
@@ -27,7 +31,7 @@ export const usePopupVisible = (
 
     const timer = setTimeout(() => {
       setIsVisible(true);
-    }, FADE_IN_DELAY);
+    }, fadeInDelay);
 
     return () => clearTimeout(timer);
   };
@@ -38,7 +42,7 @@ export const usePopupVisible = (
       setShouldRender(false);
       setDisplayFeature(null);
       previousFeature.current = null;
-    }, FADE_OUT_DURATION);
+    }, fadeOutDuration);
 
     return () => clearTimeout(timer);
   };

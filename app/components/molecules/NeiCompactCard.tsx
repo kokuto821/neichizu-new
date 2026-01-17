@@ -1,4 +1,4 @@
-import { usePopupVisible } from '@/app/feature/map/hyakumeizan/hooks/usePopupVisible';
+import { usePopupVisible, FADE_IN_DELAY, FADE_OUT_DURATION } from '@/app/feature/map/hyakumeizan/hooks/usePopupVisible';
 import { WGeoparkFromSelected } from '@/app/feature/map/geopark/types/types';
 import { HyakumeizanFromSelected } from '@/app/feature/map/hyakumeizan/types/types';
 import { GeoparkFeatureContent } from './GeoparkFeatureContent';
@@ -9,18 +9,25 @@ import { FC } from 'react';
 type Props = {
   selectedFeature: HyakumeizanFromSelected | WGeoparkFromSelected | null;
   onExpand: () => void;
+  fadeInDelay?: number;
 };
 
-export const NeiCompactCard: FC<Props> = ({ selectedFeature, onExpand }) => {
+export const NeiCompactCard: FC<Props> = ({
+  selectedFeature,
+  onExpand,
+  fadeInDelay,
+}) => {
   const { isVisible, shouldRender, displayFeature } =
-    usePopupVisible(selectedFeature);
+    usePopupVisible(selectedFeature, {
+      fadeInDelay: fadeInDelay ?? FADE_IN_DELAY,
+      fadeOutDuration: FADE_OUT_DURATION,
+    });
 
   const style = {
-    cardWrapper: `pt-0 transition-opacity duration-300 ${
-      isVisible
-        ? 'opacity-100 pointer-events-auto'
-        : 'opacity-0 pointer-events-none'
-    }`,
+    cardWrapper: `pt-0 transition-opacity duration-300 ${isVisible
+      ? 'opacity-100 pointer-events-auto'
+      : 'opacity-0 pointer-events-none'
+      }`,
     neiCard:
       'flex items-center bg-ecruWhite rounded-xl shadow-md overflow-hidden',
     cardImage:
@@ -51,14 +58,17 @@ export const NeiCompactCard: FC<Props> = ({ selectedFeature, onExpand }) => {
         className={style.neiCard}
         layoutId={`card-${displayFeature.id}`}
         onClick={onExpand}
-        drag="y"
-        dragConstraints={{ top: 0, bottom: 0 }}
-        dragElastic={0.2}
         onDragEnd={(_, info) => {
           if (info.offset.y < -50) {
             onExpand();
           }
         }}
+        drag="y"
+        dragConstraints={{ top: 0, bottom: 0 }}
+        dragElastic={0.2}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 0, 1] }}
+        transition={{ duration: 0.5, times: [0, 0.5, 1] }}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
@@ -72,6 +82,7 @@ export const NeiCompactCard: FC<Props> = ({ selectedFeature, onExpand }) => {
         <div className={style.cardContentRight}>
           {isWGeopark(displayFeature) ? (
             <GeoparkFeatureContent
+              id={String(displayFeature.id)}
               name={displayFeature.name}
               area={displayFeature.area}
               comment={displayFeature.comment}
@@ -80,6 +91,7 @@ export const NeiCompactCard: FC<Props> = ({ selectedFeature, onExpand }) => {
             />
           ) : isHyakumeizan(displayFeature) ? (
             <MountainFeatureContent
+              id={String(displayFeature.id)}
               name={displayFeature.name}
               area={displayFeature.area}
               height={displayFeature.height}

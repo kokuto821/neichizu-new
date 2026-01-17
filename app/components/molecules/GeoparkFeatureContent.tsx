@@ -7,6 +7,7 @@ import { FeatureSubtitle } from '../atoms/FeatureSubtitle';
 import { LinkIcon } from '../atoms/LinkIcon';
 
 type Props = {
+  id: string;
   name: string;
   area: string;
   category?: string;
@@ -16,6 +17,7 @@ type Props = {
 };
 
 export const GeoparkFeatureContent = ({
+  id,
   name,
   area,
   comment,
