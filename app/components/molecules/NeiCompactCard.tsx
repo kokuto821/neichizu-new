@@ -99,21 +99,25 @@ export const NeiCompactCard: FC<Props> = ({
           dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
           dragElastic={0.2}
           onDragEnd={(e, info) => {
-            const { offset, velocity } = info;
+            const { offset } = info;
             const swipeThreshold = 50;
+            // 縦スワイプと判定するための係数（横移動の1.2倍以上の縦移動が必要）
+            const verticalThresholdFactor = 1.2;
 
-            // 縦方向の判定
-            if (offset.y < -swipeThreshold) {
-              onExpand(); // 上へスワイプで展開
-            } else if (offset.y > swipeThreshold) {
-              onDeselect?.(); // 下へスワイプで閉じる
+            // 縦方向の判定 (横方向よりも明らかに縦移動が大きい場合のみ)
+            if (Math.abs(offset.y) > Math.abs(offset.x) * verticalThresholdFactor) {
+              if (offset.y < -swipeThreshold) {
+                onExpand(); // 上へスワイプで展開
+              } else if (offset.y > swipeThreshold) {
+                onDeselect?.(); // 下へスワイプで閉じる
+              }
             }
             // 横方向の判定 (縦方向が優先でない場合)
-             else if (Math.abs(offset.x) > swipeThreshold) {
+            else if (Math.abs(offset.x) > swipeThreshold) {
               if (offset.x < 0) {
-                 onSwipeLeft?.(); // 左スワイプ（次へ）
+                onSwipeLeft?.(); // 左スワイプ（次へ）
               } else {
-                 onSwipeRight?.(); // 右スワイプ（前へ）
+                onSwipeRight?.(); // 右スワイプ（前へ）
               }
             }
           }}
