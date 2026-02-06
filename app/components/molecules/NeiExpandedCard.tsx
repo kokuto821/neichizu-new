@@ -7,20 +7,28 @@ import { LinkIcon } from '../atoms/LinkIcon';
 import { WIDTH_CLASS } from '@/app/styles/layoutConstants';
 import { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { useSwipe } from '@/app/hooks/useSwipe';
+import { Map } from 'ol';
+import { useSwipeNavigation } from '@/app/feature/map/hyakumeizan/hooks/useSwipeNavigation';
 
-// 拡張表示のカードコンポーネント
 interface ExpandedCardProps {
   selectedFeature: HyakumeizanFromSelected | WGeoparkFromSelected | null;
   isExpanded: boolean;
   onClose: () => void;
+  // map: Map | null; // 親コンポーネントで管理するため削除
+  // onFeatureChange: (feature: HyakumeizanFromSelected | WGeoparkFromSelected) => void; // 親コンポーネントで管理するため削除
+  map?: Map | null; // 後方互換性のため残すが使用しない
+  canGoNext: boolean;
+  canGoPrev: boolean;
+  onGoNext: () => void;
+  onGoPrev: () => void;
+  swipeDirection?: 'left' | 'right' | null;
 }
 
 const style = {
   overlay: 'fixed inset-0 bg-black/50 backdrop-blur-sm z-40',
-  wrapper: 'fixed inset-0 z-50 flex items-center justify-center pointer-events-auto overscroll-none touch-none',
-  container:
-    `${WIDTH_CLASS} h-[80vh] rounded-2xl shadow-2xl bg-ecruWhite flex flex-col overflow-y-auto overscroll-none pointer-events-auto relative`,
+  wrapper:
+    'fixed inset-0 z-50 flex items-center justify-center pointer-events-auto overscroll-none touch-none',
+  container: `${WIDTH_CLASS} h-[80vh] rounded-2xl shadow-2xl bg-ecruWhite flex flex-col overflow-y-auto overscroll-none pointer-events-auto relative touch-pan-y`,
   imageWrapper: 'relative w-full flex-shrink-0',
   contentWrapper: 'p-4 md:p-6',
   title: 'text-2xl md:text-3xl font-bold',
@@ -34,27 +42,43 @@ const style = {
   featureTitle: 'font-semibold mb-2 text-ecruWhite',
   featureDescription: 'text-ecruWhite text-sm',
   linkContainer: 'flex gap-4',
-  linkCard: 'bg-ecruWhite rounded-lg p-2 flex items-center justify-center shadow-sm w-fit'
+  linkCard:
+    'bg-ecruWhite rounded-lg p-2 flex items-center justify-center shadow-sm w-fit',
 };
 
-export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({ selectedFeature, isExpanded, onClose }) => {
-  const { isVisible, shouldRender, displayFeature } = usePopupVisible(isExpanded ? selectedFeature : null, {
-    fadeOutDuration: 500,
-  });
+type SwipeDirection = 'left' | 'right' | null;
+
+export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({
+  selectedFeature,
+  isExpanded,
+  onClose,
+  canGoNext,
+  canGoPrev,
+  onGoNext,
+  onGoPrev,
+  swipeDirection,
+}) => {
+  const { isVisible, shouldRender, displayFeature } = usePopupVisible(
+    isExpanded ? selectedFeature : null,
+    {
+      fadeOutDuration: 500,
+    }
+  );
   const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const {
-    onTouchStart,
-    onTouchMove,
-    onTouchEnd,
-    onMouseDown,
-  } = useSwipe({
-    onClose,
-    threshold: 100,
-    axis: 'y',
-    containerRef: containerRef,
-  });
+  // スワイプナビゲーション
+  const { onTouchStart, onTouchMove, onTouchEnd, onMouseDown } =
+    useSwipeNavigation({
+      onSwipeDown: onClose,
+      onSwipeLeft: canGoNext ? onGoNext : undefined,
+      onSwipeRight: canGoPrev ? onGoPrev : undefined,
+      threshold: 100,
+      containerRef: containerRef,
+      disableLeftSwipe: !canGoNext,
+      disableRightSwipe: !canGoPrev,
+      itemId: displayFeature?.id,
+    });
 
   const handleCardWrapperClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -64,24 +88,42 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({ selectedFeature, 
 
   useEffect(() => {
     setMounted(true);
-    // マウント時にbodyのスクロールをロック（リロード防止）
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
     return () => {
-      // アンマウント時に元に戻す
       document.body.style.overflow = originalOverflow;
     };
   }, []);
 
   if (!shouldRender || !displayFeature || !mounted) return null;
 
-  const isWGeopark = (f: HyakumeizanFromSelected | WGeoparkFromSelected): f is WGeoparkFromSelected => {
+  const isWGeopark = (
+    f: HyakumeizanFromSelected | WGeoparkFromSelected
+  ): f is WGeoparkFromSelected => {
     return (f as WGeoparkFromSelected).comment !== undefined;
   };
 
-  const isHyakumeizan = (f: HyakumeizanFromSelected | WGeoparkFromSelected): f is HyakumeizanFromSelected => {
+  const isHyakumeizan = (
+    f: HyakumeizanFromSelected | WGeoparkFromSelected
+  ): f is HyakumeizanFromSelected => {
     return (f as HyakumeizanFromSelected).height !== undefined;
+  };
+
+  // カード切り替えアニメーション
+  const cardVariants = {
+    enter: (direction: SwipeDirection) => ({
+      x: direction === 'left' ? 300 : direction === 'right' ? -300 : 0,
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (direction: SwipeDirection) => ({
+      x: direction === 'left' ? -300 : direction === 'right' ? 300 : 0,
+      opacity: 0,
+    }),
   };
 
   return createPortal(
@@ -100,121 +142,132 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({ selectedFeature, 
             key="wrapper"
             className={style.wrapper}
             onClick={handleCardWrapperClick}
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEnd}
           >
-            <motion.div
-              ref={containerRef}
-              layoutId={`card-${displayFeature.id}`}
-              className={style.container}
-              initial={{ opacity: 0, scale: 0.9, y: 0 }}
-              animate={{ opacity: 1, scale: 1, y: 0, transition: { duration: 0.5 } }}
-              exit={{ opacity: [1, 0, 0], transition: { duration: 0.5, times: [0, 0.5, 1] } }}
-              onTouchStart={onTouchStart}
-              onTouchMove={onTouchMove}
-              onTouchEnd={onTouchEnd}
-              onMouseDown={onMouseDown}
-            >
-              <motion.div className={style.imageWrapper}>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  <NeiCloseButton
-                    onClose={onClose}
-                  />
-                </motion.div>
-
-                {displayFeature.image && (
-                  <motion.img
-                    src={displayFeature.image}
-                    alt={displayFeature.name}
-                    className={style.image}
+            <AnimatePresence mode="wait" custom={swipeDirection}>
+              <motion.div
+                key={displayFeature.id}
+                ref={containerRef}
+                custom={swipeDirection}
+                variants={cardVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                className={style.container}
+                onTouchStart={onTouchStart}
+                onTouchMove={onTouchMove}
+                onTouchEnd={onTouchEnd}
+                onMouseDown={onMouseDown}
+              >
+                <motion.div className={style.imageWrapper}>
+                  <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                  />
-                )}
-              </motion.div>
+                    transition={{ delay: 0.2 }}
+                  >
+                    <NeiCloseButton onClose={onClose} />
+                  </motion.div>
 
-              <motion.div className={style.contentWrapper}>
+                  {displayFeature.image && (
+                    <motion.img
+                      src={displayFeature.image}
+                      alt={displayFeature.name}
+                      className={style.image}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                    />
+                  )}
+                </motion.div>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className={style.detailsWrapper}
-                >
-                  <motion.h2 layoutId={`title-${displayFeature.id}`}
-                    className={style.title}>
-                    {displayFeature.name}
-                  </motion.h2>
-                  {isWGeopark(displayFeature) && (
-                    <>
-                      <p className={style.detailsText}>
-                        {displayFeature.comment}
-                      </p>
-                      <div className={style.grid}>
-                        <div className={style.featureCard}>
-                          <h4 className={style.featureTitle}>エリア</h4>
-                          <p className={style.featureDescription}>
-                            {displayFeature.area}
-                          </p>
-                        </div>
-                        <div className={style.featureCard}>
-                          <h4 className={style.featureTitle}>Webサイト</h4>
-                          <div className="mt-2">
-                            {displayFeature.website && (
-                              <a href={displayFeature.website} target="_blank" rel="noopener noreferrer" className="text-ecruWhite underline hover:text-white">
-                                公式サイト
-                              </a>
-                            )}
+                <motion.div className={style.contentWrapper}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className={style.detailsWrapper}
+                  >
+                    <motion.h2
+                      layoutId={`title-${displayFeature.id}`}
+                      className={style.title}
+                    >
+                      {displayFeature.name}
+                    </motion.h2>
+                    {isWGeopark(displayFeature) && (
+                      <>
+                        <p className={style.detailsText}>
+                          {displayFeature.comment}
+                        </p>
+                        <div className={style.grid}>
+                          <div className={style.featureCard}>
+                            <h4 className={style.featureTitle}>エリア</h4>
+                            <p className={style.featureDescription}>
+                              {displayFeature.area}
+                            </p>
+                          </div>
+                          <div className={style.featureCard}>
+                            <h4 className={style.featureTitle}>Webサイト</h4>
+                            <div className="mt-2">
+                              {displayFeature.website && (
+                                <a
+                                  href={displayFeature.website}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-ecruWhite underline hover:text-white"
+                                >
+                                  公式サイト
+                                </a>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </>
-                  )}
+                      </>
+                    )}
 
-                  {isHyakumeizan(displayFeature) && (
-                    <>
-                      <div className={style.grid}>
-                        <div className={style.featureCard}>
-                          <h4 className={style.featureTitle}>エリア</h4>
-                          <p className={style.featureDescription}>
-                            {displayFeature.area}
-                          </p>
+                    {isHyakumeizan(displayFeature) && (
+                      <>
+                        <div className={style.grid}>
+                          <div className={style.featureCard}>
+                            <h4 className={style.featureTitle}>エリア</h4>
+                            <p className={style.featureDescription}>
+                              {displayFeature.area}
+                            </p>
+                          </div>
+                          <div className={style.featureCard}>
+                            <h4 className={style.featureTitle}>標高</h4>
+                            <p className={style.featureDescription}>
+                              {displayFeature.height}
+                            </p>
+                          </div>
                         </div>
-                        <div className={style.featureCard}>
-                          <h4 className={style.featureTitle}>標高</h4>
-                          <p className={style.featureDescription}>
-                            {displayFeature.height}
-                          </p>
-                        </div>
-                      </div>
-                    </>
-                  )}
+                      </>
+                    )}
 
-                  <div className={style.featureCard}>
-                    <h4 className={style.featureTitle}>リンク</h4>
-                    <div className={style.linkContainer}>
-                      <div className={style.linkCard}>
-                        <LinkIcon
-                          href={displayFeature.googlemaplink}
-                          src="/img/g_map_logo.svg"
-                          alt="Google Map"
-                        />
-                      </div>
-                      {isHyakumeizan(displayFeature) && displayFeature.YAMAP && (
+                    <div className={style.featureCard}>
+                      <h4 className={style.featureTitle}>リンク</h4>
+                      <div className={style.linkContainer}>
                         <div className={style.linkCard}>
-                          <LinkIcon href={displayFeature.YAMAP} src="/img/yamap-logo.svg" alt="YAMAP" />
+                          <LinkIcon
+                            href={displayFeature.googlemaplink}
+                            src="/img/g_map_logo.svg"
+                            alt="Google Map"
+                          />
                         </div>
-                      )}
+                        {isHyakumeizan(displayFeature) &&
+                          displayFeature.YAMAP && (
+                            <div className={style.linkCard}>
+                              <LinkIcon
+                                href={displayFeature.YAMAP}
+                                src="/img/yamap-logo.svg"
+                                alt="YAMAP"
+                              />
+                            </div>
+                          )}
+                      </div>
                     </div>
-                  </div>
+                  </motion.div>
                 </motion.div>
               </motion.div>
-            </motion.div>
+            </AnimatePresence>
           </motion.div>
         </>
       )}
