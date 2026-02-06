@@ -3,25 +3,51 @@ import { WGeoparkFromSelected } from '@/app/feature/map/geopark/types/types';
 import { HyakumeizanFromSelected } from '@/app/feature/map/hyakumeizan/types/types';
 import { GeoparkFeatureContent } from './GeoparkFeatureContent';
 import { MountainFeatureContent } from './MountainFeatureContent';
-import { motion, AnimatePresence, PanInfo } from 'framer-motion';
-import { FC } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FC, useRef } from 'react';
 
 type Props = {
   selectedFeature: HyakumeizanFromSelected | WGeoparkFromSelected | null;
   onExpand: () => void;
   fadeInDelay?: number;
+  onSwipeLeft?: () => void;
+  onSwipeRight?: () => void;
+  onDeselect?: () => void;
+  swipeDirection?: 'left' | 'right' | null;
+};
+
+const cardVariants = {
+  enter: (direction: 'left' | 'right' | null) => ({
+    x: direction === 'left' ? 300 : direction === 'right' ? -300 : 0,
+    opacity: 0,
+  }),
+  center: {
+    x: 0,
+    y: 0,
+    opacity: 1,
+  },
+  exit: (direction: 'left' | 'right' | null) => ({
+    x: direction === 'left' ? -300 : direction === 'right' ? 300 : 0,
+    opacity: 0,
+  }),
 };
 
 export const NeiCompactCard: FC<Props> = ({
   selectedFeature,
   onExpand,
   fadeInDelay,
+  onSwipeLeft,
+  onSwipeRight,
+  onDeselect,
+  swipeDirection,
 }) => {
   const { isVisible, shouldRender, displayFeature } =
     usePopupVisible(selectedFeature, {
       fadeInDelay: fadeInDelay ?? FADE_IN_DELAY,
       fadeOutDuration: FADE_OUT_DURATION,
     });
+  
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const style = {
     cardWrapper: `pt-0 transition-opacity duration-300 ${isVisible
@@ -29,7 +55,7 @@ export const NeiCompactCard: FC<Props> = ({
       : 'opacity-0 pointer-events-none'
       }`,
     neiCard:
-      'flex items-center bg-ecruWhite rounded-xl shadow-md overflow-hidden',
+      'flex items-center bg-ecruWhite rounded-xl shadow-md overflow-hidden touch-pan-y relative',
     cardImage:
       'w-[152px] h-[131px] flex-shrink-0 rounded-l-xl object-cover block',
     cardContentRight:
@@ -54,24 +80,44 @@ export const NeiCompactCard: FC<Props> = ({
 
   return (
     <div className={style.cardWrapper}>
-      <motion.div
-        className={style.neiCard}
-        layoutId={`card-${displayFeature.id}`}
-        onClick={onExpand}
-        onDragEnd={(_, info) => {
-          if (info.offset.y < -50) {
-            onExpand();
-          }
-        }}
-        drag="y"
-        dragConstraints={{ top: 0, bottom: 0 }}
-        dragElastic={0.2}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: [0, 0, 1] }}
-        transition={{ duration: 0.5, times: [0, 0.5, 1] }}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-      >
+       <AnimatePresence mode="wait" custom={swipeDirection}>
+        <motion.div
+           key={displayFeature.id}
+          className={style.neiCard}
+          ref={containerRef}
+          custom={swipeDirection}
+          variants={cardVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          onClick={onExpand}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          drag
+          dragDirectionLock
+          dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
+          dragElastic={0.2}
+          onDragEnd={(e, info) => {
+            const { offset, velocity } = info;
+            const swipeThreshold = 50;
+
+            // 縦方向の判定
+            if (offset.y < -swipeThreshold) {
+              onExpand(); // 上へスワイプで展開
+            } else if (offset.y > swipeThreshold) {
+              onDeselect?.(); // 下へスワイプで閉じる
+            }
+            // 横方向の判定 (縦方向が優先でない場合)
+             else if (Math.abs(offset.x) > swipeThreshold) {
+              if (offset.x < 0) {
+                 onSwipeLeft?.(); // 左スワイプ（次へ）
+              } else {
+                 onSwipeRight?.(); // 右スワイプ（前へ）
+              }
+            }
+          }}
+        >
         {displayFeature.image && (
           <img
             className={style.cardImage}
@@ -101,6 +147,7 @@ export const NeiCompactCard: FC<Props> = ({
           ) : null}
         </div>
       </motion.div>
+      </AnimatePresence>
     </div>
   );
 };

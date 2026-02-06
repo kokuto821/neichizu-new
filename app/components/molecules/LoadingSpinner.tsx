@@ -1,12 +1,12 @@
 import { CircularProgress } from '@mui/material';
 
-export const RoadingSpinner = () => {
+export const LoadingSpinner = () => {
   const style = {
-    roadingSpinnerWrapper:
+    loadingSpinnerWrapper:
       'absolute bottom-[155px] left-0 w-screen flex justify-center items-center px-[20%] visible text-semiDarkGreen',
   };
   return (
-    <div className={style.roadingSpinnerWrapper}>
+    <div className={style.loadingSpinnerWrapper}>
       <CircularProgress color="inherit" />
     </div>
   );

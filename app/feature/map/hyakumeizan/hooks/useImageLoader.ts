@@ -2,8 +2,6 @@ import {
   useState,
   useEffect,
   useRef,
-  Dispatch,
-  SetStateAction,
   useCallback,
 } from 'react';
 import { HyakumeizanFromSelected } from '../types/types';
@@ -11,7 +9,7 @@ import { WGeoparkFromSelected } from '../../geopark/types/types';
 
 export const useImageLoader = (
   selectedFeature: HyakumeizanFromSelected | WGeoparkFromSelected | null,
-  setIsFeatureClick: Dispatch<SetStateAction<boolean>>
+  onLoadingComplete: (value: boolean) => void
 ) => {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const imgRef = useRef<HTMLImageElement | null>(null);
@@ -32,7 +30,7 @@ export const useImageLoader = (
 
     if (!selectedFeature) {
       setIsImageLoaded(true);
-      setIsFeatureClick(false);
+      onLoadingComplete(false);
       return cleanup;
     }
 
@@ -44,21 +42,21 @@ export const useImageLoader = (
       img.onload = () => {
         setIsImageLoaded(true);
         setTimeout(() => {
-          setIsFeatureClick(false);
+          onLoadingComplete(false);
         }, 700);
       };
 
       img.onerror = () => {
         setIsImageLoaded(true);
-        setIsFeatureClick(false);
+        onLoadingComplete(false);
       };
     } else {
       setIsImageLoaded(true);
-      setIsFeatureClick(false);
+      onLoadingComplete(false);
     }
 
     return cleanup;
-  }, [selectedFeature, setIsFeatureClick]);
+  }, [selectedFeature, onLoadingComplete]);
 
   /** 初回レンダリング時と selectedFeature が変更されたときに loadImage を実行 */
   useEffect(() => {

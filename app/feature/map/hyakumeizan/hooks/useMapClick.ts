@@ -10,11 +10,15 @@ const isFeature = (feature: FeatureLike): feature is Feature => {
   return feature instanceof Feature;
 };
 
-export const useMapClick = (map: Map | null) => {
+type Props = {
+  map: Map | null;
+  onClickLoading?: (loading: boolean) => void;
+};
+
+export const useMapClick = ({ map, onClickLoading }: Props) => {
   const [selectedFeature, setSelectedFeature] = useState<
     HyakumeizanFromSelected | WGeoparkFromSelected | null
   >(null);
-  const [isFeatureClick, setIsFeatureClick] = useState<boolean>(false);
 
   const handleMapClick = useCallback(
     (event: MapBrowserEvent) => {
@@ -25,7 +29,7 @@ export const useMapClick = (map: Map | null) => {
 
       // フィーチャーがなければ状態リセット
       if (!clickedFeature || !isFeature(clickedFeature)) {
-        setIsFeatureClick(true);
+        onClickLoading?.(true);
         setSelectedFeature(null);
         return;
       }
@@ -73,9 +77,9 @@ export const useMapClick = (map: Map | null) => {
         map.getView().animate({ center: coordinate, duration: 500 });
       }
 
-      setIsFeatureClick(true);
+      onClickLoading?.(true);
     },
-    [map, setSelectedFeature, setIsFeatureClick]
+    [map, setSelectedFeature, onClickLoading]
   );
 
   useEffect(() => {
@@ -90,7 +94,6 @@ export const useMapClick = (map: Map | null) => {
   return {
     selectedFeature,
     setSelectedFeature,
-    isFeatureClick,
-    setIsFeatureClick,
   };
 };
+
