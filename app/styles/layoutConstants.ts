@@ -26,4 +26,5 @@ export const LAYOUT_WIDTH = {
   desktop: '65vw',  // 100vw - 20vw * 2
 } as const;
 
-export const WIDTH_CLASS = 'w-[90vw] md:w-[65vw]';
+export const CONTAINER_WIDTH_CLASS = 'w-[100vw]';
+export const INNER_WIDTH_CLASS = 'w-[90vw] md:w-[65vw]';

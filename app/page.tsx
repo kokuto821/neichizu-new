@@ -88,11 +88,9 @@ const Hyakumeizan = () => {
             setIsGeoparkVisible={setIsGeoparkVisible}
           />
         </BottomUIContainer>
-
       </div>
     </div>
   );
 };
 
 export default Hyakumeizan;
-

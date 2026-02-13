@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { NeiCloseButton } from '../atoms/NeiCloseButton';
 import { usePopupVisible } from '@/app/feature/map/hyakumeizan/hooks/usePopupVisible';
 import { LinkIcon } from '../atoms/LinkIcon';
-import { WIDTH_CLASS } from '@/app/styles/layoutConstants';
+import { INNER_WIDTH_CLASS } from '@/app/styles/layoutConstants';
 import { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Map } from 'ol';
@@ -14,9 +14,6 @@ interface ExpandedCardProps {
   selectedFeature: HyakumeizanFromSelected | WGeoparkFromSelected | null;
   isExpanded: boolean;
   onClose: () => void;
-  // map: Map | null; // 親コンポーネントで管理するため削除
-  // onFeatureChange: (feature: HyakumeizanFromSelected | WGeoparkFromSelected) => void; // 親コンポーネントで管理するため削除
-  map?: Map | null; // 後方互換性のため残すが使用しない
   canGoNext: boolean;
   canGoPrev: boolean;
   onGoNext: () => void;
@@ -28,7 +25,7 @@ const style = {
   overlay: 'fixed inset-0 bg-black/50 backdrop-blur-sm z-40',
   wrapper:
     'fixed inset-0 z-50 flex items-center justify-center pointer-events-auto overscroll-none touch-none',
-  container: `${WIDTH_CLASS} h-[80vh] rounded-2xl shadow-2xl bg-ecruWhite flex flex-col overflow-y-auto overscroll-none pointer-events-auto relative touch-pan-y`,
+  container: `${INNER_WIDTH_CLASS} h-[80vh] rounded-2xl shadow-2xl bg-ecruWhite flex flex-col overflow-y-auto overscroll-none pointer-events-auto relative touch-pan-y`,
   imageWrapper: 'relative w-full flex-shrink-0',
   contentWrapper: 'p-4 md:p-6',
   title: 'text-2xl md:text-3xl font-bold',

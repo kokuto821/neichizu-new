@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { SwipeableDrawer } from './SwipeableDrawer';
 import { DrawerContent } from '../atoms/DrawerContent';
 import { NavigationItem } from '../atoms/NavigationItem';
+import { INNER_WIDTH_CLASS } from '@/app/styles/layoutConstants';
 
 export const BottomNavigation = ({
   isVectorVisible,
@@ -16,7 +17,7 @@ export const BottomNavigation = ({
 }) => {
   const style = {
     navigationWrapper:
-      'h-[10vh] p-2 rounded-xl flex gap-2 items-center bg-semiDarkGreen  shadow-md',
+      `h-[10vh] p-2 rounded-xl flex gap-2 items-center justify-center bg-semiDarkGreen shadow-md ${INNER_WIDTH_CLASS}`,
     navigationList:
       'flex gap-2 overflow-scroll overflow-y-hidden hidden-scrollbar h-full',
   };

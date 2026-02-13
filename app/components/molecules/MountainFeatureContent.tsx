@@ -1,51 +1,30 @@
-import CardContent from '@mui/material/CardContent';
-import Box from '@mui/material/Box';
 import { FeatureTitle } from '../atoms/FeatureTitle';
 import { FeatureSubtitle } from '../atoms/FeatureSubtitle';
-import { LinkIcon } from '../atoms/LinkIcon';
 
 type Props = {
-  id: string;
   name: string;
   area: string;
   height?: string;
-  googlemaplink: string;
-  YAMAP?: string;
 };
 
 export const MountainFeatureContent = ({
-  id,
   name,
   area,
   height,
-  googlemaplink,
-  YAMAP,
 }: Props) => {
+  const style = {
+    container: 'pl-[10px]',
+    innerWrapper: 'flex flex-col justify-start gap-1 items-start',
+  };
+
   return (
-    <CardContent style={{ padding: '0px 0px 0px 10px' }}>
+    <div className={style.container}>
       <FeatureTitle>{name}</FeatureTitle>
       <FeatureSubtitle>
         {area} {height}
       </FeatureSubtitle>
-
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
-          gap: 0.5,
-          alignItems: 'flex-start',
-        }}
-      >
-        <LinkIcon
-          href={googlemaplink}
-          src="/img/g_map_logo.svg"
-          alt="Google Map"
-        />
-        {YAMAP && (
-          <LinkIcon href={YAMAP} src="/img/yamap-logo.svg" alt="YAMAP" />
-        )}
-      </Box>
-    </CardContent>
+      <div className={style.innerWrapper}>
+      </div>
+    </div>
   );
 };
