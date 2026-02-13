@@ -46,7 +46,7 @@ export const NeiCompactCard: FC<Props> = ({
       fadeInDelay: fadeInDelay ?? FADE_IN_DELAY,
       fadeOutDuration: FADE_OUT_DURATION,
     });
-  
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   const style = {
@@ -80,9 +80,9 @@ export const NeiCompactCard: FC<Props> = ({
 
   return (
     <div className={style.cardWrapper}>
-       <AnimatePresence mode="wait" custom={swipeDirection}>
+      <AnimatePresence mode="wait" custom={swipeDirection}>
         <motion.div
-           key={displayFeature.id}
+          key={displayFeature.id}
           className={style.neiCard}
           ref={containerRef}
           custom={swipeDirection}
@@ -122,35 +122,27 @@ export const NeiCompactCard: FC<Props> = ({
             }
           }}
         >
-        {displayFeature.image && (
-          <img
-            className={style.cardImage}
-            src={displayFeature.image}
-            alt={displayFeature.name}
-          />
-        )}
-        <div className={style.cardContentRight}>
-          {isWGeopark(displayFeature) ? (
-            <GeoparkFeatureContent
-              id={String(displayFeature.id)}
-              name={displayFeature.name}
-              area={displayFeature.area}
-              comment={displayFeature.comment}
-              googlemaplink={displayFeature.googlemaplink}
-              website={displayFeature.website}
+          {displayFeature.image && (
+            <img
+              className={style.cardImage}
+              src={displayFeature.image}
+              alt={displayFeature.name}
             />
-          ) : isHyakumeizan(displayFeature) ? (
-            <MountainFeatureContent
-              id={String(displayFeature.id)}
-              name={displayFeature.name}
-              area={displayFeature.area}
-              height={displayFeature.height}
-              googlemaplink={displayFeature.googlemaplink}
-              YAMAP={displayFeature.YAMAP}
-            />
-          ) : null}
-        </div>
-      </motion.div>
+          )}
+          <div className={style.cardContentRight}>
+            {isWGeopark(displayFeature) ? (
+              <GeoparkFeatureContent
+                name={displayFeature.name}
+                area={displayFeature.area}
+              />
+            ) : isHyakumeizan(displayFeature) ? (
+              <MountainFeatureContent
+                name={displayFeature.name}
+                area={displayFeature.area}
+              />
+            ) : null}
+          </div>
+        </motion.div>
       </AnimatePresence>
     </div>
   );

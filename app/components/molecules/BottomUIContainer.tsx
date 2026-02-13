@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { WIDTH_CLASS } from '@/app/styles/layoutConstants';
+import { CONTAINER_WIDTH_CLASS } from '@/app/styles/layoutConstants';
 
 type Props = {
   children: ReactNode;
@@ -11,8 +11,8 @@ type Props = {
  */
 export const BottomUIContainer = ({ children }: Props) => {
   const style = {
-    absoluteContainer: `absolute bottom-0 left-1/2 -translate-x-1/2 pb-4 ${WIDTH_CLASS}`,
-    flexContainer: `flex flex-col gap-4`
+    absoluteContainer: `absolute bottom-0 left-1/2 -translate-x-1/2 pb-4 ${CONTAINER_WIDTH_CLASS}`,
+    flexContainer: `flex flex-col gap-4 items-center`
   }
   return (
     <div className={style.absoluteContainer}>

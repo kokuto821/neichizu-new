@@ -148,6 +148,14 @@ export const useFeatureNavigation = (
     return convertFeatureToTyped(prevFeature, selectedFeature.category);
   }, [canGoPrev, currentIndex, allFeatures, selectedFeature]);
 
+  // 型付きフィーチャー一覧（カルーセル用）
+  const typedFeatures = useMemo(() => {
+    if (!selectedFeature) return [];
+    return allFeatures
+      .map((f) => convertFeatureToTyped(f, selectedFeature.category))
+      .filter((f): f is FeatureType => f !== null);
+  }, [allFeatures, selectedFeature]);
+
   return {
     currentIndex,
     totalCount: allFeatures.length,
@@ -155,5 +163,6 @@ export const useFeatureNavigation = (
     canGoNext,
     goToNext,
     goToPrev,
+    typedFeatures,
   };
 };

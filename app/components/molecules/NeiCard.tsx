@@ -1,5 +1,5 @@
-import { FC, useState, useCallback, useEffect } from 'react';
-import { NeiCompactCard } from './NeiCompactCard';
+import { FC, useState, useCallback } from 'react';
+import { NeiCardCarousel } from './NeiCardCarousel';
 import { NeiExpandedCard } from './NeiExpandedCard';
 import { WGeoparkFromSelected } from '@/app/feature/map/geopark/types/types';
 import { HyakumeizanFromSelected } from '@/app/feature/map/hyakumeizan/types/types';
@@ -7,10 +7,12 @@ import { Map } from 'ol';
 import { useFeatureNavigation } from '@/app/feature/map/hyakumeizan/hooks/useFeatureNavigation';
 import { useMapCenter } from '@/app/feature/map/hooks/useMapCenter';
 
+type FeatureType = HyakumeizanFromSelected | WGeoparkFromSelected;
+
 type Props = {
-  selectedFeature: HyakumeizanFromSelected | WGeoparkFromSelected | null;
+  selectedFeature: FeatureType | null;
   map: Map | null;
-  onFeatureChange: (feature: HyakumeizanFromSelected | WGeoparkFromSelected | null) => void;
+  onFeatureChange: (feature: FeatureType | null) => void;
   onSwipeLoadingChange?: (loading: boolean) => void;
 };
 
@@ -18,8 +20,8 @@ export const NeiCard: FC<Props> = ({ selectedFeature, map, onFeatureChange, onSw
   const [isExpanded, setIsExpanded] = useState(false);
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
 
-  // フィーチャナビゲーション
-  const { canGoPrev, canGoNext, goToNext, goToPrev } = useFeatureNavigation(
+  // フィーチャナビゲーション（全フィーチャーリスト取得用）
+  const { canGoPrev, canGoNext, goToNext, goToPrev, typedFeatures } = useFeatureNavigation(
     map,
     selectedFeature
   );
@@ -35,17 +37,17 @@ export const NeiCard: FC<Props> = ({ selectedFeature, map, onFeatureChange, onSw
     setIsExpanded(false);
   };
 
-  const handleDeselect = () => {
-    onFeatureChange(null);
-  };
+  // カルーセルのスクロールでフィーチャーが変わった時
+  const handleCarouselFeatureChange = useCallback((feature: FeatureType) => {
+    onFeatureChange(feature);
+  }, [onFeatureChange]);
 
-  // 次のフィーチャへ移動
+  // 次のフィーチャへ移動（NeiExpandedCard用）
   const handleGoNext = useCallback(() => {
     const nextFeature = goToNext();
     if (nextFeature) {
       onSwipeLoadingChange?.(true);
       setSwipeDirection('left');
-      // アニメーション後にフィーチャ変更
       setTimeout(() => {
         onFeatureChange(nextFeature);
         setSwipeDirection(null);
@@ -53,13 +55,12 @@ export const NeiCard: FC<Props> = ({ selectedFeature, map, onFeatureChange, onSw
     }
   }, [goToNext, onFeatureChange, onSwipeLoadingChange]);
 
-  // 前のフィーチャへ移動
+  // 前のフィーチャへ移動（NeiExpandedCard用）
   const handleGoPrev = useCallback(() => {
     const prevFeature = goToPrev();
     if (prevFeature) {
       onSwipeLoadingChange?.(true);
       setSwipeDirection('right');
-      // アニメーション後にフィーチャ変更
       setTimeout(() => {
         onFeatureChange(prevFeature);
         setSwipeDirection(null);
@@ -67,24 +68,25 @@ export const NeiCard: FC<Props> = ({ selectedFeature, map, onFeatureChange, onSw
     }
   }, [goToPrev, onFeatureChange, onSwipeLoadingChange]);
 
+  const handleDeselect = useCallback(() => {
+    onFeatureChange(null);
+  }, [onFeatureChange]);
 
   return (
     <>
-      {!isExpanded && (
-        <NeiCompactCard 
-          selectedFeature={selectedFeature} 
+      {!isExpanded && typedFeatures.length > 0 && selectedFeature && (
+        <NeiCardCarousel
+          features={typedFeatures}
+          selectedFeature={selectedFeature}
           onExpand={handleExpand}
-          onSwipeLeft={canGoNext ? handleGoNext : undefined}
-          onSwipeRight={canGoPrev ? handleGoPrev : undefined}
+          onFeatureChange={handleCarouselFeatureChange}
           onDeselect={handleDeselect}
-          swipeDirection={swipeDirection}
         />
       )}
       <NeiExpandedCard
         selectedFeature={selectedFeature}
         isExpanded={isExpanded}
         onClose={handleClose}
-        map={map}
         canGoNext={canGoNext}
         canGoPrev={canGoPrev}
         onGoNext={handleGoNext}
