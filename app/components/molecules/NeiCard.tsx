@@ -87,7 +87,6 @@ export const NeiCard: FC<Props> = ({ selectedFeature, map, onFeatureChange, onSw
         selectedFeature={selectedFeature}
         isExpanded={isExpanded}
         onClose={handleClose}
-        map={map}
         canGoNext={canGoNext}
         canGoPrev={canGoPrev}
         onGoNext={handleGoNext}
