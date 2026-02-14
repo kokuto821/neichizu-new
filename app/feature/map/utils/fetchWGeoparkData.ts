@@ -1,7 +1,7 @@
 import Point from 'ol/geom/Point';
 import { fromLonLat } from 'ol/proj';
 import { getAllGeoparks } from '@/app/utils/supabaseFunctions';
-import { WGeoparkFromDB } from '../types/types';
+import { WGeoparkFromDB } from '../types/geoparkTypes';
 
 /**
  * Supabase から世界ジオパークの生データを取得し、地図用オブジェクトにマッピングして返す

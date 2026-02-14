@@ -1,7 +1,7 @@
 import { Map } from 'ol';
 import { useLayerVisibility } from '../feature/map/hooks/useLayerVisibility';
-import { addHyakumeizanFeature } from '../feature/map/hyakumeizan/utils/addHyakumeizanFeature';
-import { addWGeoparkFeature } from '../feature/map/geopark/utils/addWGeoparkFeature';
+import { addHyakumeizanFeature } from '../feature/map/utils/addHyakumeizanFeature';
+import { addWGeoparkFeature } from '../feature/map/utils/addWGeoparkFeature';
 
 /**
  * 複数のレイヤー可視性を管理するカスタムフック

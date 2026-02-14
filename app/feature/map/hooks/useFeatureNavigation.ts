@@ -2,8 +2,8 @@ import { useEffect, useState, useMemo, useCallback } from 'react';
 import { Map } from 'ol';
 import VectorLayer from 'ol/layer/Vector';
 import Feature from 'ol/Feature';
-import { WGeoparkFromSelected } from '@/app/feature/map/geopark/types/types';
-import { HyakumeizanFromSelected } from '@/app/feature/map/hyakumeizan/types/types';
+import { WGeoparkFromSelected } from '@/app/feature/map/types/geoparkTypes';
+import { HyakumeizanFromSelected } from '@/app/feature/map/types/hyakumeizanTypes';
 import Point from 'ol/geom/Point';
 import { Geometry } from 'ol/geom';
 
@@ -83,7 +83,7 @@ export const useFeatureNavigation = (
     }
 
     console.log('🔍 [FeatureNav] Searching for layer:', layerType);
-    
+
     // 該当レイヤーを検索
     const targetLayer = map
       .getLayers()
@@ -91,9 +91,12 @@ export const useFeatureNavigation = (
       .find((layer) => layer.get('type') === layerType);
 
     if (!targetLayer || !(targetLayer instanceof VectorLayer)) {
-      console.warn('⚠️ [FeatureNav] Target layer not found or not a VectorLayer:', layerType);
+      console.warn(
+        '⚠️ [FeatureNav] Target layer not found or not a VectorLayer:',
+        layerType
+      );
       // レイヤー構成デバッグ用
-      map.getLayers().forEach(l => console.log('Layer:', l.get('type'), l));
+      map.getLayers().forEach((l) => console.log('Layer:', l.get('type'), l));
       setAllFeatures([]);
       return;
     }
@@ -127,7 +130,10 @@ export const useFeatureNavigation = (
   // 次のフィーチャに移動
   const goToNext = useCallback((): FeatureType | null => {
     if (!canGoNext || !selectedFeature) {
-      console.log('❌ [FeatureNav] Cannot go next', { canGoNext, selectedFeature });
+      console.log('❌ [FeatureNav] Cannot go next', {
+        canGoNext,
+        selectedFeature,
+      });
       return null;
     }
 
@@ -139,7 +145,10 @@ export const useFeatureNavigation = (
   // 前のフィーチャに移動
   const goToPrev = useCallback((): FeatureType | null => {
     if (!canGoPrev || !selectedFeature) {
-      console.log('❌ [FeatureNav] Cannot go prev', { canGoPrev, selectedFeature });
+      console.log('❌ [FeatureNav] Cannot go prev', {
+        canGoPrev,
+        selectedFeature,
+      });
       return null;
     }
 

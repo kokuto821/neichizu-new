@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { WGeoparkFromSelected } from '../../geopark/types/types';
-import { HyakumeizanFromSelected } from '../types/types';
+import { WGeoparkFromSelected } from '../types/geoparkTypes';
+import { HyakumeizanFromSelected } from '../types/hyakumeizanTypes';
 
 export const FADE_IN_DELAY = 500;
 export const FADE_OUT_DURATION = 300;

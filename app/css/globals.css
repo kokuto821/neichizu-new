@@ -37,4 +37,35 @@ body {
     /* Chrome, Safari 対応 */
     display: none;
   }
+
+  /* Modern Scrollbar Utilities */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-track-transparent {
+    /* Firefox fallback: unfortunately firefox requires both colors in one property. 
+        We set it here assuming thumb is gray-300. If we want strict composition it's harder in pure CSS without vars.
+        For now, we prioritize WebKit and set a reasonable default for Firefox if possible, or just ignore Firefox colors if not critical.
+     */
+    scrollbar-color: var(--semiDarkGreen) transparent; /* thumb track */
+  }
+  .scrollbar-track-transparent::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  .scrollbar-thumb-gray-300::-webkit-scrollbar-thumb {
+    background-color: var(--ecruWhite);
+    border-radius: 20px;
+    border: 1px solid transparent; /* padding workaround */
+    background-clip: content-box;
+  }
+
+  .hover\:scrollbar-thumb-gray-400:hover::-webkit-scrollbar-thumb {
+    background-color: #9ca3af;
+  }
 }

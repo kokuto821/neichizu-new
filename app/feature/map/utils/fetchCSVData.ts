@@ -1,7 +1,7 @@
 import Papa from 'papaparse';
 import Point from 'ol/geom/Point';
 import { fromLonLat } from 'ol/proj';
-import { HyakumeizanFromDB } from '../types/types';
+import { HyakumeizanFromDB } from '../types/hyakumeizanTypes';
 
 export const fetchCSVData = async (url: string) => {
   try {

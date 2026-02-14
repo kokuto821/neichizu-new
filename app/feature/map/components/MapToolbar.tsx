@@ -1,9 +1,9 @@
 import {
   useChangeVisible,
   LayerType,
-} from '@/app/feature/map/hyakumeizan/hooks/useChangeVisible';
-import { NeiButton } from './NeiButton';
-import { NeiIconButton } from './NeiIconButton';
+} from '@/app/feature/map/hooks/useChangeVisible';
+import { NeiButton } from '@/app/components/molecules/NeiButton';
+import { NeiIconButton } from '@/app/components/molecules/NeiIconButton';
 import { MdLayers } from 'react-icons/md';
 
 type Props = {

@@ -1,7 +1,10 @@
 import Point from 'ol/geom/Point';
 import { fromLonLat } from 'ol/proj';
 import { getAllHyakumeizan } from '@/app/utils/supabaseFunctions';
-import { HyakumeizanFromDB, HyakumeizanFromSelected } from '../types/types';
+import {
+  HyakumeizanFromDB,
+  HyakumeizanFromSelected,
+} from '../types/hyakumeizanTypes';
 
 export const fetchHyakumeizanData = async () => {
   try {

@@ -1,11 +1,6 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-} from 'react';
-import { HyakumeizanFromSelected } from '../types/types';
-import { WGeoparkFromSelected } from '../../geopark/types/types';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { HyakumeizanFromSelected } from '../types/hyakumeizanTypes';
+import { WGeoparkFromSelected } from '../types/geoparkTypes';
 
 export const useImageLoader = (
   selectedFeature: HyakumeizanFromSelected | WGeoparkFromSelected | null,
