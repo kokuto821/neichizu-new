@@ -23,16 +23,24 @@ export const useCardCarouselScroll = ({
 
   // クローンを含む配列: [最後の要素, ...元の配列, 最初の要素]
   const extendedFeatures: FeatureType[] =
-    count > 0
-      ? [features[count - 1], ...features, features[0]]
-      : [];
+    count > 0 ? [features[count - 1], ...features, features[0]] : [];
 
   // カード幅を計算するヘルパー
   const getCardWidth = useCallback(() => {
     const el = scrollRef.current;
-    if (!el || extendedFeatures.length === 0) return 0;
-    return el.scrollWidth / extendedFeatures.length;
-  }, [extendedFeatures.length]);
+    if (!el || el.children.length === 0) return 0;
+
+    // scrollWidth / length はpaddingが含まれる場合に不正確になるため、
+    // 実際の要素間の距離(幅 + gap)を計測する
+    if (el.children.length >= 2) {
+      const first = el.children[0] as HTMLElement;
+      const second = el.children[1] as HTMLElement;
+      return second.offsetLeft - first.offsetLeft;
+    }
+
+    // 要素が1つしかない場合(通常ありえないが念のため)
+    return (el.children[0] as HTMLElement).offsetWidth;
+  }, []);
 
   // 特定のフィーチャーインデックスにスクロール（extended配列のインデックス = 実インデックス + 1）
   const scrollToFeatureIndex = useCallback(
@@ -132,9 +140,42 @@ export const useCardCarouselScroll = ({
     };
   }, []);
 
+  // ホイールスクロール: 1回のスクロールで1カード分だけ移動
+  const wheelCooldownRef = useRef(false);
+  const handleWheel = useCallback(
+    (e: React.WheelEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      if (wheelCooldownRef.current) return;
+
+      const el = scrollRef.current;
+      if (!el) return;
+
+      const cardWidth = getCardWidth();
+      if (cardWidth === 0) return;
+
+      // スクロール方向を判定（deltaYもdeltaXも対応）
+      const delta =
+        Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (delta === 0) return;
+
+      const direction = delta > 0 ? 1 : -1;
+      const targetScroll = el.scrollLeft + cardWidth * direction;
+
+      el.scrollTo({ left: targetScroll, behavior: 'smooth' });
+
+      // クールダウン（連続スクロール防止）
+      wheelCooldownRef.current = true;
+      setTimeout(() => {
+        wheelCooldownRef.current = false;
+      }, 400);
+    },
+    [getCardWidth]
+  );
+
   return {
     scrollRef,
     handleScroll,
+    handleWheel,
     extendedFeatures,
   };
 };

@@ -17,7 +17,7 @@ export const BottomNavigation = ({
 }) => {
   const style = {
     navigationWrapper:
-      `h-[10vh] p-2 rounded-xl flex gap-2 items-center justify-center bg-semiDarkGreen shadow-md ${INNER_WIDTH_CLASS}`,
+      `h-[10vh] p-2 rounded-xl flex gap-2 items-center justify-start bg-semiDarkGreen shadow-md ${INNER_WIDTH_CLASS}`,
     navigationList:
       'flex gap-2 overflow-scroll overflow-y-hidden hidden-scrollbar h-full',
   };

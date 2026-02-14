@@ -9,7 +9,7 @@ type Props = {
   onSwipeLeft?: () => void;
   /** 右スワイプ時のコールバック（前へ） */
   onSwipeRight?: () => void;
-  /** スワイプ検出の閾値（デフォルト: 100px） */
+  /** スワイプ検出の閾値（デフォルト: 50px） */
   threshold?: number;
   /** スワイプ操作を監視するコンテナ要素の ref */
   containerRef?: React.RefObject<HTMLElement | null>;
@@ -19,8 +19,6 @@ type Props = {
   disableLeftSwipe?: boolean;
   /** 右スワイプを無効化 */
   disableRightSwipe?: boolean;
-  /** 要素の再マウントを検知するためのID (keyなど) */
-  itemId?: string | number;
 };
 
 type UseSwipeNavigationReturn = {
@@ -32,26 +30,27 @@ type UseSwipeNavigationReturn = {
 
 /**
  * 左右・下方向のスワイプナビゲーションを提供するフック
- * - 左スワイプ: 次のアイテムへ
- * - 右スワイプ: 前のアイテムへ
- * - 下スワイプ: 閉じる
+ *
+ * 全てのタッチ/マウスイベントを React イベントハンドラーとして返す。
+ * addEventListener + useEffect の方式だと、AnimatePresence 内の要素の
+ * マウント/アンマウントタイミングでリスナーが登録されない問題を回避。
  */
 export const useSwipeNavigation = ({
   onSwipeDown,
   onSwipeLeft,
   onSwipeRight,
-  threshold = 100,
+  threshold = 50,
   containerRef,
   disableDownSwipe = false,
   disableLeftSwipe = false,
   disableRightSwipe = false,
-  itemId,
 }: Props): UseSwipeNavigationReturn => {
   const startXRef = useRef<number>(0);
   const startYRef = useRef<number>(0);
   const currentXRef = useRef<number>(0);
   const currentYRef = useRef<number>(0);
   const isDraggingRef = useRef(false);
+  const startScrollTopRef = useRef<number>(0);
 
   // 最新のコールバックを refs に保持
   const onSwipeDownRef = useRef(onSwipeDown);
@@ -78,154 +77,50 @@ export const useSwipeNavigation = ({
       const absDeltaX = Math.abs(deltaX);
       const absDeltaY = Math.abs(deltaY);
 
-      // 縦方向のスワイプが優勢
       if (absDeltaY > absDeltaX) {
-        // 下方向（閉じる）
         if (deltaY > threshold && !disableDownSwipe) {
-          console.log('[SwipeNav] DOWN swipe detected', { deltaY, threshold });
           return 'down';
         }
-      }
-      // 横方向のスワイプが優勢
-      else {
-        // 左スワイプ（次へ）
+      } else {
         if (deltaX < -threshold && !disableLeftSwipe) {
-          console.log('[SwipeNav] LEFT swipe detected', { deltaX, threshold });
           return 'left';
         }
-        // 右スワイプ（前へ）
         if (deltaX > threshold && !disableRightSwipe) {
-          console.log('[SwipeNav] RIGHT swipe detected', { deltaX, threshold });
           return 'right';
         }
       }
 
-      console.log('[SwipeNav] No valid swipe detected', { deltaX, deltaY, threshold });
       return null;
     },
     [threshold, disableDownSwipe, disableLeftSwipe, disableRightSwipe]
   );
 
-  // Touch handlers attached to the element directly to support non-passive events
-  useEffect(() => {
-    const element = containerRef?.current;
-    if (!element) return;
-
-    const handleTouchStart = (e: TouchEvent) => {
-      const touch = e.touches[0];
-      startXRef.current = touch.clientX;
-      startYRef.current = touch.clientY;
-      currentXRef.current = touch.clientX;
-      currentYRef.current = touch.clientY;
-      isDraggingRef.current = true;
-      console.log('[SwipeNav] touchstart', { startY: touch.clientY, scrollTop: element.scrollTop, cancelable: e.cancelable });
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!isDraggingRef.current) return;
-
-      const touch = e.touches[0];
-      currentXRef.current = touch.clientX;
-      currentYRef.current = touch.clientY;
-      const deltaY = currentYRef.current - startYRef.current;
-
-      // プルトゥリフレッシュ防止ロジック
-      // コンテナが最上部にあり、かつ下にスワイプしようとしている場合
-      if (
-        element.scrollTop <= 1 && // 1pxの遊びを持たせる
-        deltaY > 0
-      ) {
-         console.log('[SwipeNav] touchmove check', { deltaY, scrollTop: element.scrollTop, cancelable: e.cancelable });
-         // passive: false でリスナー登録されているため preventDefault が効く
-        if (e.cancelable) {
-            console.log('[SwipeNav] Preventing default scroll/pull-to-refresh');
-            e.preventDefault();
-        } else {
-            console.warn('[SwipeNav] Cannot prevent default (not cancelable)');
-        }
-      }
-    };
-
-    const handleTouchEnd = () => {
-      if (!isDraggingRef.current) return;
-
-      const deltaX = currentXRef.current - startXRef.current;
-      const deltaY = currentYRef.current - startYRef.current;
-
-      // 下方向スワイプ（閉じる or リフレッシュ）の場合、
-      // 要素がスクロール可能な状態であれば、トップにいるか確認する
-      // ※ deltaY > 0 は下方向
-      if (deltaY > 0 && element.scrollTop > 1) { // 1pxの遊びを持たせる
-         // スクロール中なのでスワイプ判定しない
-         console.log('[SwipeNav] Ignored down swipe because scrollTop > 1', { scrollTop: element.scrollTop });
-      } else {
-        const direction = determineSwipeDirection(deltaX, deltaY);
-
-        switch (direction) {
-          case 'down':
-            onSwipeDownRef.current?.();
-            break;
-          case 'left':
-            onSwipeLeftRef.current?.();
-            break;
-          case 'right':
-            onSwipeRightRef.current?.();
-            break;
-        }
-      }
-
-      isDraggingRef.current = false;
-      startXRef.current = 0;
-      startYRef.current = 0;
-      currentXRef.current = 0;
-      currentYRef.current = 0;
-    };
-
-    // non-passive listener を登録
-    element.addEventListener('touchstart', handleTouchStart, { passive: true });
-    element.addEventListener('touchmove', handleTouchMove, { passive: false });
-    element.addEventListener('touchend', handleTouchEnd);
-
-    return () => {
-      element.removeEventListener('touchstart', handleTouchStart);
-      element.removeEventListener('touchmove', handleTouchMove);
-      element.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, [containerRef, determineSwipeDirection, itemId]);
-
-
-  const onMouseDown = useCallback((e: React.MouseEvent) => {
-    startXRef.current = e.clientX;
-    startYRef.current = e.clientY;
-    currentXRef.current = e.clientX;
-    currentYRef.current = e.clientY;
-    isDraggingRef.current = true;
-  }, []);
-
-  const onMouseMove = useCallback((e: MouseEvent) => {
-    if (!isDraggingRef.current) return;
-    currentXRef.current = e.clientX;
-    currentYRef.current = e.clientY;
-  }, []);
-
-  const onMouseUp = useCallback(() => {
+  /**
+   * スワイプ終了時の共通処理
+   */
+  const processSwipeEnd = useCallback(() => {
     if (!isDraggingRef.current) return;
 
     const deltaX = currentXRef.current - startXRef.current;
     const deltaY = currentYRef.current - startYRef.current;
 
-    const direction = determineSwipeDirection(deltaX, deltaY);
+    // 下方向スワイプの場合、開始時のスクロール位置をチェック
+    if (deltaY > 0 && startScrollTopRef.current > 20) {
+      // スクロール途中からの下スワイプは無視
+    } else {
+      const direction = determineSwipeDirection(deltaX, deltaY);
 
-    switch (direction) {
-      case 'down':
-        onSwipeDownRef.current?.();
-        break;
-      case 'left':
-        onSwipeLeftRef.current?.();
-        break;
-      case 'right':
-        onSwipeRightRef.current?.();
-        break;
+      switch (direction) {
+        case 'down':
+          onSwipeDownRef.current?.();
+          break;
+        case 'left':
+          onSwipeLeftRef.current?.();
+          break;
+        case 'right':
+          onSwipeRightRef.current?.();
+          break;
+      }
     }
 
     isDraggingRef.current = false;
@@ -235,7 +130,68 @@ export const useSwipeNavigation = ({
     currentYRef.current = 0;
   }, [determineSwipeDirection]);
 
-  // グローバルなマウスリスナー登録
+  // ===== 全て React Event Handlers (JSX props として直接アタッチ) =====
+
+  const onTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      const touch = e.touches[0];
+      startXRef.current = touch.clientX;
+      startYRef.current = touch.clientY;
+      currentXRef.current = touch.clientX;
+      currentYRef.current = touch.clientY;
+      isDraggingRef.current = true;
+      const el = containerRef?.current;
+      startScrollTopRef.current = el ? el.scrollTop : 0;
+    },
+    [containerRef]
+  );
+
+  const onTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (!isDraggingRef.current) return;
+      const touch = e.touches[0];
+      currentXRef.current = touch.clientX;
+      currentYRef.current = touch.clientY;
+
+      const deltaY = currentYRef.current - startYRef.current;
+      const el = containerRef?.current;
+
+      // スクロール最上部で下スワイプ時、プルトゥリフレッシュを防止
+      if (el && el.scrollTop <= 1 && deltaY > 0) {
+        e.preventDefault();
+      }
+    },
+    [containerRef]
+  );
+
+  const onTouchEnd = useCallback(() => {
+    processSwipeEnd();
+  }, [processSwipeEnd]);
+
+  const onMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      startXRef.current = e.clientX;
+      startYRef.current = e.clientY;
+      currentXRef.current = e.clientX;
+      currentYRef.current = e.clientY;
+      isDraggingRef.current = true;
+      const el = containerRef?.current;
+      startScrollTopRef.current = el ? el.scrollTop : 0;
+    },
+    [containerRef]
+  );
+
+  // mousemove / mouseup: マウス操作のグローバルリスナー
+  const onMouseMove = useCallback((e: MouseEvent) => {
+    if (!isDraggingRef.current) return;
+    currentXRef.current = e.clientX;
+    currentYRef.current = e.clientY;
+  }, []);
+
+  const onMouseUp = useCallback(() => {
+    processSwipeEnd();
+  }, [processSwipeEnd]);
+
   useEffect(() => {
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
@@ -246,11 +202,9 @@ export const useSwipeNavigation = ({
   }, [onMouseMove, onMouseUp]);
 
   return {
-    // コンポーネント側でアタッチする必要がなくなったため空関数を返す
-    // （既存コードの変更を最小限にするための互換性維持）
-    onTouchStart: () => {},
-    onTouchMove: () => {},
-    onTouchEnd: () => {},
+    onTouchStart,
+    onTouchMove,
+    onTouchEnd,
     onMouseDown,
   };
 };

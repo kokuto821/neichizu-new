@@ -6,6 +6,9 @@ import { FeatureType, isHyakumeizan, isWGeopark } from '@/app/feature/map/utils/
 import { useCardCarouselScroll } from '@/app/feature/map/hooks/useCardCarouselScroll';
 import { useCardSwipe } from '@/app/feature/map/hooks/useCardSwipe';
 
+import { NeiCustomScrollbar } from './NeiCustomScrollbar';
+import { NeiCompactCard } from './NeiCompactCard';
+
 type Props = {
   features: FeatureType[];
   selectedFeature: FeatureType | null;
@@ -19,17 +22,22 @@ const style = {
     'flex overflow-x-auto gap-3 w-full',
     'snap-x snap-mandatory',
     'scroll-smooth',
-    'pb-2',
+    // モバイル: 1枚中央表示 (カード幅75vw、左右12.5vw)
+    'pl-[12.5vw] pr-[12.5vw]',
+    // PC: 3枚表示 (カード幅28vw、左右36vw)
+    'md:pl-[36vw] md:pr-[36vw]',
+    'hidden-scrollbar',
+    '[-webkit-overflow-scrolling:touch]',
   ].join(' '),
   cardWrapper: [
     'flex-shrink-0',
-    'w-[85%]',
+    'w-[75vw]',       // モバイル: 画面幅の75%
+    'md:w-[28vw]',    // PC: 画面幅の28% (3枚表示用)
     'snap-center',
-    'p-3', // ring用の余白
+    'px-1 py-3',
   ].join(' '),
-  cardOuter: 'rounded-xl', // ringはこの外側ラッパーに付与
-  card: 'flex items-center bg-ecruWhite rounded-xl shadow-md overflow-hidden cursor-pointer',
-  cardImage: 'aspect-square h-[12.5vh] flex-shrink-0 rounded-l-xl object-cover block',
+  cardOuter: 'rounded-xl transition-all duration-300',
+  cardSelected: 'ring-2 ring-accentOrange z-10',
 };
 
 /**
@@ -48,7 +56,7 @@ export const NeiCardCarousel: FC<Props> = ({
 }) => {
   const count = features.length;
 
-  const { scrollRef, handleScroll, extendedFeatures } = useCardCarouselScroll({
+  const { scrollRef, handleScroll, handleWheel, extendedFeatures } = useCardCarouselScroll({
     features,
     selectedFeature,
     onFeatureChange,
@@ -63,64 +71,44 @@ export const NeiCardCarousel: FC<Props> = ({
 
   const renderCard = (feature: FeatureType, isSelected: boolean) => (
     <motion.div
-      className={`${style.cardOuter} ${isSelected ? 'ring-4 ring-accentOrange' : ''}`}
-      animate={{ scale: isSelected ? 1.05 : 1 }}
-      transition={{ duration: 0.3 }}
+      className={`${style.cardOuter} ${isSelected ? style.cardSelected : ''}`}
+      animate={{
+        scale: isSelected ? 1.05 : 0.95,
+        opacity: isSelected ? 1 : 0.8,
+      }}
+      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
     >
-      <div
-        className={style.card}
+      <NeiCompactCard
+        feature={feature}
+        isSelected={isSelected}
+        onExpand={onExpand}
         onClick={isSelected ? onExpand : () => onFeatureChange(feature)}
-      >
-        {feature.image && (
-          <img
-            className={style.cardImage}
-            src={feature.image}
-            alt={feature.name}
-          />
-        )}
-        <div className="flex flex-1 flex-col pt-[2px] pr-0 pb-[2px] pl-[10px] min-w-0">
-          {isWGeopark(feature) ? (
-            <GeoparkFeatureContent
-              name={feature.name}
-              area={feature.area}
-            />
-          ) : isHyakumeizan(feature) ? (
-            <MountainFeatureContent
-              name={feature.name}
-              area={feature.area}
-              height={feature.height}
-            />
-          ) : null}
-        </div>
-      </div>
+      />
     </motion.div>
   );
 
   return (
-    <div
-      ref={scrollRef}
-      className={style.container}
-      onScroll={handleScroll}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-      style={{
-        scrollPaddingLeft: '7.5%',
-        scrollPaddingRight: '7.5%',
-        paddingLeft: '7.5%',
-        paddingRight: '7.5%',
-        WebkitOverflowScrolling: 'touch',
-        msOverflowStyle: 'none',
-        scrollbarWidth: 'none',
-      }}
-    >
-      {extendedFeatures.map((feature, index) => (
-        <div
-          key={`carousel-${index}-${feature.id}`}
-          className={style.cardWrapper}
-        >
-          {renderCard(feature, feature.id === selectedFeature?.id)}
-        </div>
-      ))}
-    </div>
+    <div className="flex flex-col w-full">
+      <div
+        ref={scrollRef}
+        className={style.container}
+        onScroll={handleScroll}
+        onWheel={handleWheel}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        {
+          extendedFeatures.map((feature, index) => (
+            <div
+              key={`carousel-${index}-${feature.id}`}
+              className={style.cardWrapper}
+            >
+              {renderCard(feature, feature.id === selectedFeature?.id)}
+            </div>
+          ))
+        }
+      </div>
+      <NeiCustomScrollbar containerRef={scrollRef} />
+    </div >
   );
 };

@@ -24,8 +24,8 @@ interface ExpandedCardProps {
 const style = {
   overlay: 'fixed inset-0 bg-black/50 backdrop-blur-sm z-40',
   wrapper:
-    'fixed inset-0 z-50 flex items-center justify-center pointer-events-auto overscroll-none touch-none',
-  container: `${INNER_WIDTH_CLASS} h-[80vh] rounded-2xl shadow-2xl bg-ecruWhite flex flex-col overflow-y-auto overscroll-none pointer-events-auto relative touch-pan-y`,
+    'fixed inset-0 z-50 flex items-center justify-center pointer-events-auto overscroll-none',
+  container: `${INNER_WIDTH_CLASS} h-[80vh] rounded-2xl shadow-2xl bg-ecruWhite flex flex-col overflow-y-auto overscroll-none pointer-events-auto relative touch-pan-y hidden-scrollbar`,
   imageWrapper: 'relative w-full flex-shrink-0',
   contentWrapper: 'p-4 md:p-6',
   title: 'text-2xl md:text-3xl font-bold',
@@ -70,11 +70,10 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({
       onSwipeDown: onClose,
       onSwipeLeft: canGoNext ? onGoNext : undefined,
       onSwipeRight: canGoPrev ? onGoPrev : undefined,
-      threshold: 100,
+      threshold: 50,
       containerRef: containerRef,
       disableLeftSwipe: !canGoNext,
       disableRightSwipe: !canGoPrev,
-      itemId: displayFeature?.id,
     });
 
   const handleCardWrapperClick = (
