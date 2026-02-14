@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { Map, MapBrowserEvent } from 'ol';
 import Point from 'ol/geom/Point';
 import Feature, { FeatureLike } from 'ol/Feature';
-import { WGeoparkFromSelected } from '../../geopark/types/types';
-import { HyakumeizanFromSelected } from '../types/types';
+import { WGeoparkFromSelected } from '../types/geoparkTypes';
+import { HyakumeizanFromSelected } from '../types/hyakumeizanTypes';
 
 // 型ガード関数
 const isFeature = (feature: FeatureLike): feature is Feature => {
@@ -96,4 +96,3 @@ export const useMapClick = ({ map, onClickLoading }: Props) => {
     setSelectedFeature,
   };
 };
-

@@ -1,14 +1,16 @@
-import { FeatureTitle } from '../atoms/FeatureTitle';
-import { FeatureSubtitle } from '../atoms/FeatureSubtitle';
+import { FeatureTitle } from '@/app/components/atoms/FeatureTitle';
+import { FeatureSubtitle } from '@/app/components/atoms/FeatureSubtitle';
 
 type Props = {
   name: string;
   area: string;
+  height?: string;
 };
 
-export const GeoparkFeatureContent = ({
+export const MountainFeatureContent = ({
   name,
   area,
+  height,
 }: Props) => {
   const style = {
     container: 'pl-[10px]',
@@ -18,7 +20,9 @@ export const GeoparkFeatureContent = ({
   return (
     <div className={style.container}>
       <FeatureTitle>{name}</FeatureTitle>
-      <FeatureSubtitle>{area}</FeatureSubtitle>
+      <FeatureSubtitle>
+        {area} {height}
+      </FeatureSubtitle>
       <div className={style.innerWrapper}>
       </div>
     </div>

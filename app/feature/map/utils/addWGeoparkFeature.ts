@@ -1,8 +1,8 @@
 import VectorSource from 'ol/source/Vector';
-import { geoparkIcon } from './styles';
+import { geoparkIcon } from './geoparkStyles';
 import { fetchWGeoparkData } from './fetchWGeoparkData';
-import { WGeoparkFromSelected } from '../types/types';
-import { addFeatures } from '../../shared/addFeatureUtils';
+import { WGeoparkFromSelected } from '../types/geoparkTypes';
+import { addFeatures } from '../shared/addFeatureUtils';
 
 /**
  * ジオパークのフィーチャーを地図に追加する

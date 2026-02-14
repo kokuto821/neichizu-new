@@ -1,6 +1,6 @@
-import { usePopupVisible, FADE_IN_DELAY, FADE_OUT_DURATION } from '@/app/feature/map/hyakumeizan/hooks/usePopupVisible';
-import { WGeoparkFromSelected } from '@/app/feature/map/geopark/types/types';
-import { HyakumeizanFromSelected } from '@/app/feature/map/hyakumeizan/types/types';
+import { usePopupVisible, FADE_IN_DELAY, FADE_OUT_DURATION } from '@/app/feature/map/hooks/usePopupVisible';
+import { WGeoparkFromSelected } from '@/app/feature/map/types/geoparkTypes';
+import { HyakumeizanFromSelected } from '@/app/feature/map/types/hyakumeizanTypes';
 import { GeoparkFeatureContent } from './GeoparkFeatureContent';
 import { MountainFeatureContent } from './MountainFeatureContent';
 import { motion, AnimatePresence } from 'framer-motion';

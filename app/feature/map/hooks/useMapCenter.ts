@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { Map } from 'ol';
 import { fromLonLat } from 'ol/proj';
-import { HyakumeizanFromSelected } from '@/app/feature/map/hyakumeizan/types/types';
-import { WGeoparkFromSelected } from '@/app/feature/map/geopark/types/types';
+import { HyakumeizanFromSelected } from '@/app/feature/map/types/hyakumeizanTypes';
+import { WGeoparkFromSelected } from '@/app/feature/map/types/geoparkTypes';
 import Point from 'ol/geom/Point';
 import { Geometry } from 'ol/geom';
 

@@ -1,14 +1,14 @@
-import { WGeoparkFromSelected } from '@/app/feature/map/geopark/types/types';
-import { HyakumeizanFromSelected } from '@/app/feature/map/hyakumeizan/types/types';
+import { WGeoparkFromSelected } from '@/app/feature/map/types/geoparkTypes';
+import { HyakumeizanFromSelected } from '@/app/feature/map/types/hyakumeizanTypes';
 import { motion, AnimatePresence } from 'framer-motion';
-import { NeiCloseButton } from '../atoms/NeiCloseButton';
-import { usePopupVisible } from '@/app/feature/map/hyakumeizan/hooks/usePopupVisible';
-import { LinkIcon } from '../atoms/LinkIcon';
+import { NeiCloseButton } from '@/app/components/atoms/NeiCloseButton';
+import { usePopupVisible } from '@/app/feature/map/hooks/usePopupVisible';
+import { LinkIcon } from '@/app/components/atoms/LinkIcon';
 import { INNER_WIDTH_CLASS } from '@/app/styles/layoutConstants';
 import { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Map } from 'ol';
-import { useSwipeNavigation } from '@/app/feature/map/hyakumeizan/hooks/useSwipeNavigation';
+import { useSwipeNavigation } from '@/app/feature/map/hooks/useSwipeNavigation';
 
 interface ExpandedCardProps {
   selectedFeature: HyakumeizanFromSelected | WGeoparkFromSelected | null;

@@ -1,8 +1,8 @@
 import VectorSource from 'ol/source/Vector';
-import { mountainIcon } from './styles';
-import { HyakumeizanFromSelected } from '../types/types';
+import { mountainIcon } from './hyakumeizanStyles';
+import { HyakumeizanFromSelected } from '../types/hyakumeizanTypes';
 import { fetchHyakumeizanData } from './fetchHyakumeizanData';
-import { addFeatures } from '../../shared/addFeatureUtils';
+import { addFeatures } from '../shared/addFeatureUtils';
 
 /**
  * 百名山のフィーチャーを地図に追加する

@@ -1,14 +1,14 @@
 // app/feature/map/hyakumeizan/page.tsx
 'use client';
 import { useEffect, useState, useCallback } from 'react';
-import { MapRenderer } from '@/app/feature/map/hyakumeizan/component/MapRenderer';
-import { MapToolbar } from './components/molecules/MapToolbar';
-import { useInitializeMap } from './feature/map/hyakumeizan/hooks/useInitializeMap';
-import { useMapClick } from './feature/map/hyakumeizan/hooks/useMapClick';
-import { useImageLoader } from './feature/map/hyakumeizan/hooks/useImageLoader';
+import { MapRenderer } from '@/app/feature/map/components/MapRenderer';
+import { MapToolbar } from '@/app/feature/map/components/MapToolbar';
+import { useInitializeMap } from './feature/map/hooks/useInitializeMap';
+import { useMapClick } from './feature/map/hooks/useMapClick';
+import { useImageLoader } from './feature/map/hooks/useImageLoader';
 import { BottomNavigation } from './components/molecules/BottomNavigation';
 import { LoadingSpinner } from './components/molecules/LoadingSpinner';
-import { NeiCard } from './components/molecules/NeiCard';
+import { NeiCard } from '@/app/feature/map/components/NeiCard';
 import { useMapLayers } from './hooks/useMapLayers';
 import { BottomUIContainer } from './components/molecules/BottomUIContainer';
 

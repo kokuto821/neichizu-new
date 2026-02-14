@@ -1,10 +1,10 @@
 import { FC, useState, useCallback } from 'react';
 import { NeiCardCarousel } from './NeiCardCarousel';
 import { NeiExpandedCard } from './NeiExpandedCard';
-import { WGeoparkFromSelected } from '@/app/feature/map/geopark/types/types';
-import { HyakumeizanFromSelected } from '@/app/feature/map/hyakumeizan/types/types';
+import { WGeoparkFromSelected } from '@/app/feature/map/types/geoparkTypes';
+import { HyakumeizanFromSelected } from '@/app/feature/map/types/hyakumeizanTypes';
 import { Map } from 'ol';
-import { useFeatureNavigation } from '@/app/feature/map/hyakumeizan/hooks/useFeatureNavigation';
+import { useFeatureNavigation } from '@/app/feature/map/hooks/useFeatureNavigation';
 import { useMapCenter } from '@/app/feature/map/hooks/useMapCenter';
 
 type FeatureType = HyakumeizanFromSelected | WGeoparkFromSelected;
