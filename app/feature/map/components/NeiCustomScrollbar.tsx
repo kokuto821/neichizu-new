@@ -7,7 +7,9 @@ type Props = {
 
 const style = {
   track: `relative ${INNER_WIDTH_CLASS} mx-auto h-1 mt-1 bg-transparent rounded-full transition-opacity duration-300`,
-  thumb: 'absolute top-0 bottom-0 h-full rounded-full cursor-pointer hover:opacity-80 transition-opacity bg-semiDarkGreen',
+  trackVisible: 'opacity-100',
+  trackHidden: 'opacity-0',
+  thumb: 'absolute top-0 bottom-0 h-full rounded-full cursor-pointer hover:opacity-80 transition-opacity bg-accentLightOrange',
 };
 
 export const NeiCustomScrollbar: FC<Props> = ({ containerRef }) => {
@@ -141,7 +143,7 @@ export const NeiCustomScrollbar: FC<Props> = ({ containerRef }) => {
   return (
     <div
       ref={trackRef}
-      className={`${style.track} ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+      className={`${style.track} ${isVisible ? style.trackVisible : style.trackHidden}`}
       onWheel={handleWheel}
     >
       <div
@@ -149,7 +151,6 @@ export const NeiCustomScrollbar: FC<Props> = ({ containerRef }) => {
         style={{
           width: `${thumbWidthRatio}%`,
           left: `${progress * (100 - thumbWidthRatio)}%`,
-          backgroundColor: 'var(--semiDarkGreen)'
         }}
         onMouseDown={handleDragStart}
         onTouchStart={handleDragStart}

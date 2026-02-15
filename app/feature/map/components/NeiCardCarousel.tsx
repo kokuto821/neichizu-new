@@ -37,7 +37,7 @@ const style = {
     'px-1 py-3',
   ].join(' '),
   cardOuter: 'rounded-xl transition-all duration-300',
-  cardSelected: 'ring-2 ring-accentOrange z-10',
+  cardSelected: 'ring-4 ring-accentOrange z-10',
 };
 
 /**
