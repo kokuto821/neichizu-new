@@ -12,7 +12,7 @@ type Props = {
 export const BottomUIContainer = ({ children }: Props) => {
   const style = {
     absoluteContainer: `absolute bottom-0 left-1/2 -translate-x-1/2 pb-4 ${CONTAINER_WIDTH_CLASS}`,
-    flexContainer: `flex flex-col gap-3 items-center`
+    flexContainer: `flex flex-col gap-2 items-center`
   }
   return (
     <div className={style.absoluteContainer}>
