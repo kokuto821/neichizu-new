@@ -1,4 +1,5 @@
 import { FC, useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { NeiCardCarousel } from './NeiCardCarousel';
 import { NeiExpandedCard } from './NeiExpandedCard';
 import { WGeoparkFromSelected } from '@/app/feature/map/types/geoparkTypes';
@@ -14,6 +15,21 @@ type Props = {
   map: Map | null;
   onFeatureChange: (feature: FeatureType | null) => void;
   onSwipeLoadingChange?: (loading: boolean) => void;
+};
+
+// カルーセル表示/非表示アニメーション
+const carouselVariants = {
+  hidden: { y: 40, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { type: 'spring' as const, stiffness: 300, damping: 30 },
+  },
+  exit: {
+    y: 40,
+    opacity: 0,
+    transition: { duration: 0.2, ease: 'easeIn' as const },
+  },
 };
 
 export const NeiCard: FC<Props> = ({ selectedFeature, map, onFeatureChange, onSwipeLoadingChange }) => {
@@ -72,17 +88,30 @@ export const NeiCard: FC<Props> = ({ selectedFeature, map, onFeatureChange, onSw
     onFeatureChange(null);
   }, [onFeatureChange]);
 
+  const showCarousel = !isExpanded && typedFeatures.length > 0 && !!selectedFeature;
+
   return (
     <>
-      {!isExpanded && typedFeatures.length > 0 && selectedFeature && (
-        <NeiCardCarousel
-          features={typedFeatures}
-          selectedFeature={selectedFeature}
-          onExpand={handleExpand}
-          onFeatureChange={handleCarouselFeatureChange}
-          onDeselect={handleDeselect}
-        />
-      )}
+      <AnimatePresence>
+        {showCarousel && (
+          <motion.div
+            key="carousel"
+            className="w-full"
+            variants={carouselVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <NeiCardCarousel
+              features={typedFeatures}
+              selectedFeature={selectedFeature}
+              onExpand={handleExpand}
+              onFeatureChange={handleCarouselFeatureChange}
+              onDeselect={handleDeselect}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
       <NeiExpandedCard
         selectedFeature={selectedFeature}
         isExpanded={isExpanded}

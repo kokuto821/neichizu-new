@@ -8,7 +8,7 @@ import { INNER_WIDTH_CLASS } from '@/app/styles/layoutConstants';
 import { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Map } from 'ol';
-import { useSwipeNavigation } from '@/app/feature/map/hooks/useSwipeNavigation';
+import { useSwipe } from '@/app/hooks/useSwipe';
 
 interface ExpandedCardProps {
   selectedFeature: HyakumeizanFromSelected | WGeoparkFromSelected | null;
@@ -66,7 +66,7 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({
 
   // スワイプナビゲーション
   const { onTouchStart, onTouchMove, onTouchEnd, onMouseDown } =
-    useSwipeNavigation({
+    useSwipe({
       onSwipeDown: onClose,
       onSwipeLeft: canGoNext ? onGoNext : undefined,
       onSwipeRight: canGoPrev ? onGoPrev : undefined,
