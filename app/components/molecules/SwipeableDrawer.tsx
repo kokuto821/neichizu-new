@@ -28,9 +28,8 @@ export const SwipeableDrawer = ({ imagePath, children }: Props) => {
     onTouchEnd: swipeOnTouchEnd,
     onMouseDown: swipeOnMouseDown,
   } = useSwipe({
-    onClose: handleClose,
+    onSwipeDown: handleClose,
     threshold: 100,
-    axis: 'y',
     containerRef: drawerRef,
   });
 

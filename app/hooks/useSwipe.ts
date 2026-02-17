@@ -1,136 +1,206 @@
-import { useRef, useCallback, useEffect } from 'react';
-import { getPointerPosition, preventPullToRefresh } from '../utils/swipeUtils';
+import { useRef, useCallback, useEffect, useState } from 'react';
+import {
+  determineSwipeDirection,
+  shouldIgnoreDownSwipe,
+} from '@/app/feature/map/utils/swipeUtils';
 
 type Props = {
-  /** スワイプ完了時のコールバック */
-  onClose?: () => void;
-  /** スワイプ検出の閾値（デフォルト: 100px） */
+  /** 上スワイプ時のコールバック（展開） */
+  onSwipeUp?: () => void;
+  /** 下スワイプ時のコールバック（閉じる） */
+  onSwipeDown?: () => void;
+  /** 左スワイプ時のコールバック（次へ） */
+  onSwipeLeft?: () => void;
+  /** 右スワイプ時のコールバック（前へ） */
+  onSwipeRight?: () => void;
+  /** スワイプ検出の閾値（デフォルト: 50px） */
   threshold?: number;
-  /** スワイプ検出の軸（デフォルト: 'y'） */
-  axis?: 'x' | 'y';
   /** スワイプ操作を監視するコンテナ要素の ref */
   containerRef?: React.RefObject<HTMLElement | null>;
+  /** 上スワイプを無効化 */
+  disableUpSwipe?: boolean;
+  /** 下スワイプを無効化 */
+  disableDownSwipe?: boolean;
+  /** 左スワイプを無効化 */
+  disableLeftSwipe?: boolean;
+  /** 右スワイプを無効化 */
+  disableRightSwipe?: boolean;
 };
 
 type UseSwipeReturn = {
-  /** タッチ／マウス開始ハンドラ */
   onTouchStart: (e: React.TouchEvent) => void;
-  /** タッチ／マウス移動ハンドラ */
   onTouchMove: (e: React.TouchEvent) => void;
-  /** タッチ／マウス終了ハンドラ */
   onTouchEnd: () => void;
-  /** マウスダウンハンドラ */
   onMouseDown: (e: React.MouseEvent) => void;
-  /** スワイプ開始位置 */
-  startPositionRef: React.RefObject<number>;
+  /** スワイプ中のY方向移動量（ビジュアルフィードバック用） */
+  dragDeltaY: number;
 };
 
 /**
- * タッチ／マウスのスワイプ（開始／移動／終了）ハンドラを提供するフック
- * 位置やドラッグ状態は refs で管理し再レンダリングを避ける
- * グローバルなマウスイベントリスナーは一度だけ登録し、refs を参照して処理する
+ * 上下左右のスワイプナビゲーションを提供するフック
+ *
+ * 全てのタッチ/マウスイベントを React イベントハンドラーとして返す。
+ * addEventListener + useEffect の方式だと、AnimatePresence 内の要素の
+ * マウント/アンマウントタイミングでリスナーが登録されない問題を回避。
  */
 export const useSwipe = ({
-  onClose,
-  threshold = 100,
-  axis = 'y',
+  onSwipeUp,
+  onSwipeDown,
+  onSwipeLeft,
+  onSwipeRight,
+  threshold = 50,
   containerRef,
+  disableUpSwipe = false,
+  disableDownSwipe = false,
+  disableLeftSwipe = false,
+  disableRightSwipe = false,
 }: Props): UseSwipeReturn => {
-  const startPositionRef = useRef<number>(0);
-  const currentPositionRef = useRef<number>(0);
+  const startXRef = useRef<number>(0);
+  const startYRef = useRef<number>(0);
+  const currentXRef = useRef<number>(0);
+  const currentYRef = useRef<number>(0);
   const isDraggingRef = useRef(false);
+  const startScrollTopRef = useRef<number>(0);
+  const [dragDeltaY, setDragDeltaY] = useState(0);
 
-  // 最新の threshold/onClose を refs に保持して、グローバルハンドラから参照できるようにする
-  const thresholdValueRef = useRef(threshold);
-  const onCloseCallbackRef = useRef(onClose);
+  // 最新のコールバックを refs に保持
+  const onSwipeUpRef = useRef(onSwipeUp);
+  const onSwipeDownRef = useRef(onSwipeDown);
+  const onSwipeLeftRef = useRef(onSwipeLeft);
+  const onSwipeRightRef = useRef(onSwipeRight);
+
   useEffect(() => {
-    thresholdValueRef.current = threshold;
-  }, [threshold]);
+    onSwipeUpRef.current = onSwipeUp;
+  }, [onSwipeUp]);
+
   useEffect(() => {
-    onCloseCallbackRef.current = onClose;
-  }, [onClose]);
+    onSwipeDownRef.current = onSwipeDown;
+  }, [onSwipeDown]);
+
+  useEffect(() => {
+    onSwipeLeftRef.current = onSwipeLeft;
+  }, [onSwipeLeft]);
+
+  useEffect(() => {
+    onSwipeRightRef.current = onSwipeRight;
+  }, [onSwipeRight]);
 
   /**
-   * 指定した閾値（または現在の threshold）で閉じる判定を行い、true/false を返す
-   * @param delta 移動量
-   * @param optThreshold オプションの閾値
-   * @return boolean 閾値を超えていれば true、そうでなければ false
+   * スワイプ終了時の共通処理
    */
-  const checkThreshold = useCallback(
-    (delta: number, optThreshold?: number): boolean => {
-      // optThreshold が数値で渡されていればそれを使い、そうでなければ thresholdValueRef.current（既定の閾値）を使う
-      const effectiveThreshold = optThreshold ?? thresholdValueRef.current;
-      // 差分が閾値を超えているか判定
-      const isOverThreshold = delta > effectiveThreshold;
-      return isOverThreshold;
-    },
-    []
-  );
+  const processSwipeEnd = useCallback(() => {
+    if (!isDraggingRef.current) return;
+
+    const deltaX = currentXRef.current - startXRef.current;
+    const deltaY = currentYRef.current - startYRef.current;
+
+    if (!shouldIgnoreDownSwipe(deltaY, startScrollTopRef.current)) {
+      const direction = determineSwipeDirection({
+        deltaX,
+        deltaY,
+        threshold,
+        disableUpSwipe,
+        disableDownSwipe,
+        disableLeftSwipe,
+        disableRightSwipe,
+      });
+
+      switch (direction) {
+        case 'up':
+          onSwipeUpRef.current?.();
+          break;
+        case 'down':
+          onSwipeDownRef.current?.();
+          break;
+        case 'left':
+          onSwipeLeftRef.current?.();
+          break;
+        case 'right':
+          onSwipeRightRef.current?.();
+          break;
+      }
+    }
+
+    isDraggingRef.current = false;
+    startXRef.current = 0;
+    startYRef.current = 0;
+    currentXRef.current = 0;
+    currentYRef.current = 0;
+    setDragDeltaY(0);
+  }, [
+    threshold,
+    disableUpSwipe,
+    disableDownSwipe,
+    disableLeftSwipe,
+    disableRightSwipe,
+  ]);
+
+  // ===== 全て React Event Handlers (JSX props として直接アタッチ) =====
 
   const onTouchStart = useCallback(
-    (touchEvent: React.TouchEvent): void => {
-      // タッチ開始: 開始位置を保存しドラッグ開始フラグを立てる
-      startPositionRef.current = getPointerPosition(touchEvent, axis);
-      currentPositionRef.current = startPositionRef.current;
+    (e: React.TouchEvent) => {
+      const touch = e.touches[0];
+      startXRef.current = touch.clientX;
+      startYRef.current = touch.clientY;
+      currentXRef.current = touch.clientX;
+      currentYRef.current = touch.clientY;
       isDraggingRef.current = true;
+      const el = containerRef?.current;
+      startScrollTopRef.current = el ? el.scrollTop : 0;
     },
-    [axis]
+    [containerRef]
   );
 
   const onTouchMove = useCallback(
-    (touchEvent: React.TouchEvent): void => {
+    (e: React.TouchEvent) => {
       if (!isDraggingRef.current) return;
+      const touch = e.touches[0];
+      currentXRef.current = touch.clientX;
+      currentYRef.current = touch.clientY;
 
-      preventPullToRefresh(
-        touchEvent,
-        startPositionRef.current,
-        containerRef?.current
-      );
+      const deltaY = currentYRef.current - startYRef.current;
+      const el = containerRef?.current;
 
-      currentPositionRef.current = getPointerPosition(touchEvent, axis);
+      // Y方向の移動量を更新（±20pxに制限）
+      const clampedDeltaY = Math.max(-20, Math.min(20, deltaY));
+      setDragDeltaY(clampedDeltaY);
+
+      // スクロール最上部で下スワイプ時、プルトゥリフレッシュを防止
+      if (el && el.scrollTop <= 1 && deltaY > 0) {
+        e.preventDefault();
+      }
     },
-    [axis, containerRef]
+    [containerRef]
   );
 
-  const onTouchEnd = useCallback((): void => {
-    // タッチ終了: 移動量を判定して onClose を呼ぶ
-    if (!isDraggingRef.current) return;
-    const diff = currentPositionRef.current - startPositionRef.current;
-    if (checkThreshold(diff)) onCloseCallbackRef.current?.();
-    isDraggingRef.current = false;
-    startPositionRef.current = 0;
-    currentPositionRef.current = 0;
-  }, [checkThreshold]);
+  const onTouchEnd = useCallback(() => {
+    processSwipeEnd();
+  }, [processSwipeEnd]);
 
   const onMouseDown = useCallback(
-    (mouseEvent: React.MouseEvent): void => {
-      // マウスダウン: デスクトップ向けの開始処理
-      startPositionRef.current = getPointerPosition(mouseEvent, axis);
-      currentPositionRef.current = startPositionRef.current;
+    (e: React.MouseEvent) => {
+      startXRef.current = e.clientX;
+      startYRef.current = e.clientY;
+      currentXRef.current = e.clientX;
+      currentYRef.current = e.clientY;
       isDraggingRef.current = true;
+      const el = containerRef?.current;
+      startScrollTopRef.current = el ? el.scrollTop : 0;
     },
-    [axis]
+    [containerRef]
   );
 
-  const onMouseMove = useCallback(
-    (mouseEvent: MouseEvent): void => {
-      if (!isDraggingRef.current) return;
-      currentPositionRef.current =
-        axis === 'y' ? mouseEvent.clientY : mouseEvent.clientX;
-    },
-    [axis]
-  );
-
-  const onMouseUp = useCallback((): void => {
+  // mousemove / mouseup: マウス操作のグローバルリスナー
+  const onMouseMove = useCallback((e: MouseEvent) => {
     if (!isDraggingRef.current) return;
-    const diff = currentPositionRef.current - startPositionRef.current;
-    if (checkThreshold(diff)) onCloseCallbackRef.current?.();
-    isDraggingRef.current = false;
-    startPositionRef.current = 0;
-    currentPositionRef.current = 0;
-  }, [checkThreshold]);
+    currentXRef.current = e.clientX;
+    currentYRef.current = e.clientY;
+  }, []);
 
-  //グローバルなマウスリスナー（mousemove, mouseup）を一度だけ登録
+  const onMouseUp = useCallback(() => {
+    processSwipeEnd();
+  }, [processSwipeEnd]);
+
   useEffect(() => {
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
@@ -138,13 +208,13 @@ export const useSwipe = ({
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
     };
-  }, [axis, onMouseMove, onMouseUp]);
+  }, [onMouseMove, onMouseUp]);
 
   return {
     onTouchStart,
     onTouchMove,
     onTouchEnd,
     onMouseDown,
-    startPositionRef,
+    dragDeltaY,
   };
 };
