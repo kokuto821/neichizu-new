@@ -1,5 +1,9 @@
 import { useRef, useCallback, useState, useEffect } from 'react';
 import { FeatureType } from '../utils/featureUtils';
+import { calculateCardWidth, applyScroll } from '../utils/carouselUtils';
+
+const SCROLL_DEBOUNCE_MS = 50;
+const WHEEL_COOLDOWN_MS = 400;
 
 type UseCardCarouselScrollProps = {
   features: FeatureType[];
@@ -25,39 +29,18 @@ export const useCardCarouselScroll = ({
   const extendedFeatures: FeatureType[] =
     count > 0 ? [features[count - 1], ...features, features[0]] : [];
 
-  // カード幅を計算するヘルパー
-  const getCardWidth = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el || el.children.length === 0) return 0;
-
-    // scrollWidth / length はpaddingが含まれる場合に不正確になるため、
-    // 実際の要素間の距離(幅 + gap)を計測する
-    if (el.children.length >= 2) {
-      const first = el.children[0] as HTMLElement;
-      const second = el.children[1] as HTMLElement;
-      return second.offsetLeft - first.offsetLeft;
-    }
-
-    // 要素が1つしかない場合(通常ありえないが念のため)
-    return (el.children[0] as HTMLElement).offsetWidth;
-  }, []);
-
   // 特定のフィーチャーインデックスにスクロール（extended配列のインデックス = 実インデックス + 1）
   const scrollToFeatureIndex = useCallback(
     (realIndex: number, smooth: boolean = false) => {
       const el = scrollRef.current;
       if (!el) return;
-      const cardWidth = getCardWidth();
+      const cardWidth = calculateCardWidth(el);
       if (cardWidth === 0) return;
 
       const extendedIndex = realIndex + 1; // クローン分のオフセット
-      el.style.scrollBehavior = smooth ? 'smooth' : 'auto';
-      el.scrollLeft = cardWidth * extendedIndex;
-      if (!smooth) {
-        el.style.scrollBehavior = '';
-      }
+      applyScroll(el, cardWidth * extendedIndex, smooth);
     },
-    [getCardWidth]
+    []
   );
 
   // スクロール停止時の処理：ループジャンプ & フィーチャー通知
@@ -70,16 +53,14 @@ export const useCardCarouselScroll = ({
     }
 
     scrollTimeoutRef.current = setTimeout(() => {
-      const cardWidth = getCardWidth();
+      const cardWidth = calculateCardWidth(el);
       if (cardWidth === 0) return;
       const currentExtendedIndex = Math.round(el.scrollLeft / cardWidth);
 
       // クローンへのループジャンプ
       if (currentExtendedIndex <= 0) {
         setIsAdjusting(true);
-        el.style.scrollBehavior = 'auto';
-        el.scrollLeft = cardWidth * count;
-        el.style.scrollBehavior = '';
+        applyScroll(el, cardWidth * count, false);
         requestAnimationFrame(() => setIsAdjusting(false));
         // ジャンプ後のフィーチャー通知
         const featureId = features[count - 1].id;
@@ -91,9 +72,7 @@ export const useCardCarouselScroll = ({
       }
       if (currentExtendedIndex >= count + 1) {
         setIsAdjusting(true);
-        el.style.scrollBehavior = 'auto';
-        el.scrollLeft = cardWidth * 1;
-        el.style.scrollBehavior = '';
+        applyScroll(el, cardWidth * 1, false);
         requestAnimationFrame(() => setIsAdjusting(false));
         const featureId = features[0].id;
         if (prevCenteredFeatureIdRef.current !== featureId) {
@@ -113,8 +92,8 @@ export const useCardCarouselScroll = ({
           onFeatureChange(centeredFeature);
         }
       }
-    }, 150);
-  }, [count, getCardWidth, isAdjusting, features, onFeatureChange]);
+    }, SCROLL_DEBOUNCE_MS);
+  }, [count, isAdjusting, features, onFeatureChange]);
 
   // selectedFeature が変更されたら、そのカードを中央にスクロール & refを更新
   useEffect(() => {
@@ -142,35 +121,31 @@ export const useCardCarouselScroll = ({
 
   // ホイールスクロール: 1回のスクロールで1カード分だけ移動
   const wheelCooldownRef = useRef(false);
-  const handleWheel = useCallback(
-    (e: React.WheelEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      if (wheelCooldownRef.current) return;
+  const handleWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (wheelCooldownRef.current) return;
 
-      const el = scrollRef.current;
-      if (!el) return;
+    const el = scrollRef.current;
+    if (!el) return;
 
-      const cardWidth = getCardWidth();
-      if (cardWidth === 0) return;
+    const cardWidth = calculateCardWidth(el);
+    if (cardWidth === 0) return;
 
-      // スクロール方向を判定（deltaYもdeltaXも対応）
-      const delta =
-        Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      if (delta === 0) return;
+    // スクロール方向を判定（deltaYもdeltaXも対応）
+    const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    if (delta === 0) return;
 
-      const direction = delta > 0 ? 1 : -1;
-      const targetScroll = el.scrollLeft + cardWidth * direction;
+    const direction = delta > 0 ? 1 : -1;
+    const targetScroll = el.scrollLeft + cardWidth * direction;
 
-      el.scrollTo({ left: targetScroll, behavior: 'smooth' });
+    el.scrollTo({ left: targetScroll, behavior: 'smooth' });
 
-      // クールダウン（連続スクロール防止）
-      wheelCooldownRef.current = true;
-      setTimeout(() => {
-        wheelCooldownRef.current = false;
-      }, 400);
-    },
-    [getCardWidth]
-  );
+    // クールダウン（連続スクロール防止）
+    wheelCooldownRef.current = true;
+    setTimeout(() => {
+      wheelCooldownRef.current = false;
+    }, WHEEL_COOLDOWN_MS);
+  }, []);
 
   return {
     scrollRef,
