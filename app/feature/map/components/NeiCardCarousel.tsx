@@ -20,8 +20,8 @@ type Props = {
 const style = {
   container: [
     'flex overflow-x-auto gap-3 w-full',
-    'snap-x snap-mandatory',
-    'scroll-smooth',
+    'snap-x snap-mandatory', // 水平方向にスナップを強制
+    'scroll-smooth', // スクロールをスムーズにする
     // モバイル: 1枚中央表示 (カード幅75vw、左右12.5vw)
     'pl-[12.5vw] pr-[12.5vw]',
     // PC: 3枚表示 (カード幅28vw、左右36vw)
@@ -33,7 +33,7 @@ const style = {
     'flex-shrink-0',
     'w-[75vw]',       // モバイル: 画面幅の75%
     'md:w-[28vw]',    // PC: 画面幅の28% (3枚表示用)
-    'snap-center',
+    'snap-center', // 各カードがコンテナ中央にスナップ
     'px-1 py-8',
   ].join(' '),
   cardOuter: 'rounded-xl transition-all duration-300',
