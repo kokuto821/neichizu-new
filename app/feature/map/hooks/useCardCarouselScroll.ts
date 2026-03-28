@@ -2,7 +2,7 @@ import { useRef, useCallback, useState, useEffect } from 'react';
 import { FeatureType } from '../utils/featureUtils';
 import { calculateCardWidth, applyScroll } from '../utils/carouselUtils';
 
-const SCROLL_DEBOUNCE_MS = 50;
+const SCROLL_DEBOUNCE_MS = 25;
 const WHEEL_COOLDOWN_MS = 400;
 
 type UseCardCarouselScrollProps = {
