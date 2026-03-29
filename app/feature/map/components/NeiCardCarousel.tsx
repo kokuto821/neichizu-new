@@ -1,8 +1,6 @@
 import { FC } from 'react';
-import { GeoparkFeatureContent } from './GeoparkFeatureContent';
-import { MountainFeatureContent } from './MountainFeatureContent';
 import { motion } from 'framer-motion';
-import { FeatureType, isHyakumeizan, isWGeopark } from '@/app/feature/map/utils/featureUtils';
+import { FeatureType } from '@/app/feature/map/utils/featureUtils';
 import { useCardCarouselScroll } from '@/app/feature/map/hooks/useCardCarouselScroll';
 import { useSwipe } from '@/app/hooks/useSwipe';
 
@@ -77,11 +75,11 @@ export const NeiCardCarousel: FC<Props> = ({
     <motion.div
       className={`${style.cardOuter} ${isSelected ? style.cardSelected : ''}`}
       animate={{
-        scale: isSelected ? 1.05 : 0.95,
+        scale: isSelected ? 1 : 0.95,
         opacity: isSelected ? 1 : 0.8,
         y: isSelected ? dragDeltaY : 0,
       }}
-      initial={{ scale: 0.9, opacity: 0 }}
+      initial={{ scale: 0.95, opacity: 0 }}
       transition={
         isSelected && dragDeltaY !== 0
           ? { type: 'tween' as const, duration: 0, scale: { type: 'spring' as const, stiffness: 300, damping: 30 }, opacity: { type: 'spring' as const, stiffness: 300, damping: 30 } }

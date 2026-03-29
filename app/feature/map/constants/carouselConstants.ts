@@ -10,7 +10,7 @@ export const WHEEL_COOLDOWN_MS = 100;
 export const SNAP_THRESHOLD_RATIO = 0.15;
 
 // カード切り替えアニメーションのspringバネ定数
-export const SPRING_STIFFNESS = 1000;
+export const SPRING_STIFFNESS = 500;
 
 // 減衰比 0.9: damping = 2 * sqrt(stiffness) * ratio
 // < 1.0: 少し揺れて止まる、= 1.0: 揺れなし（臨界制動）、> 1.0: 遅い
