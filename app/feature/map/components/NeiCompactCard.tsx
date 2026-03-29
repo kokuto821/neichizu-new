@@ -29,13 +29,12 @@ export const NeiCompactCard: FC<Props> = ({
       className={`${style.card} ${className}`}
       onClick={onClick || (isSelected ? onExpand : undefined)}
     >
-      {feature.image && (
-        <img
-          className={style.cardImage}
-          src={feature.image}
-          alt={feature.name}
-        />
-      )}
+      <img
+        className={style.cardImage}
+        src={feature.image || '/img/hyakumeizan/noimage-1-760x460.png'}
+        alt={feature.name}
+        onError={(e) => { e.currentTarget.src = '/img/hyakumeizan/noimage-1-760x460.png'; }}
+      />
       <div className={style.content}>
         {isWGeopark(feature) ? (
           <GeoparkFeatureContent

@@ -164,15 +164,14 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({
                     <NeiCloseButton onClose={onClose} />
                   </motion.div>
 
-                  {displayFeature.image && (
-                    <motion.img
-                      src={displayFeature.image}
-                      alt={displayFeature.name}
-                      className={style.image}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                    />
-                  )}
+                  <motion.img
+                    src={displayFeature.image || '/img/hyakumeizan/noimage-1-760x460.png'}
+                    alt={displayFeature.name}
+                    className={style.image}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    onError={(e) => { e.currentTarget.src = '/img/hyakumeizan/noimage-1-760x460.png'; }}
+                  />
                 </motion.div>
 
                 <motion.div className={style.contentWrapper}>
