@@ -1,9 +1,7 @@
 import { useRef, useCallback, useState, useEffect } from 'react';
 import { FeatureType } from '../utils/featureUtils';
 import { calculateCardWidth, applyScroll } from '../utils/carouselUtils';
-
-const SCROLL_DEBOUNCE_MS = 25;
-const WHEEL_COOLDOWN_MS = 400;
+import { SCROLL_DEBOUNCE_MS, WHEEL_COOLDOWN_MS, SNAP_THRESHOLD_RATIO } from '../constants/carouselConstants';
 
 type UseCardCarouselScrollProps = {
   features: FeatureType[];
@@ -56,6 +54,10 @@ export const useCardCarouselScroll = ({
       const cardWidth = calculateCardWidth(el);
       if (cardWidth === 0) return;
       const currentExtendedIndex = Math.round(el.scrollLeft / cardWidth);
+
+      // スナップ位置に十分近くない場合はまだスクロール中とみなして処理しない
+      const offset = Math.abs(el.scrollLeft - cardWidth * currentExtendedIndex);
+      if (offset > cardWidth * SNAP_THRESHOLD_RATIO) return;
 
       // クローンへのループジャンプ
       if (currentExtendedIndex <= 0) {

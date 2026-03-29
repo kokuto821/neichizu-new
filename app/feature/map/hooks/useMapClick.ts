@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Map, MapBrowserEvent } from 'ol';
 import Point from 'ol/geom/Point';
 import Feature, { FeatureLike } from 'ol/Feature';
@@ -20,9 +20,14 @@ export const useMapClick = ({ map, onClickLoading }: Props) => {
     HyakumeizanFromSelected | WGeoparkFromSelected | null
   >(null);
 
+  const isDraggingRef = useRef(false);
+
   const handleMapClick = useCallback(
     (event: MapBrowserEvent) => {
       if (!map) return;
+
+      // ドラッグ直後のclickは無視
+      if (isDraggingRef.current) return;
 
       // ピクセル位置からフィーチャーを取得
       const clickedFeature = map.forEachFeatureAtPixel(event.pixel, (f) => f);
@@ -84,9 +89,18 @@ export const useMapClick = ({ map, onClickLoading }: Props) => {
 
   useEffect(() => {
     if (!map) return;
+
+    const handlePointerDrag = () => { isDraggingRef.current = true; };
+    const handlePointerUp = () => { setTimeout(() => { isDraggingRef.current = false; }, 0); };
+
     map.on('click', handleMapClick);
+    map.on('pointerdrag', handlePointerDrag);
+    map.getViewport().addEventListener('pointerup', handlePointerUp);
+
     return () => {
       map.un('click', handleMapClick);
+      map.un('pointerdrag', handlePointerDrag);
+      map.getViewport().removeEventListener('pointerup', handlePointerUp);
       map.setTarget(undefined);
     };
   }, [map, handleMapClick]);

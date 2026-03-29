@@ -50,7 +50,7 @@ const Hyakumeizan = () => {
     onClickLoading: setClickLoading,
   });
 
-  const { isImageLoaded } = useImageLoader(selectedFeature, handleLoadingComplete);
+  useImageLoader(selectedFeature, handleLoadingComplete);
 
   // 百名山レイヤーが非表示になったらNeiCompactCardを消す
   useEffect(() => {
@@ -73,7 +73,7 @@ const Hyakumeizan = () => {
         {isLoading && selectedFeature !== null && <LoadingSpinner />}
         <MapToolbar switchBaseLayer={switchBaseLayer} />
         <BottomUIContainer>
-          {isImageLoaded && (
+          {selectedFeature !== null && (
             <NeiCard
               selectedFeature={selectedFeature}
               map={map}

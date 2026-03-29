@@ -17,6 +17,8 @@ type Props = {
   onDeselect: () => void;
 };
 
+import { SPRING_STIFFNESS, SPRING_DAMPING, HIGHLIGHT_TRANSITION_DURATION } from '../constants/carouselConstants';
+
 const style = {
   container: [
     'flex overflow-x-auto gap-3 w-full',
@@ -36,7 +38,7 @@ const style = {
     'snap-center', // 各カードがコンテナ中央にスナップ
     'px-1 py-8',
   ].join(' '),
-  cardOuter: 'rounded-xl transition-all duration-300',
+  cardOuter: `rounded-xl transition-all ${HIGHLIGHT_TRANSITION_DURATION}`,
   cardSelected: 'ring-4 ring-accentOrange z-10',
 };
 
@@ -83,7 +85,7 @@ export const NeiCardCarousel: FC<Props> = ({
       transition={
         isSelected && dragDeltaY !== 0
           ? { type: 'tween' as const, duration: 0, scale: { type: 'spring' as const, stiffness: 300, damping: 30 }, opacity: { type: 'spring' as const, stiffness: 300, damping: 30 } }
-          : { type: 'spring' as const, stiffness: 300, damping: 30 }
+          : { type: 'spring' as const, stiffness: SPRING_STIFFNESS, damping: SPRING_DAMPING }
       }
     >
       <NeiCompactCard
