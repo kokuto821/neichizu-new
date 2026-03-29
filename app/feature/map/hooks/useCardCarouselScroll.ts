@@ -8,7 +8,7 @@ import {
   extendedIndexToRealIndex,
   buildExtendedFeatures,
 } from '../utils/carouselUtils';
-import { SCROLL_DEBOUNCE_MS, WHEEL_COOLDOWN_MS, SNAP_THRESHOLD_RATIO } from '../constants/carouselConstants';
+import { SCROLL_DEBOUNCE_MS, WHEEL_COOLDOWN_MS, SNAP_THRESHOLD_RATIO, TOUCH_END_SNAP_WAIT_MS } from '../constants/carouselConstants';
 
 type UseCardCarouselScrollProps = {
   features: FeatureType[];
@@ -145,7 +145,7 @@ export const useCardCarouselScroll = ({
       // snap アニメーション完了を待つ（iOS は最大 300ms 程度）
       touchEndTimerRef.current = setTimeout(() => {
         checkScrollPosition();
-      }, 300);
+      }, TOUCH_END_SNAP_WAIT_MS);
     };
 
     el.addEventListener('touchend', handleTouchEnd, { passive: true });

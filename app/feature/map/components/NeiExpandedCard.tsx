@@ -5,6 +5,7 @@ import { NeiCloseButton } from '@/app/components/atoms/NeiCloseButton';
 import { usePopupVisible } from '@/app/feature/map/hooks/usePopupVisible';
 import { LinkIcon } from '@/app/components/atoms/LinkIcon';
 import { INNER_WIDTH_CLASS } from '@/app/styles/layoutConstants';
+import { SLIDE_ANIMATION_OFFSET_PX, SLIDE_ANIMATION_DURATION_S } from '@/app/feature/map/constants/carouselConstants';
 import { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useSwipe } from '@/app/hooks/useSwipe';
@@ -108,7 +109,7 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({
   // カード切り替えアニメーション
   const cardVariants = {
     enter: (direction: SwipeDirection) => ({
-      x: direction === 'left' ? 300 : direction === 'right' ? -300 : 0,
+      x: direction === 'left' ? SLIDE_ANIMATION_OFFSET_PX : direction === 'right' ? -SLIDE_ANIMATION_OFFSET_PX : 0,
       opacity: 0,
     }),
     center: {
@@ -116,7 +117,7 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({
       opacity: 1,
     },
     exit: (direction: SwipeDirection) => ({
-      x: direction === 'left' ? -300 : direction === 'right' ? 300 : 0,
+      x: direction === 'left' ? -SLIDE_ANIMATION_OFFSET_PX : direction === 'right' ? SLIDE_ANIMATION_OFFSET_PX : 0,
       opacity: 0,
     }),
   };
@@ -147,7 +148,7 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                transition={{ duration: SLIDE_ANIMATION_DURATION_S, ease: 'easeInOut' }}
                 className={style.container}
                 onTouchStart={onTouchStart}
                 onTouchMove={onTouchMove}
@@ -177,7 +178,7 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
+                    transition={{ delay: SLIDE_ANIMATION_DURATION_S }}
                     className={style.detailsWrapper}
                   >
                     <motion.h2

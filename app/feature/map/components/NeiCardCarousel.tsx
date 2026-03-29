@@ -15,7 +15,15 @@ type Props = {
   onDeselect: () => void;
 };
 
-import { SPRING_STIFFNESS, SPRING_DAMPING, HIGHLIGHT_TRANSITION_DURATION } from '../constants/carouselConstants';
+import {
+  SPRING_STIFFNESS,
+  SPRING_DAMPING,
+  HIGHLIGHT_TRANSITION_DURATION,
+  DRAG_SPRING_STIFFNESS,
+  DRAG_SPRING_DAMPING,
+  CARD_INACTIVE_SCALE,
+  CARD_INACTIVE_OPACITY,
+} from '../constants/carouselConstants';
 
 const style = {
   container: [
@@ -75,14 +83,14 @@ export const NeiCardCarousel: FC<Props> = ({
     <motion.div
       className={`${style.cardOuter} ${isSelected ? style.cardSelected : ''}`}
       animate={{
-        scale: isSelected ? 1 : 0.95,
-        opacity: isSelected ? 1 : 0.8,
+        scale: isSelected ? 1 : CARD_INACTIVE_SCALE,
+        opacity: isSelected ? 1 : CARD_INACTIVE_OPACITY,
         y: isSelected ? dragDeltaY : 0,
       }}
-      initial={{ scale: 0.95, opacity: 0 }}
+      initial={{ scale: CARD_INACTIVE_SCALE, opacity: 0 }}
       transition={
         isSelected && dragDeltaY !== 0
-          ? { type: 'tween' as const, duration: 0, scale: { type: 'spring' as const, stiffness: 300, damping: 30 }, opacity: { type: 'spring' as const, stiffness: 300, damping: 30 } }
+          ? { type: 'tween' as const, duration: 0, scale: { type: 'spring' as const, stiffness: DRAG_SPRING_STIFFNESS, damping: DRAG_SPRING_DAMPING }, opacity: { type: 'spring' as const, stiffness: DRAG_SPRING_STIFFNESS, damping: DRAG_SPRING_DAMPING } }
           : { type: 'spring' as const, stiffness: SPRING_STIFFNESS, damping: SPRING_DAMPING }
       }
     >

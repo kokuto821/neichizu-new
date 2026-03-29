@@ -7,6 +7,13 @@ import { HyakumeizanFromSelected } from '@/app/feature/map/types/hyakumeizanType
 import { Map } from 'ol';
 import { useFeatureNavigation } from '@/app/feature/map/hooks/useFeatureNavigation';
 import { useMapCenter } from '@/app/feature/map/hooks/useMapCenter';
+import {
+  SWIPE_DIRECTION_RESET_MS,
+  DRAG_SPRING_STIFFNESS,
+  DRAG_SPRING_DAMPING,
+  CARD_ENTER_Y_OFFSET_PX,
+  CARD_EXIT_DURATION_S,
+} from '@/app/feature/map/constants/carouselConstants';
 
 type FeatureType = HyakumeizanFromSelected | WGeoparkFromSelected;
 
@@ -19,16 +26,16 @@ type Props = {
 
 // カルーセル表示/非表示アニメーション
 const carouselVariants = {
-  hidden: { y: 40, opacity: 0 },
+  hidden: { y: CARD_ENTER_Y_OFFSET_PX, opacity: 0 },
   visible: {
     y: 0,
     opacity: 1,
-    transition: { type: 'spring' as const, stiffness: 300, damping: 30 },
+    transition: { type: 'spring' as const, stiffness: DRAG_SPRING_STIFFNESS, damping: DRAG_SPRING_DAMPING },
   },
   exit: {
-    y: 40,
+    y: CARD_ENTER_Y_OFFSET_PX,
     opacity: 0,
-    transition: { duration: 0.2, ease: 'easeIn' as const },
+    transition: { duration: CARD_EXIT_DURATION_S, ease: 'easeIn' as const },
   },
 };
 
@@ -67,7 +74,7 @@ export const NeiCard: FC<Props> = ({ selectedFeature, map, onFeatureChange, onSw
       setTimeout(() => {
         onFeatureChange(nextFeature);
         setSwipeDirection(null);
-      }, 300);
+      }, SWIPE_DIRECTION_RESET_MS);
     }
   }, [goToNext, onFeatureChange, onSwipeLoadingChange]);
 
@@ -80,7 +87,7 @@ export const NeiCard: FC<Props> = ({ selectedFeature, map, onFeatureChange, onSw
       setTimeout(() => {
         onFeatureChange(prevFeature);
         setSwipeDirection(null);
-      }, 300);
+      }, SWIPE_DIRECTION_RESET_MS);
     }
   }, [goToPrev, onFeatureChange, onSwipeLoadingChange]);
 
