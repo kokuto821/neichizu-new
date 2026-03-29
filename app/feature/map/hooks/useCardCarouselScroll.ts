@@ -1,4 +1,4 @@
-import { useRef, useCallback, useState, useEffect } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import { FeatureType } from '../utils/featureUtils';
 import { calculateCardWidth, applyScroll } from '../utils/carouselUtils';
 import { SCROLL_DEBOUNCE_MS, WHEEL_COOLDOWN_MS, SNAP_THRESHOLD_RATIO } from '../constants/carouselConstants';
@@ -15,7 +15,9 @@ export const useCardCarouselScroll = ({
   onFeatureChange,
 }: UseCardCarouselScrollProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [isAdjusting, setIsAdjusting] = useState(false);
+  // useState ではなく useRef で管理することで同期的に読み書きし、
+  // stale closure によるガード漏れを防ぐ
+  const isAdjustingRef = useRef(false);
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // 前回スクロール停止時の中央カードIDを記録（ユーザー手動スクロールを検出するため）
@@ -41,16 +43,66 @@ export const useCardCarouselScroll = ({
     []
   );
 
-  // スクロール停止時の処理：ループジャンプ & フィーチャー通知
+  // 中央フィーチャーを通知する（重複通知防止付き）
+  const notifyCenteredFeature = useCallback((feature: FeatureType) => {
+    if (prevCenteredFeatureIdRef.current !== feature.id) {
+      prevCenteredFeatureIdRef.current = feature.id;
+      onFeatureChange(feature);
+    }
+  }, [onFeatureChange]);
+
+  // クローン位置にいる場合に実要素へ瞬時ジャンプする
+  // 戻り値: ジャンプ後の実フィーチャー（ジャンプしなかった場合は null）
+  const jumpIfAtClone = useCallback((el: HTMLElement, cardWidth: number, currentExtendedIndex: number): FeatureType | null => {
+    if (currentExtendedIndex <= 0) {
+      isAdjustingRef.current = true;
+      applyScroll(el, cardWidth * count, false);
+      requestAnimationFrame(() => { isAdjustingRef.current = false; });
+      return features[count - 1];
+    }
+    if (currentExtendedIndex >= count + 1) {
+      isAdjustingRef.current = true;
+      applyScroll(el, cardWidth * 1, false);
+      requestAnimationFrame(() => { isAdjustingRef.current = false; });
+      return features[0];
+    }
+    return null;
+  }, [count, features]);
+
+  // スクロール位置を確認してループジャンプ・フィーチャー通知を行う共通処理
+  const checkScrollPosition = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el || count === 0 || isAdjustingRef.current) return;
+
+    const cardWidth = calculateCardWidth(el);
+    if (cardWidth === 0) return;
+    const currentExtendedIndex = Math.round(el.scrollLeft / cardWidth);
+
+    const jumpedTo = jumpIfAtClone(el, cardWidth, currentExtendedIndex);
+    if (jumpedTo) {
+      notifyCenteredFeature(jumpedTo);
+      return;
+    }
+
+    // 通常スクロール時のフィーチャー通知
+    const realIndex = currentExtendedIndex - 1;
+    if (realIndex >= 0 && realIndex < count) {
+      notifyCenteredFeature(features[realIndex]);
+    }
+  }, [count, features, jumpIfAtClone, notifyCenteredFeature]);
+
+  // scroll イベント: デバウンスしてスナップ閾値チェック付きで処理
   const handleScroll = useCallback(() => {
     const el = scrollRef.current;
-    if (!el || count === 0 || isAdjusting) return;
+    if (!el || count === 0 || isAdjustingRef.current) return;
 
     if (scrollTimeoutRef.current) {
       clearTimeout(scrollTimeoutRef.current);
     }
 
     scrollTimeoutRef.current = setTimeout(() => {
+      if (isAdjustingRef.current) return;
+
       const cardWidth = calculateCardWidth(el);
       if (cardWidth === 0) return;
       const currentExtendedIndex = Math.round(el.scrollLeft / cardWidth);
@@ -59,43 +111,9 @@ export const useCardCarouselScroll = ({
       const offset = Math.abs(el.scrollLeft - cardWidth * currentExtendedIndex);
       if (offset > cardWidth * SNAP_THRESHOLD_RATIO) return;
 
-      // クローンへのループジャンプ
-      if (currentExtendedIndex <= 0) {
-        setIsAdjusting(true);
-        applyScroll(el, cardWidth * count, false);
-        requestAnimationFrame(() => setIsAdjusting(false));
-        // ジャンプ後のフィーチャー通知
-        const featureId = features[count - 1].id;
-        if (prevCenteredFeatureIdRef.current !== featureId) {
-          prevCenteredFeatureIdRef.current = featureId;
-          onFeatureChange(features[count - 1]);
-        }
-        return;
-      }
-      if (currentExtendedIndex >= count + 1) {
-        setIsAdjusting(true);
-        applyScroll(el, cardWidth * 1, false);
-        requestAnimationFrame(() => setIsAdjusting(false));
-        const featureId = features[0].id;
-        if (prevCenteredFeatureIdRef.current !== featureId) {
-          prevCenteredFeatureIdRef.current = featureId;
-          onFeatureChange(features[0]);
-        }
-        return;
-      }
-
-      // 通常スクロール時のフィーチャー通知
-      const realIndex = currentExtendedIndex - 1;
-      if (realIndex >= 0 && realIndex < count) {
-        const centeredFeature = features[realIndex];
-        // 前回の中央カードから変わった場合のみ通知
-        if (prevCenteredFeatureIdRef.current !== centeredFeature.id) {
-          prevCenteredFeatureIdRef.current = centeredFeature.id;
-          onFeatureChange(centeredFeature);
-        }
-      }
+      checkScrollPosition();
     }, SCROLL_DEBOUNCE_MS);
-  }, [count, isAdjusting, features, onFeatureChange]);
+  }, [count, checkScrollPosition]);
 
   // selectedFeature が変更されたら、そのカードを中央にスクロール & refを更新
   useEffect(() => {
@@ -111,6 +129,28 @@ export const useCardCarouselScroll = ({
       scrollToFeatureIndex(realIndex, false);
     });
   }, [selectedFeature?.id, count, features, scrollToFeatureIndex]);
+
+  // iOS Safari 対策: touchend 後に snap アニメーションが完了するのを待ってから位置を確認する
+  // scroll イベントが snap アニメーション中に止まる場合でもループジャンプが確実に動作する
+  const touchEndTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const handleTouchEnd = () => {
+      if (touchEndTimerRef.current) clearTimeout(touchEndTimerRef.current);
+      // snap アニメーション完了を待つ（iOS は最大 300ms 程度）
+      touchEndTimerRef.current = setTimeout(() => {
+        checkScrollPosition();
+      }, 300);
+    };
+
+    el.addEventListener('touchend', handleTouchEnd, { passive: true });
+    return () => {
+      el.removeEventListener('touchend', handleTouchEnd);
+      if (touchEndTimerRef.current) clearTimeout(touchEndTimerRef.current);
+    };
+  }, [checkScrollPosition]);
 
   // クリーンアップ
   useEffect(() => {
