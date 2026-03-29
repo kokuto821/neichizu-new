@@ -8,7 +8,7 @@ import {
   extendedIndexToRealIndex,
   buildExtendedFeatures,
 } from '../utils/carouselUtils';
-import { SCROLL_DEBOUNCE_MS, WHEEL_COOLDOWN_MS, SNAP_THRESHOLD_RATIO, TOUCH_END_SNAP_WAIT_MS } from '../constants/carouselConstants';
+import { SCROLL_DEBOUNCE_MS, WHEEL_COOLDOWN_MS, SNAP_THRESHOLD_RATIO, TOUCH_END_SNAP_WAIT_MS, SWIPE_DIRECTION_RESET_MS } from '../constants/carouselConstants';
 
 type UseCardCarouselScrollProps = {
   features: FeatureType[];
@@ -128,8 +128,16 @@ export const useCardCarouselScroll = ({
     const smooth = !isFirstScrollRef.current;
     isFirstScrollRef.current = false;
 
+    // スクロール中に handleScroll が途中位置を検出して誤った onFeatureChange を
+    // 呼ばないよう、programmatic スクロールの間は isAdjustingRef でブロックする
+    isAdjustingRef.current = true;
     requestAnimationFrame(() => {
       scrollToFeatureIndex(realIndex, smooth);
+      if (smooth) {
+        setTimeout(() => { isAdjustingRef.current = false; }, SWIPE_DIRECTION_RESET_MS);
+      } else {
+        requestAnimationFrame(() => { isAdjustingRef.current = false; });
+      }
     });
   }, [selectedFeature, count, features, scrollToFeatureIndex]);
 
