@@ -34,7 +34,6 @@ export const useMapCenter = (
       map.getView().animate({
         center: centerCoordinates,
         duration: 500, // アニメーション時間
-        zoom: 10, // ズームレベル（必要に応じて調整）
       });
     }
   }, [map, selectedFeature]);
