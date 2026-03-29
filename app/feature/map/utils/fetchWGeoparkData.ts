@@ -35,7 +35,7 @@ export const fetchWGeoparkData = async () => {
         comment: row.comment || '',
         googlemaplink: row.googlemaplink,
         website: row.website || '',
-        image: row.image || '/img/geopark_w.png',
+        image: row.image || '/img/hyakumeizan/noimage-1-760x460.png',
         geometry: new Point(
           fromLonLat([
             parseFloat(row.longitude || '0'),
