@@ -18,4 +18,4 @@ export const SPRING_DAMPING_RATIO = 0.9;
 export const SPRING_DAMPING = 2 * Math.sqrt(SPRING_STIFFNESS) * SPRING_DAMPING_RATIO;
 
 // ハイライトアニメーションの時間 (Tailwind クラス名)
-export const HIGHLIGHT_TRANSITION_DURATION = 'duration-50';
+export const HIGHLIGHT_TRANSITION_DURATION = 'duration-150';
