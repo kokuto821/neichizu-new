@@ -7,10 +7,9 @@ import { LinkIcon } from '@/app/components/atoms/LinkIcon';
 import { INNER_WIDTH_CLASS } from '@/app/styles/layoutConstants';
 import { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { Map } from 'ol';
 import { useSwipe } from '@/app/hooks/useSwipe';
 
-interface ExpandedCardProps {
+type ExpandedCardProps = {
   selectedFeature: HyakumeizanFromSelected | WGeoparkFromSelected | null;
   isExpanded: boolean;
   onClose: () => void;

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { WGeoparkFromSelected } from '../types/geoparkTypes';
 import { HyakumeizanFromSelected } from '../types/hyakumeizanTypes';
 
@@ -22,7 +22,7 @@ export const usePopupVisible = (
   >(null);
 
   // フィーチャ選択時の処理
-  const handleFeatureSelect = (
+  const handleFeatureSelect =useCallback( (
     feature: HyakumeizanFromSelected | WGeoparkFromSelected
   ) => {
     previousFeature.current = feature;
@@ -34,10 +34,10 @@ export const usePopupVisible = (
     }, fadeInDelay);
 
     return () => clearTimeout(timer);
-  };
+  }, [fadeInDelay]);
 
   // フィーチャ解除時の処理
-  const handleFeatureDeselect = () => {
+  const handleFeatureDeselect = useCallback(() => {
     const timer = setTimeout(() => {
       setShouldRender(false);
       setDisplayFeature(null);
@@ -45,7 +45,7 @@ export const usePopupVisible = (
     }, fadeOutDuration);
 
     return () => clearTimeout(timer);
-  };
+  }, [fadeOutDuration]);
 
   useEffect(() => {
     setIsVisible(false);
@@ -55,7 +55,7 @@ export const usePopupVisible = (
     } else {
       return handleFeatureDeselect();
     }
-  }, [selectedFeature]);
+  }, [handleFeatureDeselect, handleFeatureSelect, selectedFeature]);
 
   return { isVisible, shouldRender, displayFeature };
 };

@@ -95,16 +95,16 @@ export const NeiCustomScrollbar: FC<Props> = ({ containerRef }) => {
     // ただしCSSで%幅にしているため、移動量(px) / トラック幅(px) * (100 / (100-thumbWidth)) が係数になるがややこしい
     // 簡易的に「トラック幅全体に対する移動割合」をスクロール量に反映
 
-    const moveRatio = deltaX / trackWidth;
-    // moveRatio * maxScroll だと、つまみの移動距離 < スクロール移動距離 になる（逆パララックス）
-    // 正確には deltaX / (trackWidth * (1 - thumbWidthRatio/100)) * maxScroll
+    // const moveRatio = deltaX / trackWidth;
+    // // moveRatio * maxScroll だと、つまみの移動距離 < スクロール移動距離 になる（逆パララックス）
+    // // 正確には deltaX / (trackWidth * (1 - thumbWidthRatio/100)) * maxScroll
 
     const scrollDelta = (deltaX / (trackWidth * (1 - thumbWidthRatio / 100))) * maxScroll;
 
     el.scrollLeft = startScrollLeftRef.current + scrollDelta;
 
     if (e.cancelable && e.type === 'touchmove') e.preventDefault();
-  }, [thumbWidthRatio]);
+  }, [containerRef, thumbWidthRatio]);
 
   const handleDragEnd = useCallback(() => {
     isDraggingRef.current = false;
