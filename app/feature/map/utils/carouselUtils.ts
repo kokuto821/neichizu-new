@@ -19,9 +19,14 @@ export const applyScroll = (
   scrollLeft: number,
   smooth: boolean = false
 ) => {
-  el.style.scrollBehavior = smooth ? 'smooth' : 'auto';
-  el.scrollLeft = scrollLeft;
-  if (!smooth) {
-    el.style.scrollBehavior = '';
+  if (smooth) {
+    el.style.scrollBehavior = 'smooth';
+    el.scrollLeft = scrollLeft;
+  } else {
+    // iOS Safari では inline style の scroll-behavior が CSS クラス (scroll-smooth) に
+    // 上書きされない場合があるため !important で強制上書きする
+    el.style.setProperty('scroll-behavior', 'auto', 'important');
+    el.scrollLeft = scrollLeft;
+    el.style.removeProperty('scroll-behavior');
   }
 };
