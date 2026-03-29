@@ -39,7 +39,7 @@ const style = {
   featureDescription: 'text-ecruWhite text-sm',
   linkContainer: 'flex gap-4',
   linkCard:
-    'bg-ecruWhite rounded-lg p-2 flex items-center justify-center shadow-sm w-fit',
+    'bg-ecruWhite rounded-lg p-2 flex items-center gap-1 justify-center shadow-sm w-fit text-semiDarkGreen',
 };
 
 type SwipeDirection = 'left' | 'right' | null;
@@ -198,21 +198,7 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({
                               {displayFeature.area}
                             </p>
                           </div>
-                          <div className={style.featureCard}>
-                            <h4 className={style.featureTitle}>Webサイト</h4>
-                            <div className="mt-2">
-                              {displayFeature.website && (
-                                <a
-                                  href={displayFeature.website}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-ecruWhite underline hover:text-white"
-                                >
-                                  公式サイト
-                                </a>
-                              )}
-                            </div>
-                          </div>
+                          
                         </div>
                       </>
                     )}
@@ -254,6 +240,20 @@ export const NeiExpandedCard: React.FC<ExpandedCardProps> = ({
                                 src="/img/yamap-logo.svg"
                                 alt="YAMAP"
                               />
+                            </div>
+                          )}
+                        {isWGeopark(displayFeature) &&
+                          displayFeature.website && (
+                            <div className={style.linkCard}>
+                              <LinkIcon
+                                href={displayFeature.website}
+                                src="/img/geopark_w.png"
+                                alt="Website"
+                                width={40}
+                                height={40}
+                              >
+                              公式サイト
+                              </LinkIcon>
                             </div>
                           )}
                       </div>
